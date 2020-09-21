@@ -1,7 +1,7 @@
 package response
 
 import (
-	"beego-admin/controllers"
+	"beego-admin/global"
 	"github.com/astaxie/beego/context"
 )
 
@@ -59,12 +59,12 @@ func Result(code int,msg string,data interface{},url string,wait int,header map[
 
 //成功、普通返回
 func Success(ctx *context.Context)  {
-	Result(SUCCESS,"操作成功","",controllers.URL_BACK,0, map[string]string{},ctx)
+	Result(SUCCESS,"操作成功","",global.URL_BACK,0, map[string]string{},ctx)
 }
 
 //成功、返回自定义信息
 func SuccessWithMessage(msg string,ctx *context.Context)  {
-	Result(SUCCESS,msg,"",controllers.URL_BACK,0,map[string]string{},ctx)
+	Result(SUCCESS,msg,"",global.URL_BACK,0,map[string]string{},ctx)
 }
 
 //成功、返回自定义信息和url
@@ -79,12 +79,12 @@ func SuccessWithDetailed(msg string,url string,data interface{},wait int,header 
 
 //失败、普通返回
 func Error(ctx *context.Context)  {
-	Result(ERROR,"操作失败","",controllers.URL_CURRENT,0, map[string]string{},ctx)
+	Result(ERROR,"操作失败","",global.URL_CURRENT,0, map[string]string{},ctx)
 }
 
 //失败、返回自定义信息
 func ErrorWithMessage(msg string,ctx *context.Context)  {
-	Result(ERROR,msg,"",controllers.URL_BACK,0,map[string]string{},ctx)
+	Result(ERROR,msg,"",global.URL_BACK,0,map[string]string{},ctx)
 }
 
 //失败、返回自定义信息和url

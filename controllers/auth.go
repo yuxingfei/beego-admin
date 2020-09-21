@@ -1,13 +1,24 @@
 package controllers
 
 import (
+	"beego-admin/global/response"
 	"beego-admin/utils"
 	"fmt"
 	"github.com/astaxie/beego"
+	"html/template"
 )
 
 type AuthController struct {
 	baseController
+}
+
+//login 表单
+type LoginForm struct {
+	Username  string `form:"username"`
+	Password  string `form:"password"`
+	Captcha   string `form:"captcha"`
+	CaptchaId string `form:"captchaId"`
+	Remember  string `form:"remember"`
 }
 
 //控制器，初始化函数，基础自父控制器
@@ -31,6 +42,21 @@ func (this *AuthController) Login()  {
 
 	//登录验证码
 	this.Data["captcha_id"] = utils.CaptchaId()
+	this.Data["xsrfdata"]=template.HTML(this.XSRFFormHTML())
 
 	this.TplName = "auth/login.tpl"
+}
+
+//登录认证
+func (this *AuthController)CheckLogin()  {
+	//数据校验
+	loginForm := LoginForm{}
+	if err := this.ParseForm(&loginForm); err != nil{
+		response.ErrorWithMessage(err.Error(),this.Ctx)
+		return
+	}
+
+	fmt.Println(loginForm)
+	this.Data["json"] = loginForm
+	this.ServeJSON()
 }

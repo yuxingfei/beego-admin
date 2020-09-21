@@ -19,7 +19,9 @@ func init() {
     	beego.NSHandler("/auth/captcha/*.png",captcha.Server(240,80)),
 		//首页
     	beego.NSRouter("/index/index",&controllers.IndexController{},"get:Index"),
-    	)
+    	//登录认证
+    	beego.NSRouter("/auth/check_login",&controllers.AuthController{},"post:CheckLogin"),
+	)
 
     beego.AddNamespace(admin)
 }

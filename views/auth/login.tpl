@@ -50,6 +50,7 @@
     <div class="login-box-body">
         <p class="login-box-msg">登录</p>
         <form class="dataForm" id="dataForm" action="{{urlfor "AuthController.CheckLogin"}}" method="post">
+            {{ .xsrfdata }}
             <div class="form-group has-feedback">
                 <input name="username" id="username" autocomplete="off" type="text" class="form-control" placeholder="用户名">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
