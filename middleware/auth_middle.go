@@ -22,6 +22,7 @@ func AuthMiddle()  {
 		"admin/auth/logout":2,
 		"admin/auth/captcha":3,
 		"admin/editor/server":4,
+		"admin/auth/refresh_captcha":5,
 	}
 
 	//登录认证中间件过滤器

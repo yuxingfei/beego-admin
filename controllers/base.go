@@ -79,6 +79,9 @@ func (this *baseController) Prepare() {
 	fmt.Println("baseController Prepare")
 	fmt.Println("loginUser",loginUser)
 
+	//ajax头部统一设置_xsrf
+	this.Data["xsrf_token"] = this.XSRFToken()
+
 	//判断子控制器是否事项了初始化方法
 	if app, ok := this.AppController.(NestPreparer); ok {
 		app.NestPrepare()

@@ -84,7 +84,7 @@ func Error(ctx *context.Context)  {
 
 //失败、返回自定义信息
 func ErrorWithMessage(msg string,ctx *context.Context)  {
-	Result(ERROR,msg,"",global.URL_BACK,0,map[string]string{},ctx)
+	Result(ERROR,msg,"",global.URL_CURRENT,0,map[string]string{},ctx)
 }
 
 //失败、返回自定义信息和url

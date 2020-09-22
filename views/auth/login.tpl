@@ -6,6 +6,7 @@
     <meta name="renderer" content="webkit">
     <title>{{.admin.title}} | {{.admin.name}}</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="_xsrf" content="{{.xsrf_token}}" />
     {{assets_css "/static/admin/plugins/bootstrap/css/bootstrap.min.css"}}
     {{assets_css "/static/admin/plugins/font-awesome/css/font-awesome.min.css"}}
     {{assets_css "/static/admin/css/AdminLTE.min.css"}}

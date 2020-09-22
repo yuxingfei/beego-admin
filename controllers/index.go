@@ -5,7 +5,10 @@ type IndexController struct {
 }
 
 func (this *IndexController) Index()  {
-	this.Data["json"] = "json"
 
+	m := map[string]interface{}{
+		"msg":"ok",
+	}
+	this.Data["json"] = m
 	this.ServeJSON()
 }
