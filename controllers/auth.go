@@ -3,6 +3,7 @@ package controllers
 import (
 	"beego-admin/form_validate"
 	"beego-admin/global/response"
+	"beego-admin/services/admin_log_service"
 	"beego-admin/services/admin_user_service"
 	"beego-admin/utils"
 	"fmt"
@@ -71,14 +72,13 @@ func (this *AuthController)CheckLogin()  {
 
 	//基础验证通过后，进行用户验证
 	loginUser,err := admin_user_service.CheckLogin(loginForm,this.Ctx)
-
-	//登录日志记录
-	fmt.Println(loginUser)
-
 	if err != nil{
 		response.ErrorWithMessage(err.Error(),this.Ctx)
 		return
 	}
+
+	//登录日志记录
+	admin_log_service.LoginLog(loginUser.Id,this.Ctx)
 
 	redirect,_ := this.GetSession("redirect").(string)
 	if redirect != ""{

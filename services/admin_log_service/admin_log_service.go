@@ -36,8 +36,8 @@ func CreateAdminLog(loginUser *models.AdminUser,menu *models.AdminMenu,url strin
 	}
 
 	//adminLogData数据表添加数据
-	jsonData,_ := json.Marshal(ctx.Input.Params())
-	cryptData := encrypter.Encrypt(jsonData,[]byte(beego.AppConfig.String("app_key")))
+	jsonData,_ := json.Marshal(ctx.Request.PostForm)
+	cryptData := encrypter.Encrypt(jsonData,[]byte(beego.AppConfig.String("log_aes_key")))
 	var adminLogData models.AdminLogData
 	adminLogData.AdminLogId = int(adminLogId)
 	adminLogData.Data = cryptData
@@ -45,6 +45,40 @@ func CreateAdminLog(loginUser *models.AdminUser,menu *models.AdminMenu,url strin
 	if err != nil{
 		o.Rollback()
 	}
+	o.Commit()
+}
 
+//登录日志
+func LoginLog(loginUserId int,ctx *context.Context){
+	var adminLog models.AdminLog
+	adminLog.AdminUserId = loginUserId
+	adminLog.Name = "登录"
+	adminLog.Url = "admin/auth/login"
+	adminLog.LogMethod = "POST"
+	adminLog.LogIp = ctx.Input.IP()
+	adminLog.CreateTime = int(time.Now().Unix())
+	adminLog.UpdateTime = int(time.Now().Unix())
+
+	o := orm.NewOrm()
+
+	//开启事务
+	err := o.Begin()
+
+	adminLogId,err := o.Insert(&adminLog)
+	if err != nil{
+		o.Rollback()
+	}
+
+	//adminLogData数据表添加数据
+	jsonData,_ := json.Marshal(ctx.Request.PostForm)
+	cryptData := encrypter.Encrypt(jsonData,[]byte(beego.AppConfig.String("log_aes_key")))
+
+	var adminLogData models.AdminLogData
+	adminLogData.AdminLogId = int(adminLogId)
+	adminLogData.Data = cryptData
+	_,err = o.Insert(&adminLogData)
+	if err != nil{
+		o.Rollback()
+	}
 	o.Commit()
 }

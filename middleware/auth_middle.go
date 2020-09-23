@@ -32,7 +32,6 @@ func AuthMiddle()  {
 
 		//需要进行登录验证
 		if !isAuthExceptUrl(strings.ToLower(url),authExcept){
-			fmt.Println("需要进行登录验证")
 			//验证是否登录
 			loginUser,isLogin := isLogin(ctx)
 			if !isLogin{
@@ -57,7 +56,6 @@ func AuthMiddle()  {
 			return
 		}
 
-
 	}
 
 	beego.InsertFilter("/admin/*",beego.BeforeRouter,filterLogin)
@@ -80,8 +78,6 @@ func isAuthExceptUrl(url string,m map[string]interface{}) bool {
 //是否登录
 func isLogin(ctx *context.Context) (*models.AdminUser,bool) {
 	loginUser,ok := ctx.Input.Session(global.LOGIN_USER).(models.AdminUser)
-	fmt.Println("loginUser",loginUser)
-	fmt.Println("ok",ok)
 	if !ok{
 		loginUserIdStr := ctx.GetCookie(global.LOGIN_USER_ID)
 		loginUserIdSign := ctx.GetCookie(global.LOGIN_USER_ID_SIGN)

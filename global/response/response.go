@@ -21,7 +21,7 @@ type Response struct {
 
 //返回结果辅助函数
 func Result(code int,msg string,data interface{},url string,wait int,header map[string]string,ctx *context.Context)  {
-	if ctx.Request.Method == "POST"{
+	if ctx.Input.IsPost(){
 		result := Response{
 			Code:code,
 			Msg:msg,

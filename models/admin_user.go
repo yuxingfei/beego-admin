@@ -32,7 +32,6 @@ func init()  {
 //获取加密字符串，用在登录的时候加密处理
 func (adminUser *AdminUser)GetSignStrByAdminUser(ctx *context.Context) string {
 	ua := ctx.Input.Header("user-agent")
-	fmt.Println("浏览器UA:",ua)
 	return fmt.Sprintf("%x",sha1.Sum([]byte(fmt.Sprintf("%d%s%s",adminUser.Id,adminUser.Username,ua))))
 }
 

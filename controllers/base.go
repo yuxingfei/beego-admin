@@ -35,7 +35,6 @@ func (this *baseController) Prepare() {
 		this.Data["debug"] = false
 	}
 	this.Data["cookie_prefix"] = ""
-	fmt.Println("base")
 
 	//admin基础配置
 	adminConfig,err := beego.AppConfig.GetSection("base")
