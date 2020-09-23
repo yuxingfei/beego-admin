@@ -1,0 +1,43 @@
+package utils
+
+import (
+	"fmt"
+	"github.com/dchest/captcha"
+	"golang.org/x/crypto/bcrypt"
+)
+
+type CaptchaResponse struct {
+	CaptchaId string
+	CaptchaUrl string
+}
+
+//获取验证码
+func GetCaptcha() *CaptchaResponse {
+	captchaId := captcha.NewLen(4)
+	return &CaptchaResponse{
+		CaptchaId:captchaId,
+		CaptchaUrl:fmt.Sprintf("/admin/auth/captcha/%s.png",captchaId),
+	}
+}
+
+//模仿php的in_array,判断是否存在map中
+func KeyInMap(key string,m map[string]interface{}) bool {
+	_,ok := m[key]
+	if ok{
+		return true
+	}else{
+		return false
+	}
+}
+
+//php的函数password_hash
+func PasswordHash(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+//php的函数password_verify
+func PasswordVerify(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}

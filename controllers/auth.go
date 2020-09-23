@@ -39,7 +39,7 @@ func (this *AuthController) Login()  {
 	//登录验证码
 	this.Data["captcha"] = utils.GetCaptcha()
 
-	this.TplName = "auth/login.tpl"
+	this.TplName = "auth/login.html"
 }
 
 //登录认证

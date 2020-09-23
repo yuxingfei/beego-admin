@@ -64,7 +64,7 @@ func (this *baseController) Prepare() {
 
 	this.Data["admin"] = map[string]interface{}{
 		"pjax":this.Ctx.Input.Header("X-PJAX") == "true",
-		"user":loginUser,
+		"user":&loginUser,
 		"menu":1,
 		"name":adminConfig["name"],
 		"author":adminConfig["author"],

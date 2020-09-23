@@ -1,0 +1,33 @@
+<!--内容头部-->
+<section class="content-header">
+    <h1>
+        {{if eq .admin.title ""}}Admin{{else}}{{.admin.title}}{{end}}
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/admin/index/index"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">{{if eq .admin.title ""}}Admin{{else}}{{.admin.title}}{{end}}</li>
+    </ol>
+</section>
+
+{{if ne .flash_session_error_message ""}}
+<!--如果有错误或者成功的消息-->
+<script>
+    layer.msg('{{ .flash_session_error_message }}',{icon:2});
+    $.pjax({
+        url: "{{ .flash_session_url }}",
+        container: '#pjax-container'
+    });
+</script>
+{{end}}
+
+{{if ne .flash_session_success_message ""}}
+<script>
+    layer.msg('{{ .flash_session_success_message }}',{icon:1});
+    $.pjax({
+        url: '{{ .flash_session_url }}',
+        container: '#pjax-container'
+    });
+</script>
+{{end}}
+
+

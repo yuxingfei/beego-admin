@@ -1,0 +1,54 @@
+<!--网页头部-->
+{{if ne true .admin.pjax}}
+<header class="main-header">
+    <a class="logo">
+        <span class="logo-mini">{{if eq .admin.short_name ""}}Backend{{else}}{{.admin.short_name}}{{end}}</span>
+        <span class="logo-lg">{{if eq .admin.name ""}}Backend{{else}}{{.admin.name}}{{end}}</span>
+    </a>
+    <nav class="navbar navbar-static-top">
+        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+
+                <li class="dropdown messages-menu">
+                    <a href="#" class="dropdown-toggle ReloadButton" title="刷新页面" data-toggle="dropdown">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                </li>
+
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="{{if eq .admin.user.Avatar ""}}/static/admin/images/avatar.png{{else}}{{.admin.user.Avatar}}{{end}}" onerror="javascript:this.src='/static/admin/images/avatar.png';this.onerror = null" class="user-image" alt="用户头像">
+                        <span class="hidden-xs">{{.admin.user.Nickname}}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="user-header">
+                            <img src="{{if eq .admin.user.Avatar ""}}/static/admin/images/avatar.png{{else}}{{.admin.user.Avatar}}{{end}}" onerror="javascript:this.src='/static/admin/images/avatar.png';this.onerror = null" class="img-circle" alt="用户头像">
+                            <p>
+                                {{.admin.user.Nickname}}
+                                <small>{{.admin.user.Username}}</small>
+                            </p>
+                        </li>
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="/admin/admin_user/profile" class="btn btn-default btn-flat">个人资料</a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="/admin/auth/logout" class="btn btn-default btn-flat">退出</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+{{end}}

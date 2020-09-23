@@ -9,14 +9,14 @@ import (
 )
 
 type AdminUser struct {
-	Id         int       `orm:"column(id);auto;size(11)" description:"表ID"`
-	Username   string    `orm:"column(username);size(30)" description:"用户名"`
-	Password   string    `orm:"column(password);size(255)" description:"密码"`
-	Nickname   string    `orm:"column(nickname);size(30)" description:"昵称"`
-	Avatar     string    `orm:"column(avatar);size(255)" description:"头像"`
-	Role       string    `orm:"column(role);size(200)" description:"角色"`
-	Status     int8      `orm:"column(status);size(1)" description:"是否启用 0：否 1：是"`
-	DeleteTime int `orm:"column(delete_time);;size(10);default(0)" description:"删除时间"`
+	Id         int       `orm:"column(id);auto;size(11)" description:"表ID" json:"id"`
+	Username   string    `orm:"column(username);size(30)" description:"用户名" json:"username"`
+	Password   string    `orm:"column(password);size(255)" description:"密码" json:"password"`
+	Nickname   string    `orm:"column(nickname);size(30)" description:"昵称" json:"nickname"`
+	Avatar     string    `orm:"column(avatar);size(255)" description:"头像" json:"avatar"`
+	Role       string    `orm:"column(role);size(200)" description:"角色" json:"role"`
+	Status     int8      `orm:"column(status);size(1)" description:"是否启用 0：否 1：是" json:"status"`
+	DeleteTime int `orm:"column(delete_time);;size(10);default(0)" description:"删除时间" json:"delete_time"`
 }
 
 //自定义table 名称
