@@ -25,7 +25,7 @@ func (this *baseController) Prepare() {
 	//访问url
 	url := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(),"/"))
 	//登录用户
-	loginUser,_ := this.GetSession(global.LOGIN_USER).(*models.AdminUser)
+	loginUser,_ := this.GetSession(global.LOGIN_USER).(models.AdminUser)
 
 	//基础变量
 	runMode := beego.AppConfig.String("runmode")
@@ -59,7 +59,7 @@ func (this *baseController) Prepare() {
 	if adminMenu != nil{
 		title = adminMenu.Name
 		if strings.ToLower(adminMenu.LogMethod) == strings.ToLower(this.Ctx.Input.Method()){
-			admin_log_service.CreateAdminLog(loginUser,adminMenu,url,this.Ctx)
+			admin_log_service.CreateAdminLog(&loginUser,adminMenu,url,this.Ctx)
 		}
 	}
 
