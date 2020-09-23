@@ -55,8 +55,8 @@ func CheckLogin(loginForm form_validate.LoginForm,ctx *context.Context) (*models
 	ctx.Output.Session(global.LOGIN_USER,adminUser)
 
 	if loginForm.Remember != ""{
-		ctx.SetCookie(global.LOGIN_USER_ID,strconv.Itoa(adminUser.Id))
-		ctx.SetCookie(global.LOGIN_USER_ID_SIGN,adminUser.GetSignStrByAdminUser(ctx))
+		ctx.SetCookie(global.LOGIN_USER_ID,strconv.Itoa(adminUser.Id),7200)
+		ctx.SetCookie(global.LOGIN_USER_ID_SIGN,adminUser.GetSignStrByAdminUser(ctx),7200)
 	}else{
 		ctx.SetCookie(global.LOGIN_USER_ID,ctx.GetCookie(global.LOGIN_USER_ID),-1)
 		ctx.SetCookie(global.LOGIN_USER_ID_SIGN,ctx.GetCookie(global.LOGIN_USER_ID_SIGN),-1)
