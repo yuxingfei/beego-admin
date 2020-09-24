@@ -5,7 +5,6 @@ import (
 	"beego-admin/models"
 	"beego-admin/services/admin_log_service"
 	"beego-admin/services/admin_menu_service"
-	"fmt"
 	"github.com/astaxie/beego"
 	"strconv"
 	"strings"
@@ -70,13 +69,11 @@ func (this *baseController) Prepare() {
 		"author":adminConfig["author"],
 		"version":adminConfig["version"],
 		"short_name":adminConfig["short_name"],
+		"link":adminConfig["link"],
 		"per_page":perPage,
 		"per_page_config":[]int{10,20,30,50,100},
 		"title":title,
 	}
-
-	fmt.Println("baseController Prepare")
-	fmt.Println("loginUser",loginUser)
 
 	//ajax头部统一设置_xsrf
 	this.Data["xsrf_token"] = this.XSRFToken()

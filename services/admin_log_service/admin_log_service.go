@@ -82,3 +82,12 @@ func LoginLog(loginUserId int,ctx *context.Context){
 	}
 	o.Commit()
 }
+
+//获取admin_log 总数
+func GetCount() int {
+	count,err := orm.NewOrm().QueryTable(new(models.AdminLog)).Count()
+	if err != nil{
+		return 0
+	}
+	return int(count)
+}

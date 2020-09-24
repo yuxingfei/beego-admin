@@ -1,16 +1,16 @@
 {{template "public/content_header.html" .}}
 <section class="content">
 
-    @if($show_notice)
+    {{if ne .show_notice ""}}
     <div class="row">
         <div class="pad margin no-print">
             <div class="callout callout-info">
-                <h4><i class="fa fa-info"></i> 您好,{{isset($loginUser['nickname']) ? $loginUser['nickname'] : '管理员'}}:</h4>
-                {{isset($notice_content) ? $notice_content : ''}}
+                <h4><i class="fa fa-info"></i> 您好,{{if ne .login_user.Nickname ""}}{{.login_user.Nickname}}{{else}}管理员{{end}}:</h4>
+                {{.notice_content}}
             </div>
         </div>
     </div>
-    @endif
+    {{end}}
 
     <div class="row">
         <div class="col-md-3 col-sm-6 col-xs-12">
@@ -20,7 +20,7 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">后台用户</span>
-                    <span class="info-box-number">{{isset($admin_user_count) ? $admin_user_count : '0'}}</span>
+                    <span class="info-box-number">{{.admin_user_count}}</span>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">后台角色</span>
-                    <span class="info-box-number">{{isset($admin_role_count) ? $admin_role_count : '0'}}</span>
+                    <span class="info-box-number">{{.admin_role_count}}</span>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                 </span>
                 <div class="info-box-content">
                     <span class="info-box-text">后台菜单</span>
-                    <span class="info-box-number">{{isset($admin_menu_count) ? $admin_menu_count : '0'}}</span>
+                    <span class="info-box-number">{{.admin_menu_count}}</span>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">操作日志</span>
-                    <span class="info-box-number">{{isset($admin_log_count) ? $admin_log_count : '0'}}</span>
+                    <span class="info-box-number">{{.admin_log_count}}</span>
                 </div>
             </div>
         </div>
@@ -77,16 +77,16 @@
                         <tbody>
                         <tr>
                             <th>用户系统</th>
-                            <td>{{$system_info['user_os']}}</td>
+                            <td>{{.system_info.user_os}}</td>
                             <th>用户IP</th>
-                            <td>{{$system_info['user_ip']}}</td>
+                            <td>{{.system_info.user_ip}}</td>
                         </tr>
 
                         <tr>
                             <th>浏览器</th>
-                            <td>{{$system_info['user_browser']}}</td>
+                            <td>{{.system_info.user_browser}}</td>
                             <th>所在城市</th>
-                            <td>{{$system_info['user_ip_address']}}</td>
+                            <td>--</td>
                         </tr>
 
                         </tbody>
@@ -103,51 +103,29 @@
                         <tbody>
                         <tr>
                             <th>服务器系统</th>
-                            <td>{{$system_info['server_os']}}</td>
-                            <th>服务器IP</th>
-                            <td>{{$system_info['server_ip']}}</td>
+                            <td>{{.system_info.server_os}}</td>
+                            <th>文件上传缓存大小</th>
+                            <td>{{.system_info.upload_file_max_memory}}M</td>
                         </tr>
 
                         <tr>
-                            <th>PHP版本</th>
-                            <td>{{$system_info['php_version']}}</td>
-                            <th>运行内存限制</th>
-                            <td>{{$system_info['memory_limit']}}</td>
-                        </tr>
-
-                        <tr>
-                            <th>最大文件上传限制</th>
-                            <td>{{$system_info['upload_max_filesize']}}</td>
-                            <th>单次上传数量限制</th>
-                            <td>{{$system_info['max_file_uploads']}}</td>
-                        </tr>
-
-                        <tr>
-                            <th>最大POST限制</th>
-                            <td>{{$system_info['post_max_size']}}</td>
-                            <th>项目磁盘剩余容量</th>
-                            <td>{{$system_info['disk_free']}}</td>
-                        </tr>
-
-                        <tr>
-                            <th>Laravel版本</th>
-                            <td>{{$system_info['laravel_version']}}</td>
-                            <th>后台系统版本</th>
-                            <td>{{$system_info['admin_version']}}</td>
-                        </tr>
-
-                        <tr>
+                            <th>GO版本</th>
+                            <td>{{.system_info.go_version}}</td>
                             <th>MySql版本</th>
-                            <td>{{$system_info['db_version']}}</td>
-                            <th>PHP当前运行模式</th>
-                            <td>{{$system_info['php_sapi_name']}}</td>
+                            <td>{{.system_info.db_version}}</td>
+                        </tr>
+                        <tr>
+                            <th>Beego版本</th>
+                            <td>{{.system_info.beego_version}}</td>
+                            <th>后台系统版本</th>
+                            <td>{{.system_info.admin_version}}</td>
                         </tr>
 
                         <tr>
-                            <th>PHP当前时区</th>
-                            <td>{{$system_info['timezone']}}</td>
-                            <th>PHP当前时间</th>
-                            <td>{{$system_info['date_time']}}</td>
+                            <th>GO当前时区</th>
+                            <td>{{.system_info.timezone}}</td>
+                            <th>GO当前时间</th>
+                            <td>{{.system_info.date_time}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -163,18 +141,12 @@
                 <div class="box-body">
                     <table class="table table-bordered table-striped">
                         <tbody>
-                        @foreach($system_info['require_list'] as $key => $item)
+                        {{range $index, $elem := .system_info.require_list}}
                             <tr>
-                                <th>{{$key}}</th>
-                                <td>{{$item}}</td>
+                                <th>{{$elem.Name}}</th>
+                                <td>{{$elem.Version}}</td>
                             </tr>
-                        @endforeach
-                        @foreach($system_info['require_dev_list'] as $key => $item)
-                            <tr>
-                                <th>{{$key}}</th>
-                                <td>{{$item}}</td>
-                            </tr>
-                        @endforeach
+                        {{end}}
                         </tbody>
                     </table>
                 </div>
@@ -184,7 +156,7 @@
 </section>
 
 <script>
-    var passwordDanger = {{$password_danger}};
+    var passwordDanger = {{.password_danger}};
     var sortableChanged = false;
     var sortableIds = [];
 
@@ -225,7 +197,7 @@
         if (parseInt(passwordDanger) === 1) {
             layer.confirm('系统检测到该账户为初始密码，马上去修改？', {title: '风险提示', closeBtn: 1, icon: 7}, function () {
                 $.pjax({
-                    url: '{{route("admin.admin_user.profile")}}#privacy',
+                    url: '/admin/admin_user/profile#privacy',
                     container: '#pjax-container'
                 });
                 layer.closeAll();

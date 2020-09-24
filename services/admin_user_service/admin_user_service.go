@@ -66,3 +66,12 @@ func CheckLogin(loginForm form_validate.LoginForm,ctx *context.Context) (*models
 
 }
 
+//获取admin_user 总数
+func GetCount() int {
+	count,err := orm.NewOrm().QueryTable(new(models.AdminUser)).Count()
+	if err != nil{
+		return 0
+	}
+	return int(count)
+}
+

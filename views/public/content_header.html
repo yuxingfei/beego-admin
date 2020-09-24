@@ -9,25 +9,4 @@
     </ol>
 </section>
 
-{{if ne .flash_session_error_message ""}}
-<!--如果有错误或者成功的消息-->
-<script>
-    layer.msg('{{ .flash_session_error_message }}',{icon:2});
-    $.pjax({
-        url: "{{ .flash_session_url }}",
-        container: '#pjax-container'
-    });
-</script>
-{{end}}
-
-{{if ne .flash_session_success_message ""}}
-<script>
-    layer.msg('{{ .flash_session_success_message }}',{icon:1});
-    $.pjax({
-        url: '{{ .flash_session_url }}',
-        container: '#pjax-container'
-    });
-</script>
-{{end}}
-
 

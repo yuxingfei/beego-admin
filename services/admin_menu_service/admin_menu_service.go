@@ -15,3 +15,12 @@ func GetAdminMenuByUrl(url string) *models.AdminMenu {
 		return nil
 	}
 }
+
+//获取admin_menu 总数
+func GetCount() int {
+	count,err := orm.NewOrm().QueryTable(new(models.AdminMenu)).Count()
+	if err != nil{
+		return 0
+	}
+	return int(count)
+}
