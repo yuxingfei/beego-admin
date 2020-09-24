@@ -46,14 +46,6 @@ func Result(code int,msg string,data interface{},url string,wait int,header map[
 		}
 	}
 
-	//闪存session
-	//if code == 0{
-	//	ctx.Output.Session("success_message",msg)
-	//}else{
-	//	ctx.Output.Session("error_message",msg)
-	//}
-
-	ctx.Output.Session("url",url)
 	ctx.Redirect(302,url)
 }
 

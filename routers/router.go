@@ -11,6 +11,8 @@ func init() {
 	//授权登录中间件
 	middleware.AuthMiddle()
 
+	beego.Router("/",&controllers.AuthController{},"get:Login")
+
     //admin模块路由
     admin := beego.NewNamespace("/admin",
 		//登录页
