@@ -4,6 +4,7 @@ import (
 	"beego-admin/controllers"
 	"beego-admin/middleware"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 	"github.com/dchest/captcha"
 )
 
@@ -11,7 +12,9 @@ func init() {
 	//授权登录中间件
 	middleware.AuthMiddle()
 
-	beego.Router("/",&controllers.AuthController{},"get:Login")
+	beego.Get("/", func(ctx *context.Context) {
+		ctx.Redirect(302,"/admin/index/index")
+	})
 
     //admin模块路由
     admin := beego.NewNamespace("/admin",
