@@ -5,6 +5,7 @@ import (
 	"beego-admin/models"
 	"beego-admin/services/admin_log_service"
 	"beego-admin/services/admin_menu_service"
+	"beego-admin/services/admin_tree_service"
 	"github.com/astaxie/beego"
 	"strconv"
 	"strings"
@@ -24,7 +25,7 @@ func (this *baseController) Prepare() {
 	//访问url
 	url := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(),"/"))
 	//登录用户
-	loginUser,_ := this.GetSession(global.LOGIN_USER).(models.AdminUser)
+	loginUser,ok := this.GetSession(global.LOGIN_USER).(models.AdminUser)
 
 	//基础变量
 	runMode := beego.AppConfig.String("runmode")
@@ -61,10 +62,17 @@ func (this *baseController) Prepare() {
 		}
 	}
 
+	//左侧菜单
+	menu := make(map[string]interface{})
+	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && ok{
+		menu = admin_tree_service.GetLeftMenu(url,loginUser)
+		return
+	}
+
 	this.Data["admin"] = map[string]interface{}{
 		"pjax":this.Ctx.Input.Header("X-PJAX") == "true",
 		"user":&loginUser,
-		"menu":1,
+		"menu":menu,
 		"name":adminConfig["name"],
 		"author":adminConfig["author"],
 		"version":adminConfig["version"],

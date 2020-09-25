@@ -79,3 +79,43 @@ func (adminUser *AdminUser)GetAuthUrl() map[string]interface{} {
 	}
 	return authUrl
 }
+
+//获取当前用户已授权的显示菜单
+func (adminUser *AdminUser)GetShowMenu() map[int]orm.Params {
+	var maps []orm.Params
+	returnMaps := make(map[int]orm.Params)
+	o := orm.NewOrm()
+
+	if adminUser.Id == 1{
+		_,err := o.QueryTable(new(AdminMenu)).Filter("is_show",1).OrderBy("sort_id","id").Values(&maps,"id","parent_id","name","url","icon","sort_id","route_name")
+		if err == nil{
+			for _,m := range maps{
+				returnMaps[int(m["Id"].(int64))] = m
+			}
+			return returnMaps
+		}else{
+			return map[int]orm.Params{}
+		}
+	}
+
+	var list orm.ParamsList
+	_,err := o.QueryTable(new(AdminRole)).Filter("id__in",strings.Split(adminUser.Role,",")).Filter("status",1).ValuesFlat(&list,"url")
+	if err == nil{
+		var urlIdArr []string
+		for _,m := range list{
+			urlIdArr = append(urlIdArr,strings.Split(m.(string),",")...)
+		}
+		_,err := o.QueryTable(new(AdminMenu)).Filter("id__in",urlIdArr).Filter("is_show",1).OrderBy("sort_id","id").Values(&maps,"id","parent_id","name","url","icon","sort_id","route_name")
+		if err == nil{
+			for _,m := range maps{
+				returnMaps[int(m["Id"].(int64))] = m
+			}
+			return returnMaps
+		}else{
+			return map[int]orm.Params{}
+		}
+	}else{
+		return map[int]orm.Params{}
+	}
+
+}
