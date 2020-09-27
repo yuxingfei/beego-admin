@@ -51,7 +51,6 @@ func (this *baseController) Prepare() {
 		perPage = "100"
 	}
 
-
 	//记录日志
 	adminMenu := admin_menu_service.GetAdminMenuByUrl(url)
 	title := "Title"
