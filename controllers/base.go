@@ -53,7 +53,7 @@ func (this *baseController) Prepare() {
 
 	//记录日志
 	adminMenu := admin_menu_service.GetAdminMenuByUrl(url)
-	title := "Title"
+	title := ""
 	if adminMenu != nil{
 		title = adminMenu.Name
 		if strings.ToLower(adminMenu.LogMethod) == strings.ToLower(this.Ctx.Input.Method()){

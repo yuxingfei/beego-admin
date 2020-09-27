@@ -3,6 +3,7 @@ package response
 import (
 	"beego-admin/global"
 	"github.com/astaxie/beego/context"
+	"net/http"
 )
 
 const (
@@ -46,7 +47,7 @@ func Result(code int,msg string,data interface{},url string,wait int,header map[
 		}
 	}
 
-	ctx.Redirect(302,url)
+	ctx.Redirect(http.StatusFound,url)
 }
 
 //成功、普通返回

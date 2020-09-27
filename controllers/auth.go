@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"beego-admin/form_validate"
+	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/services/admin_log_service"
 	"beego-admin/services/admin_user_service"
@@ -11,6 +12,7 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/dchest/captcha"
 	"github.com/gookit/validate"
+	"net/http"
 )
 
 type AuthController struct {
@@ -40,6 +42,14 @@ func (this *AuthController) Login()  {
 	this.Data["captcha"] = utils.GetCaptcha()
 
 	this.TplName = "auth/login.html"
+}
+
+//退出登录
+func (this *AuthController)Logout()  {
+	this.DelSession(global.LOGIN_USER)
+	this.Ctx.SetCookie(global.LOGIN_USER_ID,"",-1)
+	this.Ctx.SetCookie(global.LOGIN_USER_ID_SIGN,"",-1)
+	this.Redirect("/admin/auth/login",http.StatusFound)
 }
 
 //登录认证
