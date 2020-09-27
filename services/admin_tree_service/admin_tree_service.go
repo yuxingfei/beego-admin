@@ -2,9 +2,11 @@ package admin_tree_service
 
 import (
 	"beego-admin/models"
-	"fmt"
+	"beego-admin/utils"
 	"github.com/astaxie/beego/orm"
+	"sort"
 	"strconv"
+	"strings"
 )
 
 //初始化
@@ -16,9 +18,8 @@ var (
 )
 
 //获取左侧菜单
-func GetLeftMenu(requestUrl string,user models.AdminUser) map[string]interface{} {
+func GetLeftMenu(requestUrl string,user models.AdminUser) string {
 	menu := user.GetShowMenu()
-	fmt.Println("menu = ",menu)
 	maxLevel := 0
 	currentId := 1
 	parentIds := []int{0}
@@ -72,33 +73,15 @@ func GetLeftMenu(requestUrl string,user models.AdminUser) map[string]interface{}
 	textCurrent := textBaseFour + textHoverLi + textBaseFive
 	textOther   := textBaseFour + textBaseFive
 
-	//text
 	text = make(map[string]interface{})
-
-	for i := 0; i < maxLevel;i++{
+	for i := 0; i <= maxLevel;i++{
 		text[strconv.Itoa(i)] = []string{text0,text1,text2}
 	}
 	text["current"] = textCurrent
 	text["other"] = textOther
 
-	fmt.Println(`$this->get_authTree(0, $current_id, $parent_ids);`)
+	return getAuthTree(0,currentId,parentIds)
 
-
-
-
-
-
-
-
-	fmt.Println("newmenu = ",menu)
-
-	fmt.Println("max_level=",maxLevel)
-	fmt.Println("current_id=",currentId)
-	fmt.Println("parent_ids=",parentIds)
-
-
-
-	return map[string]interface{}{}
 }
 
 //获取父级菜单
@@ -134,13 +117,64 @@ func initTree(menu map[int]orm.Params)  {
 }
 
 //获取后台左侧菜单
-func getAuthTree(myId int,currentId int,parentIds []int)  {
+func getAuthTree(myId int,currentId int,parentIds []int) string {
 	nStr := ""
 	child := getChild(myId)
 	if len(child) > 0{
-		
-	}
+		menu := make(map[string]interface{})
+		//取key最小的一个，防止for range随机取，导致每次菜单顺序不同
+		sortId := 99999
+		for k,_ := range child{
+			if k < sortId{
+				sortId = k
+			}
+		}
+		menu = child[sortId]
 
+		//获取当前等级的html
+		var textHtmlInterface interface{}
+		if text[strconv.Itoa(menu["Level"].(int))] != ""{
+			//[]string类型
+			textHtmlInterface = text[strconv.Itoa(menu["Level"].(int))]
+		}else{
+			//string类型
+			textHtmlInterface = text["other"]
+		}
+
+		//child排序，防止菜单位置每次都不同
+		var childKeys []int
+		for k := range child{
+			childKeys = append(childKeys,k)
+		}
+		sort.Ints(childKeys)
+		for _,key := range childKeys{
+			k := key
+			v := child[key]
+
+			if len(getChild(k)) > 0{
+				textHtmlArr := textHtmlInterface.([]string)
+				if utils.KeyInArrayForInt(parentIds,k){
+					nStr = strReplace(textHtmlArr[1],v)
+					html += nStr
+				}else {
+					nStr = strReplace(textHtmlArr[0],v)
+					html += nStr
+				}
+				getAuthTree(k,currentId,parentIds)
+				nStr = strReplace(textHtmlArr[2],v)
+				html += nStr
+			}else if k == currentId {
+				a := text["current"].(string)
+				nStr = strReplace(a,v)
+				html += nStr
+			}else {
+				a := text["other"].(string)
+				nStr = strReplace(a,v)
+				html += nStr
+			}
+		}
+	}
+	return html
 }
 
 //得到子级数组
@@ -152,4 +186,12 @@ func getChild(pid int) map[int]map[string]interface{} {
 		}
 	}
 	return result
+}
+
+//替换字符串
+func strReplace(str string,m map[string]interface{}) string {
+	str = strings.ReplaceAll(str,"$icon",m["Icon"].(string))
+	str = strings.ReplaceAll(str,"$name",m["Name"].(string))
+	str = strings.ReplaceAll(str,"$url",m["Url"].(string))
+	return str
 }

@@ -30,6 +30,26 @@ func KeyInMap(key string,m map[string]interface{}) bool {
 	}
 }
 
+//模仿php的in_array,判断是否存在string数组中
+func KeyInArrayForString(items []string, item string) bool {
+	for _, eachItem := range items {
+		if eachItem == item {
+			return true
+		}
+	}
+	return false
+}
+
+//模仿php的in_array,判断是否存在int数组中
+func KeyInArrayForInt(items []int, item int) bool {
+	for _, eachItem := range items {
+		if eachItem == item {
+			return true
+		}
+	}
+	return false
+}
+
 //php的函数password_hash
 func PasswordHash(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

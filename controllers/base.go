@@ -63,10 +63,9 @@ func (this *baseController) Prepare() {
 	}
 
 	//左侧菜单
-	menu := make(map[string]interface{})
+	menu := ""
 	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && ok{
 		menu = admin_tree_service.GetLeftMenu(url,loginUser)
-		return
 	}
 
 	this.Data["admin"] = map[string]interface{}{
