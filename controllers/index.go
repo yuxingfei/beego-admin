@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"beego-admin/models"
 	"beego-admin/services/admin_log_service"
 	"beego-admin/services/admin_menu_service"
 	"beego-admin/services/admin_role_service"
@@ -10,6 +9,7 @@ import (
 	"beego-admin/utils"
 	"bufio"
 	"encoding/base64"
+	"fmt"
 	"github.com/astaxie/beego"
 	"io"
 	"os"
@@ -29,14 +29,15 @@ type PackageLib struct {
 }
 
 func (this *IndexController) Index()  {
-	indexConfig,error := beego.AppConfig.GetSection("index")
-	loginUser,_ := this.Data["login_user"].(models.AdminUser)
+
+	indexConfig,err := beego.AppConfig.GetSection("index")
 	this.Data["login_user"] = loginUser
+	fmt.Println(loginUser)
 
 	//默认密码修改检测
 	this.Data["password_danger"] = 0
 
-	if error == nil{
+	if err == nil{
 		//是否首页显示提示信息
 		this.Data["show_notice"] = indexConfig["show_notice"]
 		//提示内容

@@ -20,12 +20,20 @@ type baseController struct {
 	beego.Controller
 }
 
+var (
+	//后台变量
+	admin map[string]interface{}
+	//当前用户
+	loginUser models.AdminUser
+)
+
 //父控制器初始化
 func (this *baseController) Prepare() {
 	//访问url
 	url := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(),"/"))
 	//登录用户
-	loginUser,ok := this.GetSession(global.LOGIN_USER).(models.AdminUser)
+	var isOk bool
+	loginUser, isOk = this.GetSession(global.LOGIN_USER).(models.AdminUser)
 
 	//基础变量
 	runMode := beego.AppConfig.String("runmode")
@@ -63,11 +71,11 @@ func (this *baseController) Prepare() {
 
 	//左侧菜单
 	menu := ""
-	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && ok{
+	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && isOk{
 		menu = admin_tree_service.GetLeftMenu(url,loginUser)
 	}
 
-	this.Data["admin"] = map[string]interface{}{
+	admin = map[string]interface{}{
 		"pjax":this.Ctx.Input.Header("X-PJAX") == "true",
 		"user":&loginUser,
 		"menu":menu,
@@ -80,6 +88,7 @@ func (this *baseController) Prepare() {
 		"per_page_config":[]int{10,20,30,50,100},
 		"title":title,
 	}
+	this.Data["admin"] = admin
 
 	//ajax头部统一设置_xsrf
 	this.Data["xsrf_token"] = this.XSRFToken()
