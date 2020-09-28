@@ -33,6 +33,8 @@ func CreateAdminLog(loginUser *models.AdminUser,menu *models.AdminMenu,url strin
 	adminLogId,err := o.Insert(&adminLog)
 	if err != nil{
 		o.Rollback()
+		beego.Error(err)
+		return
 	}
 
 	//adminLogData数据表添加数据
@@ -44,6 +46,8 @@ func CreateAdminLog(loginUser *models.AdminUser,menu *models.AdminMenu,url strin
 	_,err = o.Insert(&adminLogData)
 	if err != nil{
 		o.Rollback()
+		beego.Error(err)
+		return
 	}
 	o.Commit()
 }
@@ -67,6 +71,8 @@ func LoginLog(loginUserId int,ctx *context.Context){
 	adminLogId,err := o.Insert(&adminLog)
 	if err != nil{
 		o.Rollback()
+		beego.Error(err)
+		return
 	}
 
 	//adminLogData数据表添加数据
@@ -79,6 +85,8 @@ func LoginLog(loginUserId int,ctx *context.Context){
 	_,err = o.Insert(&adminLogData)
 	if err != nil{
 		o.Rollback()
+		beego.Error(err)
+		return
 	}
 	o.Commit()
 }
