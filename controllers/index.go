@@ -9,7 +9,6 @@ import (
 	"beego-admin/utils"
 	"bufio"
 	"encoding/base64"
-	"fmt"
 	"github.com/astaxie/beego"
 	"io"
 	"os"
@@ -32,7 +31,6 @@ func (this *IndexController) Index()  {
 
 	indexConfig,err := beego.AppConfig.GetSection("index")
 	this.Data["login_user"] = loginUser
-	fmt.Println(loginUser)
 
 	//默认密码修改检测
 	this.Data["password_danger"] = 0

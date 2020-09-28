@@ -75,3 +75,15 @@ func GetCount() int {
 	return int(count)
 }
 
+//获取所有adminuser
+func GetAllData() []*models.AdminUser {
+	var adminUser []*models.AdminUser
+	o := orm.NewOrm().QueryTable(new(models.AdminUser))
+	_,err := o.All(&adminUser)
+	if err != nil{
+		return nil
+	}else{
+		return adminUser
+	}
+}
+

@@ -119,3 +119,19 @@ func (adminUser *AdminUser)GetShowMenu() map[int]orm.Params {
 	}
 
 }
+
+//用户角色名称
+func (adminUser *AdminUser)GetRoleText() map[int]*AdminRole {
+	roleIdArr := strings.Split(adminUser.Role,",")
+	var adminRole []*AdminRole
+	_,err := orm.NewOrm().QueryTable(new(AdminRole)).Filter("id__in",roleIdArr,"id","name").All(&adminRole)
+	if err != nil{
+		return nil
+	}else{
+		adminRoleMap := make(map[int]*AdminRole)
+		for _,v := range adminRole{
+			adminRoleMap[v.Id] = v
+		}
+		return adminRoleMap
+	}
+}

@@ -7,7 +7,6 @@ import (
 	"beego-admin/services/admin_log_service"
 	"beego-admin/services/admin_user_service"
 	"beego-admin/utils"
-	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 	"github.com/dchest/captcha"
@@ -21,7 +20,7 @@ type AuthController struct {
 
 //控制器，初始化函数，基础自父控制器
 func (this *AuthController) NestPrepare() {
-	fmt.Println("AuthController NestPrepare")
+	//fmt.Println("AuthController NestPrepare")
 }
 
 //登录界面

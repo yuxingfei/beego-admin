@@ -50,13 +50,15 @@ func (this *baseController) Prepare() {
 		beego.Error("get base config fail. error:",err)
 	}
 	//每页预览的数量
-	perPage := this.Ctx.GetCookie("admin_per_page")
-	if perPage == ""{
-		perPage = "10"
+	perPageStr := this.Ctx.GetCookie("admin_per_page")
+	var perPage int
+	if perPageStr == ""{
+		perPage = 10
+	}else{
+		perPage,_ = strconv.Atoi(perPageStr)
 	}
-	perPageInt,_ := strconv.Atoi(perPage)
-	if perPageInt >= 100{
-		perPage = "100"
+	if perPage >= 100{
+		perPage = 100
 	}
 
 	//记录日志
