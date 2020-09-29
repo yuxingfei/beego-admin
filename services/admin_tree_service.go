@@ -1,4 +1,4 @@
-package admin_tree_service
+package services
 
 import (
 	"beego-admin/models"
@@ -9,16 +9,17 @@ import (
 	"strings"
 )
 
+type AdminTreeService struct {
+	Ret string
+	Html string
+	Array map[int]orm.Params
+	Text map[string]interface{}
+}
+
 //初始化
-var (
-	ret string
-	html string
-    array map[int]orm.Params
-	text map[string]interface{}
-)
 
 //获取左侧菜单
-func GetLeftMenu(requestUrl string,user models.AdminUser) string {
+func (adminTreeService *AdminTreeService) GetLeftMenu(requestUrl string,user models.AdminUser) string {
 	menu := user.GetShowMenu()
 	maxLevel := 0
 	currentId := 1
@@ -26,7 +27,7 @@ func GetLeftMenu(requestUrl string,user models.AdminUser) string {
 
 	for _,v := range menu{
 		if v["Url"].(string) == requestUrl{
-			parentIds = getMenuParent(menu,int(v["Id"].(int64)),[]int{})
+			parentIds = adminTreeService.getMenuParent(menu,int(v["Id"].(int64)),[]int{})
 			currentId = int(v["Id"].(int64))
 		}
 	}
@@ -37,14 +38,14 @@ func GetLeftMenu(requestUrl string,user models.AdminUser) string {
 
 	for k,v := range menu{
 		menu[k]["Url"] = "/" + v["Url"].(string)
-		tempLevel := getLevel(int(v["Id"].(int64)),menu,0)
+		tempLevel := adminTreeService.getLevel(int(v["Id"].(int64)),menu,0)
 		menu[k]["Level"] = tempLevel
 		if maxLevel <= tempLevel{
 			maxLevel = tempLevel
 		}
 	}
 
-	initTree(menu)
+	adminTreeService.initTree(menu)
 
 	textBaseOne := "<li class='treeview"
 	textHover := " active"
@@ -73,23 +74,23 @@ func GetLeftMenu(requestUrl string,user models.AdminUser) string {
 	textCurrent := textBaseFour + textHoverLi + textBaseFive
 	textOther   := textBaseFour + textBaseFive
 
-	text = make(map[string]interface{})
+	adminTreeService.Text = make(map[string]interface{})
 	for i := 0; i <= maxLevel;i++{
-		text[strconv.Itoa(i)] = []string{text0,text1,text2}
+		adminTreeService.Text[strconv.Itoa(i)] = []string{text0,text1,text2}
 	}
-	text["current"] = textCurrent
-	text["other"] = textOther
+	adminTreeService.Text["current"] = textCurrent
+	adminTreeService.Text["other"] = textOther
 
-	return getAuthTree(0,currentId,parentIds)
+	return adminTreeService.getAuthTree(0,currentId,parentIds)
 
 }
 
 //获取父级菜单
-func getMenuParent(menu map[int]orm.Params,myId int,parentIds []int) []int {
+func (adminTreeService *AdminTreeService) getMenuParent(menu map[int]orm.Params,myId int,parentIds []int) []int {
 	for _,a := range menu{
 		if int(a["Id"].(int64)) == myId && int(a["ParentId"].(int64)) != 0{
 			parentIds = append(parentIds,int(a["ParentId"].(int64)))
-			parentIds = getMenuParent(menu,int(a["ParentId"].(int64)),parentIds)
+			parentIds = adminTreeService.getMenuParent(menu,int(a["ParentId"].(int64)),parentIds)
 		}
 	}
 	if len(parentIds) > 0{
@@ -100,26 +101,26 @@ func getMenuParent(menu map[int]orm.Params,myId int,parentIds []int) []int {
 }
 
 //递归获取级别
-func getLevel(id int,menu map[int]orm.Params,i int) int {
+func (adminTreeService *AdminTreeService) getLevel(id int,menu map[int]orm.Params,i int) int {
 	v,ok := menu[id]["ParentId"].(int64)
 	if (!ok || int(v) == 0) || id == int(v){
 		return i
 	}
 	i++
-	return getLevel(int(v),menu,i)
+	return adminTreeService.getLevel(int(v),menu,i)
 }
 
-func initTree(menu map[int]orm.Params)  {
-	array = make(map[int]orm.Params)
-	array = menu
-	ret = ""
-	html = ""
+func (adminTreeService *AdminTreeService) initTree(menu map[int]orm.Params)  {
+	adminTreeService.Array = make(map[int]orm.Params)
+	adminTreeService.Array = menu
+	adminTreeService.Ret = ""
+	adminTreeService.Html = ""
 }
 
 //获取后台左侧菜单
-func getAuthTree(myId int,currentId int,parentIds []int) string {
+func (adminTreeService *AdminTreeService) getAuthTree(myId int,currentId int,parentIds []int) string {
 	nStr := ""
-	child := getChild(myId)
+	child := adminTreeService.getChild(myId)
 	if len(child) > 0{
 		menu := make(map[string]interface{})
 		//取key最小的一个，防止for range随机取，导致每次菜单顺序不同
@@ -133,12 +134,12 @@ func getAuthTree(myId int,currentId int,parentIds []int) string {
 
 		//获取当前等级的html
 		var textHtmlInterface interface{}
-		if text[strconv.Itoa(menu["Level"].(int))] != ""{
+		if adminTreeService.Text[strconv.Itoa(menu["Level"].(int))] != ""{
 			//[]string类型
-			textHtmlInterface = text[strconv.Itoa(menu["Level"].(int))]
+			textHtmlInterface = adminTreeService.Text[strconv.Itoa(menu["Level"].(int))]
 		}else{
 			//string类型
-			textHtmlInterface = text["other"]
+			textHtmlInterface = adminTreeService.Text["other"]
 		}
 
 		//child排序，防止菜单位置每次都不同
@@ -151,36 +152,36 @@ func getAuthTree(myId int,currentId int,parentIds []int) string {
 			k := key
 			v := child[key]
 
-			if len(getChild(k)) > 0{
+			if len(adminTreeService.getChild(k)) > 0{
 				textHtmlArr := textHtmlInterface.([]string)
 				if utils.KeyInArrayForInt(parentIds,k){
-					nStr = strReplace(textHtmlArr[1],v)
-					html += nStr
+					nStr = adminTreeService.strReplace(textHtmlArr[1],v)
+					adminTreeService.Html += nStr
 				}else {
-					nStr = strReplace(textHtmlArr[0],v)
-					html += nStr
+					nStr = adminTreeService.strReplace(textHtmlArr[0],v)
+					adminTreeService.Html += nStr
 				}
-				getAuthTree(k,currentId,parentIds)
-				nStr = strReplace(textHtmlArr[2],v)
-				html += nStr
+				adminTreeService.getAuthTree(k,currentId,parentIds)
+				nStr = adminTreeService.strReplace(textHtmlArr[2],v)
+				adminTreeService.Html += nStr
 			}else if k == currentId {
-				a := text["current"].(string)
-				nStr = strReplace(a,v)
-				html += nStr
+				a := adminTreeService.Text["current"].(string)
+				nStr = adminTreeService.strReplace(a,v)
+				adminTreeService.Html += nStr
 			}else {
-				a := text["other"].(string)
-				nStr = strReplace(a,v)
-				html += nStr
+				a := adminTreeService.Text["other"].(string)
+				nStr = adminTreeService.strReplace(a,v)
+				adminTreeService.Html += nStr
 			}
 		}
 	}
-	return html
+	return adminTreeService.Html
 }
 
 //得到子级数组
-func getChild(pid int) map[int]map[string]interface{} {
+func (adminTreeService *AdminTreeService) getChild(pid int) map[int]map[string]interface{} {
 	result := make(map[int]map[string]interface{})
-	for k,v := range array{
+	for k,v := range adminTreeService.Array{
 		if int(v["ParentId"].(int64)) == pid{
 			result[k] = v
 		}
@@ -189,7 +190,7 @@ func getChild(pid int) map[int]map[string]interface{} {
 }
 
 //替换字符串
-func strReplace(str string,m map[string]interface{}) string {
+func (adminTreeService *AdminTreeService) strReplace(str string,m map[string]interface{}) string {
 	str = strings.ReplaceAll(str,"$icon",m["Icon"].(string))
 	str = strings.ReplaceAll(str,"$name",m["Name"].(string))
 	str = strings.ReplaceAll(str,"$url",m["Url"].(string))

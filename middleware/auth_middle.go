@@ -4,7 +4,7 @@ import (
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/models"
-	"beego-admin/services/admin_user_service"
+	"beego-admin/services"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
@@ -40,7 +40,8 @@ func AuthMiddle()  {
 			}
 
 			//验证，是否有权限访问
-			if loginUser.Id != 1 && !admin_user_service.AuthCheck(url,authExcept,loginUser){
+			var adminUserService services.AdminUserService
+			if loginUser.Id != 1 && !adminUserService.AuthCheck(url,authExcept,loginUser){
 				errorBackUrl := global.URL_CURRENT
 				if ctx.Request.Method == "GET"{
 					errorBackUrl = ""
@@ -84,7 +85,8 @@ func isLogin(ctx *context.Context) (*models.AdminUser,bool) {
 
 		if loginUserIdStr != "" && loginUserIdSign != ""{
 			loginUserId,_ := strconv.Atoi(loginUserIdStr)
-			loginUserPointer := admin_user_service.GetAdminUserById(loginUserId)
+			var adminUserService services.AdminUserService
+			loginUserPointer := adminUserService.GetAdminUserById(loginUserId)
 
 			if loginUserPointer != nil && loginUserPointer.GetSignStrByAdminUser(ctx) == loginUserIdSign{
 				ctx.Output.Session(global.LOGIN_USER,*loginUserPointer)

@@ -4,8 +4,7 @@ import (
 	"beego-admin/form_validate"
 	"beego-admin/global"
 	"beego-admin/global/response"
-	"beego-admin/services/admin_log_service"
-	"beego-admin/services/admin_user_service"
+	"beego-admin/services"
 	"beego-admin/utils"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
@@ -13,6 +12,8 @@ import (
 	"github.com/gookit/validate"
 	"net/http"
 )
+
+var adminLogService services.AdminLogService
 
 type AuthController struct {
 	baseController
@@ -80,14 +81,15 @@ func (this *AuthController)CheckLogin()  {
 	}
 
 	//基础验证通过后，进行用户验证
-	loginUser,err := admin_user_service.CheckLogin(loginForm,this.Ctx)
+	var adminUserService services.AdminUserService
+	loginUser,err := adminUserService.CheckLogin(loginForm,this.Ctx)
 	if err != nil{
 		response.ErrorWithMessage(err.Error(),this.Ctx)
 		return
 	}
 
 	//登录日志记录
-	admin_log_service.LoginLog(loginUser.Id,this.Ctx)
+	adminLogService.LoginLog(loginUser.Id,this.Ctx)
 
 	redirect,_ := this.GetSession("redirect").(string)
 	if redirect != ""{

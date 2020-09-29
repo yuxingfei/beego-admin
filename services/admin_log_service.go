@@ -1,4 +1,4 @@
-package admin_log_service
+package services
 
 import (
 	"beego-admin/models"
@@ -7,11 +7,16 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/orm"
+	beego_pagination "github.com/yuxingfei/beego-pagination"
 	"time"
 )
 
+type AdminLogService struct {
+
+}
+
 //创建操作日志
-func CreateAdminLog(loginUser *models.AdminUser,menu *models.AdminMenu,url string,ctx *context.Context)  {
+func (*AdminLogService)CreateAdminLog(loginUser *models.AdminUser,menu *models.AdminMenu,url string,ctx *context.Context)  {
 	var adminLog models.AdminLog
 
 	if loginUser == nil{
@@ -53,7 +58,7 @@ func CreateAdminLog(loginUser *models.AdminUser,menu *models.AdminMenu,url strin
 }
 
 //登录日志
-func LoginLog(loginUserId int,ctx *context.Context){
+func (*AdminLogService)LoginLog(loginUserId int,ctx *context.Context){
 	var adminLog models.AdminLog
 	adminLog.AdminUserId = loginUserId
 	adminLog.Name = "登录"
@@ -92,7 +97,7 @@ func LoginLog(loginUserId int,ctx *context.Context){
 }
 
 //获取admin_log 总数
-func GetCount() int {
+func (*AdminLogService)GetCount() int {
 	count,err := orm.NewOrm().QueryTable(new(models.AdminLog)).Count()
 	if err != nil{
 		return 0
@@ -101,10 +106,13 @@ func GetCount() int {
 }
 
 //获取所有adminuser
-func GetAllData() []*models.AdminLog {
+func (*AdminLogService)GetAllData() []*models.AdminLog {
 	var adminLog []*models.AdminLog
 	o := orm.NewOrm().QueryTable(new(models.AdminLog))
-	_,err := o.All(&adminLog)
+	config := map[string]interface{}{
+		"page":1,
+	}
+	_,err := beego_pagination.Paginate(o,5,config).All(&adminLog)
 	if err != nil{
 		return nil
 	}else{

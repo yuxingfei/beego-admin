@@ -3,9 +3,7 @@ package controllers
 import (
 	"beego-admin/global"
 	"beego-admin/models"
-	"beego-admin/services/admin_log_service"
-	"beego-admin/services/admin_menu_service"
-	"beego-admin/services/admin_tree_service"
+	"beego-admin/services"
 	"github.com/astaxie/beego"
 	"strconv"
 	"strings"
@@ -62,19 +60,22 @@ func (this *baseController) Prepare() {
 	}
 
 	//记录日志
-	adminMenu := admin_menu_service.GetAdminMenuByUrl(url)
+	var adminMenuService services.AdminMenuService
+	adminMenu := adminMenuService.GetAdminMenuByUrl(url)
 	title := ""
 	if adminMenu != nil{
 		title = adminMenu.Name
 		if strings.ToLower(adminMenu.LogMethod) == strings.ToLower(this.Ctx.Input.Method()){
-			admin_log_service.CreateAdminLog(&loginUser,adminMenu,url,this.Ctx)
+			var adminLogService services.AdminLogService
+			adminLogService.CreateAdminLog(&loginUser,adminMenu,url,this.Ctx)
 		}
 	}
 
 	//左侧菜单
 	menu := ""
 	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && isOk{
-		menu = admin_tree_service.GetLeftMenu(url,loginUser)
+		var adminTreeService services.AdminTreeService
+		menu = adminTreeService.GetLeftMenu(url,loginUser)
 	}
 
 	admin = map[string]interface{}{

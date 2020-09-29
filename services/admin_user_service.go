@@ -1,4 +1,4 @@
-package admin_user_service
+package services
 
 import (
 	"beego-admin/form_validate"
@@ -12,8 +12,12 @@ import (
 	"strconv"
 )
 
+type AdminUserService struct {
+
+}
+
 //根据id获取一条admin_user数据
-func GetAdminUserById(id int) *models.AdminUser {
+func (*AdminUserService)GetAdminUserById(id int) *models.AdminUser {
 	o := orm.NewOrm()
 	adminUser := models.AdminUser{Id:id}
 	err := o.Read(&adminUser)
@@ -24,7 +28,7 @@ func GetAdminUserById(id int) *models.AdminUser {
 }
 
 //权限检测
-func AuthCheck(url string,authExcept map[string]interface{},loginUser *models.AdminUser) bool {
+func (*AdminUserService)AuthCheck(url string,authExcept map[string]interface{},loginUser *models.AdminUser) bool {
 	authUrl := loginUser.GetAuthUrl()
 	if utils.KeyInMap(url,authExcept) || utils.KeyInMap(url,authUrl){
 		return true
@@ -34,7 +38,7 @@ func AuthCheck(url string,authExcept map[string]interface{},loginUser *models.Ad
 }
 
 //用户登录验证
-func CheckLogin(loginForm form_validate.LoginForm,ctx *context.Context) (*models.AdminUser,error) {
+func (*AdminUserService)CheckLogin(loginForm form_validate.LoginForm,ctx *context.Context) (*models.AdminUser,error) {
 	var adminUser models.AdminUser
 	o := orm.NewOrm()
 	err := o.QueryTable(new(models.AdminUser)).Filter("username",loginForm.Username).Limit(1).One(&adminUser)
@@ -67,7 +71,7 @@ func CheckLogin(loginForm form_validate.LoginForm,ctx *context.Context) (*models
 }
 
 //获取admin_user 总数
-func GetCount() int {
+func (*AdminUserService)GetCount() int {
 	count,err := orm.NewOrm().QueryTable(new(models.AdminUser)).Count()
 	if err != nil{
 		return 0
@@ -76,7 +80,7 @@ func GetCount() int {
 }
 
 //获取所有adminuser
-func GetAllData() []*models.AdminUser {
+func (*AdminUserService)GetAllData() []*models.AdminUser {
 	var adminUser []*models.AdminUser
 	o := orm.NewOrm().QueryTable(new(models.AdminUser))
 	_,err := o.All(&adminUser)

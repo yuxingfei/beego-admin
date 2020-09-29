@@ -1,11 +1,7 @@
 package controllers
 
 import (
-	"beego-admin/services/admin_log_service"
-	"beego-admin/services/admin_menu_service"
-	"beego-admin/services/admin_role_service"
-	"beego-admin/services/admin_user_service"
-	"beego-admin/services/database_service"
+	"beego-admin/services"
 	"beego-admin/utils"
 	"bufio"
 	"encoding/base64"
@@ -49,13 +45,17 @@ func (this *IndexController) Index()  {
 	}
 
 	//后台用户数量
-	this.Data["admin_user_count"] = admin_user_service.GetCount()
+	var adminUserService services.AdminUserService
+	this.Data["admin_user_count"] = adminUserService.GetCount()
 	//后台角色数量
-	this.Data["admin_role_count"] = admin_role_service.GetCount()
+	var adminRoleService services.AdminRoleService
+	this.Data["admin_role_count"] = adminRoleService.GetCount()
 	//后台菜单数量
-	this.Data["admin_menu_count"] = admin_menu_service.GetCount()
+	var adminMenuService services.AdminMenuService
+	this.Data["admin_menu_count"] = adminMenuService.GetCount()
 	//后台日志数量
-	this.Data["admin_log_count"] = admin_log_service.GetCount()
+	var adminLogService services.AdminLogService
+	this.Data["admin_log_count"] = adminLogService.GetCount()
 	//系统信息
 	this.Data["system_info"] = this.getSystemInfo()
 
@@ -78,7 +78,8 @@ func (this *IndexController)getSystemInfo() map[string]interface{} {
 	//当前后台版本
 	systemInfo["admin_version"] = beego.AppConfig.String("base::version")
 	//mysql版本
-	systemInfo["db_version"] = database_service.GetMysqlVersion()
+	var databaseService services.DatabaseService
+	systemInfo["db_version"] = databaseService.GetMysqlVersion()
 	//go时区
 	systemInfo["timezone"] = time.UTC
 	//当前时间
