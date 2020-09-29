@@ -33,6 +33,8 @@ func init() {
     	beego.NSRouter("/auth/refresh_captcha",&controllers.AuthController{},"post:RefreshCaptcha"),
     	//用户管理
     	beego.NSRouter("/admin_user/index",&controllers.AdminUserController{},"get:Index"),
+    	//操作日志
+    	beego.NSRouter("/admin_log/index",&controllers.AdminLogController{},"get:Index"),
 	)
 
     beego.AddNamespace(admin)

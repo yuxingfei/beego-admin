@@ -99,3 +99,15 @@ func GetCount() int {
 	}
 	return int(count)
 }
+
+//获取所有adminuser
+func GetAllData() []*models.AdminLog {
+	var adminLog []*models.AdminLog
+	o := orm.NewOrm().QueryTable(new(models.AdminLog))
+	_,err := o.All(&adminLog)
+	if err != nil{
+		return nil
+	}else{
+		return adminLog
+	}
+}

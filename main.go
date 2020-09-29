@@ -4,6 +4,7 @@ import (
 	_ "beego-admin/initialize/mysql"
 	_ "beego-admin/initialize/session"
 	_ "beego-admin/routers"
+	_ "beego-admin/utils/template"
 	"github.com/astaxie/beego"
 )
 
