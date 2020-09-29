@@ -1,0 +1,208 @@
+{{template "public/content_header.html" .}}
+<section class="content">
+
+    {{if ne .show_notice ""}}
+    <div class="row">
+        <div class="pad margin no-print">
+            <div class="callout callout-info">
+                <h4><i class="fa fa-info"></i> 您好,{{if ne .login_user.Nickname ""}}{{.login_user.Nickname}}{{else}}管理员{{end}}:</h4>
+                {{.notice_content}}
+            </div>
+        </div>
+    </div>
+    {{end}}
+
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua">
+                    <i class="fa fa-user"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text">后台用户</span>
+                    <span class="info-box-number">{{.admin_user_count}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-red">
+                    <i class="fa fa-users"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text">后台角色</span>
+                    <span class="info-box-number">{{.admin_role_count}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green">
+                    <i class="fa fa-list"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text">后台菜单</span>
+                    <span class="info-box-number">{{.admin_menu_count}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow">
+                    <i class="fa fa-keyboard-o"></i>
+                </span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">操作日志</span>
+                    <span class="info-box-number">{{.admin_log_count}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <section class="col-lg-7 connectedSortable" id="sortable1">
+
+            <div class="box sortable-widget" id="user_info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">访问信息</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                        <tr>
+                            <th>用户系统</th>
+                            <td>{{.system_info.user_os}}</td>
+                            <th>用户IP</th>
+                            <td>{{.system_info.user_ip}}</td>
+                        </tr>
+
+                        <tr>
+                            <th>浏览器</th>
+                            <td>{{.system_info.user_browser}}</td>
+                            <th>所在城市</th>
+                            <td>--</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="box sortable-widget" id="system_info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">系统信息</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                        <tr>
+                            <th>服务器系统</th>
+                            <td>{{.system_info.server_os}}</td>
+                            <th>文件上传缓存大小</th>
+                            <td>{{.system_info.upload_file_max_memory}}M</td>
+                        </tr>
+
+                        <tr>
+                            <th>GO版本</th>
+                            <td>{{.system_info.go_version}}</td>
+                            <th>MySql版本</th>
+                            <td>{{.system_info.db_version}}</td>
+                        </tr>
+                        <tr>
+                            <th>Beego版本</th>
+                            <td>{{.system_info.beego_version}}</td>
+                            <th>后台系统版本</th>
+                            <td>{{.system_info.admin_version}}</td>
+                        </tr>
+
+                        <tr>
+                            <th>GO当前时区</th>
+                            <td>{{.system_info.timezone}}</td>
+                            <th>GO当前时间</th>
+                            <td>{{.system_info.date_time}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-lg-5 connectedSortable" id="composer_info">
+            <div class="box sortable-widget" id="widget2">
+                <div class="box-header with-border">
+                    <h3 class="box-title">依赖关系</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                        {{range $index, $elem := .system_info.require_list}}
+                            <tr>
+                                <th>{{$elem.Name}}</th>
+                                <td>{{$elem.Version}}</td>
+                            </tr>
+                        {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+<script>
+    var passwordDanger = {{.password_danger}};
+    var sortableChanged = false;
+    var sortableIds = [];
+
+    $(function () {
+
+        $('.connectedSortable').sortable({
+            placeholder: 'sort-highlight',
+            connectWith: '.connectedSortable',
+            handle: '.box-header',
+            forcePlaceholderSize: true,
+            zIndex: 999999,
+            update: function (event, ui) {
+                sortableChanged = true;
+                let ids1 = $('#sortable1').sortable('toArray');
+                let ids2 = $('#sortable2').sortable('toArray');
+                $.each(ids2, function (index, item) {
+                    ids1.push(item);
+                });
+
+                sortableIds = ids1;
+                console.log(sortableIds);
+
+                /* $.ajax({
+                     type: "post",
+                     url: "",
+                     data: {image_ids},
+                     dataType: "json",
+                     success: function(result) {
+                         window.location.reload(); //后台获取到数据刷新页面
+                     }
+                 });*/
+            }
+
+        });
+        $('.connectedSortable .box-header, .connectedSortable .nav-tabs-custom').css('cursor', 'move');
+
+        //密码修改检查
+        if (parseInt(passwordDanger) === 1) {
+            layer.confirm('系统检测到该账户为初始密码，马上去修改？', {title: '风险提示', closeBtn: 1, icon: 7}, function () {
+                $.pjax({
+                    url: '/admin/admin_user/profile#privacy',
+                    container: '#pjax-container'
+                });
+                layer.closeAll();
+            });
+        }
+    });
+
+</script>

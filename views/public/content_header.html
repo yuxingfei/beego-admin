@@ -1,0 +1,12 @@
+<!--内容头部-->
+<section class="content-header">
+    <h1>
+        {{if eq .admin.title ""}}Beego Admin{{else}}{{.admin.title}}{{end}}
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/admin/index/index"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">{{if eq .admin.title ""}}Beego Admin{{else}}{{.admin.title}}{{end}}</li>
+    </ol>
+</section>
+
+

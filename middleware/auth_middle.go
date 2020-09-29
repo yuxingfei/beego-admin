@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"beego-admin/controllers"
+	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/models"
-	"beego-admin/services/admin_user_service"
+	"beego-admin/services"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
@@ -22,6 +22,7 @@ func AuthMiddle()  {
 		"admin/auth/logout":2,
 		"admin/auth/captcha":3,
 		"admin/editor/server":4,
+		"admin/auth/refresh_captcha":5,
 	}
 
 	//登录认证中间件过滤器
@@ -31,7 +32,6 @@ func AuthMiddle()  {
 
 		//需要进行登录验证
 		if !isAuthExceptUrl(strings.ToLower(url),authExcept){
-			fmt.Println("需要进行登录验证")
 			//验证是否登录
 			loginUser,isLogin := isLogin(ctx)
 			if !isLogin{
@@ -40,8 +40,9 @@ func AuthMiddle()  {
 			}
 
 			//验证，是否有权限访问
-			if loginUser.Id != 1 && !admin_user_service.AuthCheck(url,authExcept,loginUser){
-				errorBackUrl := controllers.URL_CURRENT
+			var adminUserService services.AdminUserService
+			if loginUser.Id != 1 && !adminUserService.AuthCheck(url,authExcept,loginUser){
+				errorBackUrl := global.URL_CURRENT
 				if ctx.Request.Method == "GET"{
 					errorBackUrl = ""
 				}
@@ -55,7 +56,6 @@ func AuthMiddle()  {
 			response.Success(ctx)
 			return
 		}
-
 
 	}
 
@@ -78,22 +78,23 @@ func isAuthExceptUrl(url string,m map[string]interface{}) bool {
 
 //是否登录
 func isLogin(ctx *context.Context) (*models.AdminUser,bool) {
-	_,ok := ctx.Input.Session(controllers.LOGIN_USER).(models.AdminUser)
+	loginUser,ok := ctx.Input.Session(global.LOGIN_USER).(models.AdminUser)
 	if !ok{
-		loginUserIdStr := ctx.GetCookie(controllers.LOGIN_USER_ID)
-		loginUserIdSign := ctx.GetCookie(controllers.LOGIN_USER_ID_SIGN)
+		loginUserIdStr := ctx.GetCookie(global.LOGIN_USER_ID)
+		loginUserIdSign := ctx.GetCookie(global.LOGIN_USER_ID_SIGN)
 
 		if loginUserIdStr != "" && loginUserIdSign != ""{
 			loginUserId,_ := strconv.Atoi(loginUserIdStr)
-			loginUser := admin_user_service.GetAdminUserById(loginUserId)
+			var adminUserService services.AdminUserService
+			loginUserPointer := adminUserService.GetAdminUserById(loginUserId)
 
-			if loginUser != nil && loginUser.GetSignStrByAdminUser(ctx) == loginUserIdSign{
-				ctx.Output.Session(controllers.LOGIN_USER,loginUser)
-				return loginUser,true
+			if loginUserPointer != nil && loginUserPointer.GetSignStrByAdminUser(ctx) == loginUserIdSign{
+				ctx.Output.Session(global.LOGIN_USER,*loginUserPointer)
+				return loginUserPointer,true
 			}
 		}
 		return nil,false
 	}
 
-	return nil,true
+	return &loginUser,true
 }

@@ -1,0 +1,44 @@
+<!--头部js-->
+{{if ne true .admin.pjax}}
+{{assets_js "/static/admin/plugins/js-cookie/js.cookie-2.2.0.min.js"}}
+{{assets_js "/static/admin/plugins/jquery/jquery.min.js"}}
+{{assets_js "/static/admin/plugins/jquery-ui/jquery-ui.min.js"}}
+{{assets_js "/static/admin/plugins/layer/layer.js"}}
+{{assets_js "/static/admin/plugins/laydate/laydate.js"}}
+{{assets_js "/static/admin/plugins/bootstrap/js/bootstrap.min.js"}}
+{{assets_js "/static/admin/plugins/jquery-slimscroll/jquery.slimscroll.min.js"}}
+{{assets_js "/static/admin/plugins/jquery-validation/jquery.validate.min.js"}}
+{{assets_js "/static/admin/plugins/jquery-validation/localization/messages_zh.min.js"}}
+{{assets_js "/static/admin/plugins/bootstrap-switch/js/bootstrap-switch.min.js"}}
+{{assets_js "/static/admin/plugins/bootstrap-number/bootstrap-number.min.js"}}
+{{assets_js "/static/admin/plugins/fastclick/fastclick.min.js"}}
+{{assets_js "/static/admin/plugins/select2/js/select2.full.min.js"}}
+{{assets_js "/static/admin/plugins/nprogress/nprogress.min.js"}}
+{{assets_js "/static/admin/plugins/iconpicker/js/iconpicker.min.js"}}
+{{assets_js "/static/admin/plugins/fileinput/js/plugins/piexif.min.js"}}
+{{assets_js "/static/admin/plugins/fileinput/js/fileinput.min.js"}}
+{{assets_js "/static/admin/plugins/fileinput/js/locales/zh.min.js"}}
+{{assets_js "/static/admin/plugins/ueditor/ueditor.config.js"}}
+{{assets_js "/static/admin/plugins/ueditor/ueditor.all.min.js"}}
+{{assets_js "/static/admin/plugins/ueditor/lang/zh-cn/zh-cn.min.js"}}
+{{assets_js "/static/admin/plugins/clipboard/clipboard.min.js"}}
+{{assets_js "/static/admin/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"}}
+{{assets_js "/static/admin/plugins/viewer/viewer.min.js"}}
+{{assets_js "/static/admin/plugins/viewer/jquery-viewer.min.js"}}
+
+<script>
+    //是否为debug模式
+    var adminDebug = {{.debug}};
+    //cookie前缀
+    var cookiePrefix = '{{.cookie_prefix}}';
+    //UEditor server地址
+    var UEServer = "admin/editor/server";
+    //列表页当前选择的ID
+    var dataSelectIds = [];
+</script>
+{{assets_js "/static/admin/js/adminlte.min.js"}}
+{{assets_js "/static/admin/js/jquery.pjax.js"}}
+{{assets_js "/static/admin/js/admin.js"}}
+{{assets_js "/static/admin/js/demo.js"}}
+{{assets_js "/static/admin/js/app.js"}}
+{{end}}

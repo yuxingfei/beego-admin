@@ -207,12 +207,8 @@ function formSubmit(form) {
     let method = $(form).attr('method');
     let data = new FormData($(form)[0]);
 
-    if (adminDebug) {
-        console.log('%cajax submit start!', ';color:#333333');
-        console.log('action:' + action);
-        console.log('method:' + method);
-        console.log('data:' + data);
-    }
+    //设置全局通用_xsrf验证token
+    data.set("_xsrf",$('meta[name="_xsrf"]').attr('content'));
 
     $.ajax({
             url: action,
@@ -227,26 +223,10 @@ function formSubmit(form) {
                     icon: result.code ? 1 : 2,
                     scrollbar: false,
                 });
-                if (adminDebug) {
-                    console.log('submit success!');
-                    if (result.code === 1) {
-                        console.log('%cresult success', ';color:#00a65a');
-                    } else {
-                        console.log('%cresult fail', ';color:#f39c12');
-                    }
-                }
                 goUrl(result.url);
             },
             error: function (xhr, type, errorThrown) {
                 //异常处理；
-                if (adminDebug) {
-                    console.log('%csubmit fail!', ';color:#dd4b39');
-                    console.log();
-                    console.log("type:" + type + ",readyState:" + xhr.readyState + ",status:" + xhr.status);
-                    console.log("url:" + action);
-                    console.log("data:" + data);
-                    layer.close(loadT);
-                }
                 layer.msg('访问错误,代码' + xhr.status, {icon: 2,scrollbar: false,});
             }
         }
@@ -351,10 +331,10 @@ $(function () {
             dataData = {"id": dataId};
         }
 
-        //ajax设置laravel 的 csrf token验证
+        //ajax设置beego 的 xsrf token验证
         $.ajaxSetup({
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'X-XSRFToken': $('meta[name="_xsrf"]').attr('content')
             }
         });
 
@@ -435,29 +415,10 @@ function ajaxRequest(url, method, data, go) {
                     scrollbar: false,
                 });
 
-                if (adminDebug) {
-                    console.log('request success!');
-                    if (result.code === 1) {
-                        console.log('%cresult success', ';color:#00a65a');
-                    } else {
-                        go = 'url://current';
-                        console.log('%cresult fail', ';color:#f39c12');
-                    }
-                }
-
                 goUrl(go);
             },
             error: function (xhr, type, errorThrown) {
                 //异常处理；
-                if (adminDebug) {
-                    console.log('%crequest fail!', ';color:#dd4b39');
-                    console.log();
-                    console.log("type:" + type + ",readyState:" + xhr.readyState + ",status:" + xhr.status);
-                    console.log("url:" + url);
-                    console.log("data:");
-                    console.log(data);
-                    layer.close(loadT);
-                }
                 layer.msg('访问错误,代码' + xhr.status, {icon: 2,scrollbar: false,});
             }
         }
@@ -466,9 +427,6 @@ function ajaxRequest(url, method, data, go) {
 
 //改变每页数量
 function changePerPage(obj) {
-    if (adminDebug) {
-        console.log('当前每页数量' + Cookies.get(cookiePrefix + 'admin_per_page'));
-    }
     Cookies.set(cookiePrefix + 'admin_per_page', obj.value, {expires:30});
     $.pjax.reload();
 }

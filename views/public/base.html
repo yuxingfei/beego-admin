@@ -1,0 +1,41 @@
+{{if ne true .admin.pjax}}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="_xsrf" content="{{.xsrf_token}}" />
+    <meta name="renderer" content="webkit">
+{{end}}
+
+    <title>{{if eq .admin.title ""}}Beego Admin{{else}}{{.admin.title}}{{end}} | {{if eq .admin.name ""}}Admin{{else}}{{.admin.name}}{{end}}</title>
+
+{{if ne true .admin.pjax}}
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    {{template "public/head_css.html" .}}
+    {{template "public/head_js.html" .}}
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+{{end}}
+
+    <!-- 顶部 -->
+    {{template "public/header.html" .}}
+    <!-- 左侧 -->
+    {{template "public/sidebar.html" .}}
+    <!-- 内容 -->
+    <div class="content-wrapper" id="pjax-container">
+        {{.LayoutContent}}
+    </div>
+    {{template "public/footer.html" .}}
+
+    {{template "public/control_sidebar.html" .}}
+
+{{if ne true .admin.pjax}}
+</div>
+{{end}}
+
+{{if ne true .admin.pjax}}
+</body>
+</html>
+{{end}}
