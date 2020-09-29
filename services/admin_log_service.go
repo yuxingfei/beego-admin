@@ -8,11 +8,12 @@ import (
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/orm"
 	beego_pagination "github.com/yuxingfei/beego-pagination"
+	"net/url"
 	"time"
 )
 
 type AdminLogService struct {
-
+	Pagination beego_pagination.Pagination
 }
 
 //创建操作日志
@@ -106,16 +107,17 @@ func (*AdminLogService)GetCount() int {
 }
 
 //获取所有adminuser
-func (*AdminLogService)GetAllData() []*models.AdminLog {
+func (*AdminLogService)GetAllData(params url.Values) ([]*models.AdminLog,beego_pagination.Pagination) {
 	var adminLog []*models.AdminLog
 	o := orm.NewOrm().QueryTable(new(models.AdminLog))
 	config := map[string]interface{}{
 		"page":1,
 	}
-	_,err := beego_pagination.Paginate(o,5,config).All(&adminLog)
+	var pagination beego_pagination.Pagination
+	_,err := pagination.Paginate(o,5,config).All(&adminLog)
 	if err != nil{
-		return nil
+		return nil,pagination
 	}else{
-		return adminLog
+		return adminLog,pagination
 	}
 }

@@ -1,6 +1,9 @@
 package controllers
 
-import "beego-admin/services"
+import (
+	"beego-admin/services"
+	"fmt"
+)
 
 type AdminLogController struct {
 	baseController
@@ -14,8 +17,15 @@ func (this *AdminLogController) NestPrepare() {
 
 func (this *AdminLogController)Index()  {
 
+	fmt.Println("this.Input() = ",this.Input())
+	fmt.Println("this.Ctx.Request.RequestURI = ",this.Ctx.Request.RequestURI)
+	fmt.Println("this.Ctx.Request.URL = ",this.Ctx.Request.URL)
+	fmt.Println("this.Ctx.Input.Data() = ",this.Ctx.Input.Data())
+	fmt.Println("this.Ctx.Input.Params() = ",this.Ctx.Input.Params())
 	var adminLogService services.AdminLogService
-	this.Data["data"] = adminLogService.GetAllData()
+	data , pagination := adminLogService.GetAllData()
+	this.Data["data"] = data
+	this.Data["paginate"] =pagination
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_log/index.html"
