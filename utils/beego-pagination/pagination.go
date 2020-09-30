@@ -40,7 +40,7 @@ func (pagination *Pagination) Paginate(seter orm.QuerySeter,listRows int,paramet
 
 	//当前页
 	var page int
-	pageStr := parameters.Get("page")
+	pageStr := pagination.Parameters.Get("page")
 	if pageStr == ""{
 		page = 1
 	}else{

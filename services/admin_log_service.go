@@ -108,9 +108,11 @@ func (*AdminLogService)GetCount() int {
 
 //获取所有adminuser
 func (this *AdminLogService)GetAllData(listRows int,params url.Values) ([]*models.AdminLog,beego_pagination.Pagination) {
+	this.WhereField = append(this.WhereField,[]string{"admin_user_id"}...)
+
 	var adminLog []*models.AdminLog
 	o := orm.NewOrm().QueryTable(new(models.AdminLog))
-	_,err := this.Paginate(o,listRows,params).All(&adminLog)
+	_,err := this.PaginateAndScopeWhere(o,listRows,params).All(&adminLog)
 	if err != nil{
 		return nil,this.Pagination
 	}else{
