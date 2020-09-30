@@ -28,7 +28,7 @@ func AuthMiddle()  {
 	//登录认证中间件过滤器
 	var filterLogin = func(ctx *context.Context) {
 		url := strings.TrimLeft(ctx.Input.URL(),"/")
-		fmt.Println("访问url",url)
+		fmt.Println("访问url",ctx.Request.RequestURI)
 
 		//需要进行登录验证
 		if !isAuthExceptUrl(strings.ToLower(url),authExcept){

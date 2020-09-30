@@ -5,6 +5,7 @@ import (
 	"beego-admin/models"
 	"beego-admin/services"
 	"github.com/astaxie/beego"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -23,12 +24,19 @@ var (
 	admin map[string]interface{}
 	//当前用户
 	loginUser models.AdminUser
+	//参数
+	queryParams url.Values
 )
 
 //父控制器初始化
 func (this *baseController) Prepare() {
 	//访问url
 	url := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(),"/"))
+
+	//query参数
+	queryParams = this.Input()
+	queryParams.Set("url",this.Ctx.Input.URL())
+
 	//登录用户
 	var isOk bool
 	loginUser, isOk = this.GetSession(global.LOGIN_USER).(models.AdminUser)

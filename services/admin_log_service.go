@@ -2,12 +2,12 @@ package services
 
 import (
 	"beego-admin/models"
+	beego_pagination "beego-admin/utils/beego-pagination"
 	"beego-admin/utils/encrypter"
 	"encoding/json"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/orm"
-	beego_pagination "github.com/yuxingfei/beego-pagination"
 	"net/url"
 	"time"
 )
@@ -107,14 +107,12 @@ func (*AdminLogService)GetCount() int {
 }
 
 //获取所有adminuser
-func (*AdminLogService)GetAllData(params url.Values) ([]*models.AdminLog,beego_pagination.Pagination) {
+func (*AdminLogService)GetAllData(listRows int,params url.Values) ([]*models.AdminLog,beego_pagination.Pagination) {
 	var adminLog []*models.AdminLog
 	o := orm.NewOrm().QueryTable(new(models.AdminLog))
-	config := map[string]interface{}{
-		"page":1,
-	}
+
 	var pagination beego_pagination.Pagination
-	_,err := pagination.Paginate(o,5,config).All(&adminLog)
+	_,err := pagination.Paginate(o,listRows,params).All(&adminLog)
 	if err != nil{
 		return nil,pagination
 	}else{
