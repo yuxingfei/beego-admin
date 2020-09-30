@@ -13,7 +13,7 @@ import (
 )
 
 type AdminLogService struct {
-	Pagination beego_pagination.Pagination
+	BaseService
 }
 
 //创建操作日志
@@ -107,15 +107,13 @@ func (*AdminLogService)GetCount() int {
 }
 
 //获取所有adminuser
-func (*AdminLogService)GetAllData(listRows int,params url.Values) ([]*models.AdminLog,beego_pagination.Pagination) {
+func (this *AdminLogService)GetAllData(listRows int,params url.Values) ([]*models.AdminLog,beego_pagination.Pagination) {
 	var adminLog []*models.AdminLog
 	o := orm.NewOrm().QueryTable(new(models.AdminLog))
-
-	var pagination beego_pagination.Pagination
-	_,err := pagination.Paginate(o,listRows,params).All(&adminLog)
+	_,err := this.Paginate(o,listRows,params).All(&adminLog)
 	if err != nil{
-		return nil,pagination
+		return nil,this.Pagination
 	}else{
-		return adminLog,pagination
+		return adminLog,this.Pagination
 	}
 }

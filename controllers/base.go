@@ -4,6 +4,7 @@ import (
 	"beego-admin/global"
 	"beego-admin/models"
 	"beego-admin/services"
+	"fmt"
 	"github.com/astaxie/beego"
 	"net/url"
 	"strconv"
@@ -36,6 +37,7 @@ func (this *baseController) Prepare() {
 	//query参数
 	queryParams = this.Input()
 	queryParams.Set("url",this.Ctx.Input.URL())
+	fmt.Println("queryParams = ",queryParams)
 
 	//登录用户
 	var isOk bool
