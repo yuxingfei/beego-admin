@@ -38,6 +38,16 @@ func (this *baseController) Prepare() {
 	queryParams = this.Input()
 	queryParams.Set("url",this.Ctx.Input.URL())
 	fmt.Println("queryParams = ",queryParams)
+	if len(queryParams) > 0{
+		for k,val := range queryParams{
+			v,ok := strconv.Atoi(val[0])
+			if ok == nil{
+				this.Data[k] = v
+			}else{
+				this.Data[k] = val[0]
+			}
+		}
+	}
 
 	//登录用户
 	var isOk bool

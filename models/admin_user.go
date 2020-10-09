@@ -135,3 +135,14 @@ func (adminUser *AdminUser)GetRoleText() map[int]*AdminRole {
 		return adminRoleMap
 	}
 }
+
+//获取所有用户
+func (adminUser *AdminUser) GetAdminUser() []*AdminUser {
+	var adminUsers []*AdminUser
+	_,err := orm.NewOrm().QueryTable(new(AdminUser)).All(&adminUsers)
+	if err == nil{
+		return adminUsers
+	}else{
+		return nil
+	}
+}

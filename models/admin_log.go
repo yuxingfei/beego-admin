@@ -15,6 +15,26 @@ type AdminLog struct {
 	UpdateTime     int       `orm:"column(update_time);size(10);default(0)" description:"更新时间"`
 }
 
+//定义模型的可搜索字段
+func (adminLog *AdminLog) SearchField() []string{
+	return []string{"name","url","log_ip"}
+}
+
+//定义模型可作为条件的字段
+func (adminLog *AdminLog) WhereField() []string{
+	return []string{"admin_user_id"}
+}
+
+//定义可做为时间范围查询的字段
+func (adminLog *AdminLog) TimeField() []string{
+	return []string{"create_time"}
+}
+
+//禁止删除的数据id
+func (adminLog *AdminLog) NoDeletionId() []int{
+	return []int{}
+}
+
 //自定义table 名称
 func (adminLog *AdminLog) TableName() string {
 	return "admin_log"

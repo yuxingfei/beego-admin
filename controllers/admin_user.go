@@ -1,9 +1,5 @@
 package controllers
 
-import (
-	"beego-admin/services"
-)
-
 type AdminUserController struct {
 	baseController
 }
@@ -15,8 +11,8 @@ func (this *AdminUserController) NestPrepare() {
 
 func (this *AdminUserController)Index()  {
 
-	var adminUserService services.AdminUserService
-	this.Data["data"] = adminUserService.GetAllData()
+	//var adminUserService services.AdminUserService
+	//this.Data["data"] = adminUserService.GetAllData()
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_user/index.html"

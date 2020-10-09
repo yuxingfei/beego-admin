@@ -17,7 +17,7 @@ type AdminUserService struct {
 }
 
 //根据id获取一条admin_user数据
-func (*AdminUserService)GetAdminUserById(id int) *models.AdminUser {
+func (*AdminUserService) GetAdminUserById(id int) *models.AdminUser {
 	o := orm.NewOrm()
 	adminUser := models.AdminUser{Id:id}
 	err := o.Read(&adminUser)
@@ -28,7 +28,7 @@ func (*AdminUserService)GetAdminUserById(id int) *models.AdminUser {
 }
 
 //权限检测
-func (*AdminUserService)AuthCheck(url string,authExcept map[string]interface{},loginUser *models.AdminUser) bool {
+func (*AdminUserService) AuthCheck(url string,authExcept map[string]interface{},loginUser *models.AdminUser) bool {
 	authUrl := loginUser.GetAuthUrl()
 	if utils.KeyInMap(url,authExcept) || utils.KeyInMap(url,authUrl){
 		return true
@@ -38,7 +38,7 @@ func (*AdminUserService)AuthCheck(url string,authExcept map[string]interface{},l
 }
 
 //用户登录验证
-func (*AdminUserService)CheckLogin(loginForm form_validate.LoginForm,ctx *context.Context) (*models.AdminUser,error) {
+func (*AdminUserService) CheckLogin(loginForm form_validate.LoginForm,ctx *context.Context) (*models.AdminUser,error) {
 	var adminUser models.AdminUser
 	o := orm.NewOrm()
 	err := o.QueryTable(new(models.AdminUser)).Filter("username",loginForm.Username).Limit(1).One(&adminUser)
@@ -71,7 +71,7 @@ func (*AdminUserService)CheckLogin(loginForm form_validate.LoginForm,ctx *contex
 }
 
 //获取admin_user 总数
-func (*AdminUserService)GetCount() int {
+func (*AdminUserService) GetCount() int {
 	count,err := orm.NewOrm().QueryTable(new(models.AdminUser)).Count()
 	if err != nil{
 		return 0
@@ -80,7 +80,7 @@ func (*AdminUserService)GetCount() int {
 }
 
 //获取所有adminuser
-func (*AdminUserService)GetAllData() []*models.AdminUser {
+func (*AdminUserService) GetAllAdminUser() []*models.AdminUser {
 	var adminUser []*models.AdminUser
 	o := orm.NewOrm().QueryTable(new(models.AdminUser))
 	_,err := o.All(&adminUser)
