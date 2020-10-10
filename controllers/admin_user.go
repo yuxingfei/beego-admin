@@ -9,7 +9,7 @@ func (this *AdminUserController) NestPrepare() {
 	//fmt.Println("AdminUserController NestPrepare")
 }
 
-func (this *AdminUserController)Index()  {
+func (this *AdminUserController) Index() {
 
 	//var adminUserService services.AdminUserService
 	//this.Data["data"] = adminUserService.GetAllData()

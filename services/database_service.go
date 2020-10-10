@@ -7,14 +7,13 @@ type DbVersion struct {
 }
 
 type DatabaseService struct {
-
 }
 
 //获取mysql的版本
-func (*DatabaseService)GetMysqlVersion() string {
+func (*DatabaseService) GetMysqlVersion() string {
 	var dbVersion DbVersion
 	error := orm.NewOrm().Raw("select VERSION() as db_version").QueryRow(&dbVersion)
-	if error != nil{
+	if error != nil {
 		return "not found."
 	}
 	return dbVersion.DbVersion

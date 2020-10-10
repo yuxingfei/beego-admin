@@ -7,7 +7,7 @@ import (
 )
 
 type CaptchaResponse struct {
-	CaptchaId string
+	CaptchaId  string
 	CaptchaUrl string
 }
 
@@ -15,17 +15,17 @@ type CaptchaResponse struct {
 func GetCaptcha() *CaptchaResponse {
 	captchaId := captcha.NewLen(4)
 	return &CaptchaResponse{
-		CaptchaId:captchaId,
-		CaptchaUrl:fmt.Sprintf("/admin/auth/captcha/%s.png",captchaId),
+		CaptchaId:  captchaId,
+		CaptchaUrl: fmt.Sprintf("/admin/auth/captcha/%s.png", captchaId),
 	}
 }
 
 //模仿php的in_array,判断是否存在map中
-func KeyInMap(key string,m map[string]interface{}) bool {
-	_,ok := m[key]
-	if ok{
+func KeyInMap(key string, m map[string]interface{}) bool {
+	_, ok := m[key]
+	if ok {
 		return true
-	}else{
+	} else {
 		return false
 	}
 }

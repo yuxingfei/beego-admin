@@ -32,18 +32,18 @@ var (
 //父控制器初始化
 func (this *baseController) Prepare() {
 	//访问url
-	url := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(),"/"))
+	url := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(), "/"))
 
 	//query参数
 	queryParams = this.Input()
-	queryParams.Set("url",this.Ctx.Input.URL())
-	fmt.Println("queryParams = ",queryParams)
-	if len(queryParams) > 0{
-		for k,val := range queryParams{
-			v,ok := strconv.Atoi(val[0])
-			if ok == nil{
+	queryParams.Set("url", this.Ctx.Input.URL())
+	fmt.Println("queryParams = ", queryParams)
+	if len(queryParams) > 0 {
+		for k, val := range queryParams {
+			v, ok := strconv.Atoi(val[0])
+			if ok == nil {
 				this.Data[k] = v
-			}else{
+			} else {
 				this.Data[k] = val[0]
 			}
 		}
@@ -55,27 +55,27 @@ func (this *baseController) Prepare() {
 
 	//基础变量
 	runMode := beego.AppConfig.String("runmode")
-	if runMode == "dev"{
+	if runMode == "dev" {
 		this.Data["debug"] = true
-	}else{
+	} else {
 		this.Data["debug"] = false
 	}
 	this.Data["cookie_prefix"] = ""
 
 	//admin基础配置
-	adminConfig,err := beego.AppConfig.GetSection("base")
-	if err != nil{
-		beego.Error("get base config fail. error:",err)
+	adminConfig, err := beego.AppConfig.GetSection("base")
+	if err != nil {
+		beego.Error("get base config fail. error:", err)
 	}
 	//每页预览的数量
 	perPageStr := this.Ctx.GetCookie("admin_per_page")
 	var perPage int
-	if perPageStr == ""{
+	if perPageStr == "" {
 		perPage = 10
-	}else{
-		perPage,_ = strconv.Atoi(perPageStr)
+	} else {
+		perPage, _ = strconv.Atoi(perPageStr)
 	}
-	if perPage >= 100{
+	if perPage >= 100 {
 		perPage = 100
 	}
 
@@ -83,33 +83,33 @@ func (this *baseController) Prepare() {
 	var adminMenuService services.AdminMenuService
 	adminMenu := adminMenuService.GetAdminMenuByUrl(url)
 	title := ""
-	if adminMenu != nil{
+	if adminMenu != nil {
 		title = adminMenu.Name
-		if strings.ToLower(adminMenu.LogMethod) == strings.ToLower(this.Ctx.Input.Method()){
+		if strings.ToLower(adminMenu.LogMethod) == strings.ToLower(this.Ctx.Input.Method()) {
 			var adminLogService services.AdminLogService
-			adminLogService.CreateAdminLog(&loginUser,adminMenu,url,this.Ctx)
+			adminLogService.CreateAdminLog(&loginUser, adminMenu, url, this.Ctx)
 		}
 	}
 
 	//左侧菜单
 	menu := ""
-	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && isOk{
+	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && isOk {
 		var adminTreeService services.AdminTreeService
-		menu = adminTreeService.GetLeftMenu(url,loginUser)
+		menu = adminTreeService.GetLeftMenu(url, loginUser)
 	}
 
 	admin = map[string]interface{}{
-		"pjax":this.Ctx.Input.Header("X-PJAX") == "true",
-		"user":&loginUser,
-		"menu":menu,
-		"name":adminConfig["name"],
-		"author":adminConfig["author"],
-		"version":adminConfig["version"],
-		"short_name":adminConfig["short_name"],
-		"link":adminConfig["link"],
-		"per_page":perPage,
-		"per_page_config":[]int{10,20,30,50,100},
-		"title":title,
+		"pjax":            this.Ctx.Input.Header("X-PJAX") == "true",
+		"user":            &loginUser,
+		"menu":            menu,
+		"name":            adminConfig["name"],
+		"author":          adminConfig["author"],
+		"version":         adminConfig["version"],
+		"short_name":      adminConfig["short_name"],
+		"link":            adminConfig["link"],
+		"per_page":        perPage,
+		"per_page_config": []int{10, 20, 30, 50, 100},
+		"title":           title,
 	}
 	this.Data["admin"] = admin
 

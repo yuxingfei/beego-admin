@@ -9,7 +9,7 @@ type CaptchaController struct {
 	beego.Controller
 }
 
-func (this *CaptchaController) CaptchaId()  {
+func (this *CaptchaController) CaptchaId() {
 	captchaId := captcha.NewLen(6)
 	this.Ctx.WriteString(captchaId)
 }

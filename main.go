@@ -15,4 +15,3 @@ func main() {
 	//启动beego
 	beego.Run()
 }
-
