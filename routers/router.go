@@ -43,6 +43,8 @@ func init() {
 		beego.NSRouter("/admin_menu/index", &controllers.AdminMenuController{}, "get:Index"),
 		//添加菜单-界面
 		beego.NSRouter("/admin_menu/add", &controllers.AdminMenuController{}, "get:Add"),
+		//添加菜单-创建
+		beego.NSRouter("/admin_menu/create", &controllers.AdminMenuController{}, "post:Create"),
 	)
 
 	beego.AddNamespace(admin)

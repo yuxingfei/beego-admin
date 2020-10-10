@@ -1,8 +1,12 @@
 package controllers
 
 import (
+	"beego-admin/form_validate"
+	"beego-admin/global/response"
 	"beego-admin/models"
 	"beego-admin/services"
+	"fmt"
+	"github.com/gookit/validate"
 )
 
 type AdminMenuController struct {
@@ -36,4 +40,26 @@ func (this *AdminMenuController) Add() {
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_menu/add.html"
+}
+
+//添加菜单
+func (this *AdminMenuController) Create()  {
+	adminMenuForm := form_validate.AdminMenuForm{}
+
+	if err := this.ParseForm(&adminMenuForm); err != nil{
+		response.ErrorWithMessage(err.Error(),this.Ctx)
+		return
+	}
+
+	fmt.Println("adminMenuForm = ",adminMenuForm)
+
+
+	//数据校验
+	v := validate.Struct(adminMenuForm)
+
+	if !v.Validate() {
+		response.ErrorWithMessage(v.Errors.One(),this.Ctx)
+		return
+	}
+
 }
