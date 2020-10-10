@@ -13,7 +13,7 @@ type AdminRole struct {
 }
 
 //自定义table 名称
-func (adminUser *AdminRole) TableName() string {
+func (*AdminRole) TableName() string {
 	return "admin_role"
 }
 

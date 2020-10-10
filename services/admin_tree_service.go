@@ -251,26 +251,95 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 				selected = "selected"
 			}
 			nStr := ""
-			if 0 == value["ParentId"].(int) && strGroup != "" {
+			parentIdInt, ok := value["ParentId"].(int)
+			if !ok {
+				parentIdInt = int(value["ParentId"].(int64))
+			}
+			if 0 == parentIdInt && strGroup != "" {
 				nStr = strGroup
 			} else {
 				nStr = str
 			}
-			nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(value["Id"].(int)))
-			nStr = strings.ReplaceAll(nStr, "$level", strconv.Itoa(value["Level"].(int)))
-			nStr = strings.ReplaceAll(nStr, "$parent_id_node", value["ParentIdNode"].(string))
+
+			//id orm转换可能是int或者int64类型，兼容
+			idInt, ok := value["Id"].(int)
+			if !ok {
+				idInt64, ok := value["Id"].(int64)
+				if ok {
+					idInt = int(idInt64)
+					nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(idInt))
+				}
+			} else {
+				nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(idInt))
+			}
+
+			levelInt, ok := value["Level"].(int)
+			if !ok {
+				levelInt64, ok := value["Level"].(int64)
+				if ok {
+					levelInt = int(levelInt64)
+					nStr = strings.ReplaceAll(nStr, "$level", strconv.Itoa(levelInt))
+				}
+			} else {
+				nStr = strings.ReplaceAll(nStr, "$level", strconv.Itoa(levelInt))
+			}
+
+			sortIdInt, ok := value["SortId"].(int)
+			if !ok {
+				sortIdInt64, ok := value["SortId"].(int64)
+				if ok {
+					sortIdInt = int(sortIdInt64)
+					nStr = strings.ReplaceAll(nStr, "$sort_id", strconv.Itoa(sortIdInt))
+				}
+			} else {
+				nStr = strings.ReplaceAll(nStr, "$sort_id", strconv.Itoa(sortIdInt))
+			}
+
+			parentIdNodeStringValue, ok := value["ParentIdNode"].(string)
+			if ok {
+				nStr = strings.ReplaceAll(nStr, "$parent_id_node", parentIdNodeStringValue)
+			}
+
 			nStr = strings.ReplaceAll(nStr, "$spacer", spacer)
 			nStr = strings.ReplaceAll(nStr, "$selected", selected)
-			nStr = strings.ReplaceAll(nStr, "$name", value["Name"].(string))
-			nStr = strings.ReplaceAll(nStr, "$url", value["Url"].(string))
-			nStr = strings.ReplaceAll(nStr, "$route_name", value["RouteName"].(string))
-			nStr = strings.ReplaceAll(nStr, "$parent_id", strconv.Itoa(value["ParentId"].(int)))
-			nStr = strings.ReplaceAll(nStr, "$icon", value["Icon"].(string))
-			nStr = strings.ReplaceAll(nStr, "$sort_id", strconv.Itoa(value["SortId"].(int)))
-			nStr = strings.ReplaceAll(nStr, "$is_show", value["IsShow"].(string))
-			nStr = strings.ReplaceAll(nStr, "$log_method", value["LogMethod"].(string))
-			strManage := strings.ReplaceAll(value["StrManage"].(string), "\\", "")
-			nStr = strings.ReplaceAll(nStr, "$str_manage", strManage)
+
+			nameValue, ok := value["Name"].(string)
+			if ok {
+				nStr = strings.ReplaceAll(nStr, "$name", nameValue)
+			}
+
+			urlValue, ok := value["Url"].(string)
+			if ok {
+				nStr = strings.ReplaceAll(nStr, "$url", urlValue)
+			}
+
+			routeNameValue, ok := value["RouteName"].(string)
+			if ok {
+				nStr = strings.ReplaceAll(nStr, "$route_name", routeNameValue)
+			}
+
+			nStr = strings.ReplaceAll(nStr, "$parent_id", strconv.Itoa(parentIdInt))
+
+			iconValue, ok := value["Icon"].(string)
+			if ok {
+				nStr = strings.ReplaceAll(nStr, "$icon", iconValue)
+			}
+
+			isShowValue, ok := value["IsShow"].(string)
+			if ok {
+				nStr = strings.ReplaceAll(nStr, "$is_show", isShowValue)
+			}
+
+			logMethodValue, ok := value["LogMethod"].(string)
+			if ok {
+				nStr = strings.ReplaceAll(nStr, "$log_method", logMethodValue)
+			}
+
+			strManageValue, ok := value["StrManage"].(string)
+			if ok {
+				strManageValue = strings.ReplaceAll(strManageValue, "\\", "")
+				nStr = strings.ReplaceAll(nStr, "$str_manage", strManageValue)
+			}
 
 			adminTreeService.Ret += nStr
 			adminTreeService.GetTree(id, str, sid, adds+k+space, strGroup)
@@ -281,4 +350,31 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 	}
 
 	return adminTreeService.Ret
+}
+
+//菜单选择 select树形选择
+func (adminTreeService *AdminTreeService) Menu(selected int, currentId int) string {
+	var adminMenuService AdminMenuService
+	result := adminMenuService.Menu(currentId)
+	resultKey := make(map[int]orm.Params)
+	if result != nil {
+		for _, r := range result {
+			idInt, ok := r["Id"].(int)
+			if !ok {
+				idInt = int(r["Id"].(int64))
+			}
+			resultKey[idInt] = r
+			if idInt == selected {
+				resultKey[idInt]["selected"] = "selected"
+			} else {
+				resultKey[idInt]["selected"] = ""
+			}
+		}
+
+		str := `<option value='$id' $selected >$spacer $name</option>`
+		adminTreeService.initTree(resultKey)
+		return adminTreeService.GetTree(0, str, selected, "", "")
+	} else {
+		return ""
+	}
 }

@@ -81,3 +81,10 @@ func (*AdminMenuService) AdminMenuTree() string {
 		return ""
 	}
 }
+
+//除去当前id之外的所有菜单id
+func (*AdminMenuService) Menu(currentId int) []orm.Params {
+	var adminMenusMap []orm.Params
+	orm.NewOrm().QueryTable(new(models.AdminMenu)).Exclude("id", currentId).OrderBy("sort_id", "id").Values(&adminMenusMap, "id", "parent_id", "name", "sort_id")
+	return adminMenusMap
+}

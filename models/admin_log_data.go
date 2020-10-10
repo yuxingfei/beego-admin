@@ -11,7 +11,7 @@ type AdminLogData struct {
 }
 
 //自定义table 名称
-func (adminLogData *AdminLogData) TableName() string {
+func (*AdminLogData) TableName() string {
 	return "admin_log_data"
 }
 

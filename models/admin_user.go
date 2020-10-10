@@ -20,7 +20,7 @@ type AdminUser struct {
 }
 
 //自定义table 名称
-func (adminUser *AdminUser) TableName() string {
+func (*AdminUser) TableName() string {
 	return "admin_user"
 }
 
@@ -137,7 +137,7 @@ func (adminUser *AdminUser) GetRoleText() map[int]*AdminRole {
 }
 
 //获取所有用户
-func (adminUser *AdminUser) GetAdminUser() []*AdminUser {
+func (*AdminUser) GetAdminUser() []*AdminUser {
 	var adminUsers []*AdminUser
 	_, err := orm.NewOrm().QueryTable(new(AdminUser)).All(&adminUsers)
 	if err == nil {

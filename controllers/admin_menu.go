@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"beego-admin/models"
 	"beego-admin/services"
 )
 
@@ -21,4 +22,18 @@ func (this *AdminMenuController) Index() {
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_menu/index.html"
+}
+
+//添加菜单界面
+func (this *AdminMenuController) Add() {
+
+	var adminTreeService services.AdminTreeService
+	parentId, _ := this.GetInt("parent_id", 0)
+	parents := adminTreeService.Menu(parentId, 0)
+
+	this.Data["parents"] = parents
+	this.Data["log_method"] = new(models.AdminMenu).GetLogMethod()
+
+	this.Layout = "public/base.html"
+	this.TplName = "admin_menu/add.html"
 }

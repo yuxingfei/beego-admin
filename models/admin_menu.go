@@ -17,11 +17,16 @@ type AdminMenu struct {
 }
 
 //自定义table 名称
-func (adminUser *AdminMenu) TableName() string {
+func (*AdminMenu) TableName() string {
 	return "admin_menu"
 }
 
 //在init中注册定义的model
 func init() {
 	orm.RegisterModel(new(AdminMenu))
+}
+
+//自定义方法
+func (*AdminMenu) GetLogMethod() []string {
+	return []string{"不记录", "GET", "POST", "PUT", "DELETE"}
 }
