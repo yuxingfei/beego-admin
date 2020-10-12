@@ -4,6 +4,7 @@ import "github.com/gookit/validate"
 
 //菜单管理-添加菜单表单
 type AdminMenuForm struct {
+	Id        int    `form:"id"`
 	ParentId  int    `form:"parent_id" validate:"min:0"`
 	Name      string `form:"name" validate:"required"`
 	Url       string `form:"url" validate:"required"`

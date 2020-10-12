@@ -3,7 +3,6 @@ package services
 import (
 	utils2 "beego-admin/utils"
 	beego_pagination "beego-admin/utils/beego-pagination"
-	"fmt"
 	"github.com/astaxie/beego/orm"
 	"net/url"
 	"strings"
@@ -57,7 +56,6 @@ func (this *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values)
 		for key, value := range parameters {
 			if value[0] != "" && utils2.KeyInArrayForString(this.TimeField, key) {
 				timeRange := strings.Split(value[0], " - ")
-				fmt.Println("timeRange = ", timeRange)
 				startTimeStr := timeRange[0]
 				endTimeStr := timeRange[1]
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dchest/captcha"
 	"golang.org/x/crypto/bcrypt"
+	"strconv"
 )
 
 type CaptchaResponse struct {
@@ -60,4 +61,13 @@ func PasswordHash(password string) (string, error) {
 func PasswordVerify(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+//int数组转string数组
+func IntArrToStringArr(arr []int) []string {
+	var stringArr []string
+	for _,v := range arr{
+		stringArr = append(stringArr,strconv.Itoa(v))
+	}
+	return stringArr
 }
