@@ -66,8 +66,8 @@ func PasswordVerify(password, hash string) bool {
 //int数组转string数组
 func IntArrToStringArr(arr []int) []string {
 	var stringArr []string
-	for _,v := range arr{
-		stringArr = append(stringArr,strconv.Itoa(v))
+	for _, v := range arr {
+		stringArr = append(stringArr, strconv.Itoa(v))
 	}
 	return stringArr
 }

@@ -51,6 +51,9 @@ func init() {
 		beego.NSRouter("/admin_menu/update", &controllers.AdminMenuController{}, "post:Update"),
 		//菜单管理-删除菜单
 		beego.NSRouter("/admin_menu/del", &controllers.AdminMenuController{}, "post:Del"),
+
+		//系统管理-个人资料
+		beego.NSRouter("/admin_user/profile", &controllers.AdminUserController{}, "get:Profile"),
 	)
 
 	beego.AddNamespace(admin)

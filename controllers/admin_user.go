@@ -17,3 +17,9 @@ func (this *AdminUserController) Index() {
 	this.Layout = "public/base.html"
 	this.TplName = "admin_user/index.html"
 }
+
+//系统管理-个人资料
+func (this *AdminUserController) Profile() {
+	this.Layout = "public/base.html"
+	this.TplName = "admin_user/profile.html"
+}
