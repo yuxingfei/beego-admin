@@ -47,14 +47,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="route_name" class="col-sm-2 control-label">路由名</label>
-                                <div class="col-sm-10 col-md-4">
-                                    <input maxlength="100" id="route_name" name="route_name" value=""
-                                           class="form-control" placeholder="路由名">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                                 <label for="icon" class="col-sm-2 control-label">图标</label>
                                 <div class="col-sm-10 col-md-4">
                                     <div class="input-group iconpicker-container">
@@ -123,24 +115,6 @@
                                 $('#log_method').select2();
                             </script>
 
-                            <div class="form-group">
-                                <label for="is_more" class="col-sm-2 control-label">是否自动生成增删改菜单</label>
-                                <div class="col-sm-10 col-md-4">
-                                    <input id="is_more" class="input-switch" placeholder="" type="checkbox"/>
-                                    <input class="switch" name="is_more" value="0" hidden/>
-                                </div>
-                            </div>
-                            <script>
-                                $('#is_more').bootstrapSwitch({
-                                    onText: "是",
-                                    offText: "否",
-                                    onColor: "success",
-                                    offColor: "danger",
-                                    onSwitchChange: function (event, state) {
-                                        $(event.target).closest('.bootstrap-switch').next().val(state ? '1' : '0').change();
-                                    }
-                                });
-                            </script>
                             <div class="form-group">
                                 <label for="more_name" class="col-sm-2 control-label">增删改操作名称</label>
                                 <div class="col-sm-10 col-md-4">

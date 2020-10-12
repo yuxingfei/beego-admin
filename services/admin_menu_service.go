@@ -1,6 +1,7 @@
 package services
 
 import (
+	"beego-admin/form_validate"
 	"beego-admin/models"
 	"github.com/astaxie/beego/orm"
 	"strconv"
@@ -48,7 +49,6 @@ func (*AdminMenuService) AdminMenuTree() string {
 			result[n]["ParentId"] = adminMenu.ParentId
 			result[n]["Name"] = adminMenu.Name
 			result[n]["Url"] = adminMenu.Url
-			result[n]["RouteName"] = adminMenu.RouteName
 			result[n]["Icon"] = adminMenu.Icon
 			result[n]["IsShow"] = adminMenu.IsShow
 			result[n]["SortId"] = adminMenu.SortId
@@ -69,7 +69,7 @@ func (*AdminMenuService) AdminMenuTree() string {
 		}
 		str := `<tr id='node-$id' data-level='$level' $parent_id_node><td><input type='checkbox' onclick='checkThis(this)'
                      name='data-checkbox' data-id='$id' class='checkbox data-list-check' value='$id' placeholder='选择/取消'>
-                    </td><td>$id</td><td>$spacer$name</td><td>$url</td><td>$route_name</td>
+                    </td><td>$id</td><td>$spacer$name</td><td>$url</td>
                     <td>$parent_id</td><td><i class='fa $icon'></i><span>($icon)</span></td>
                     <td>$sort_id</td><td>$is_show</td><td>$log_method</td><td class='td-do'>$str_manage</td></tr>`
 
@@ -87,4 +87,24 @@ func (*AdminMenuService) Menu(currentId int) []orm.Params {
 	var adminMenusMap []orm.Params
 	orm.NewOrm().QueryTable(new(models.AdminMenu)).Exclude("id", currentId).OrderBy("sort_id", "id").Values(&adminMenusMap, "id", "parent_id", "name", "sort_id")
 	return adminMenusMap
+}
+
+//创建菜单
+func (*AdminMenuService) Create(form *form_validate.AdminMenuForm) (id int64,err error) {
+	adminMenu := models.AdminMenu{
+		ParentId:form.ParentId,
+		Name:form.Name,
+		Url:form.Url,
+		Icon:form.Icon,
+		IsShow:form.IsShow,
+		SortId:form.SortId,
+		LogMethod:form.LogMethod,
+	}
+
+	return orm.NewOrm().Insert(&adminMenu)
+}
+
+//Url验重
+func (*AdminMenuService) IsUrlUnique(url string) bool {
+	return orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("url",url).Exist()
 }

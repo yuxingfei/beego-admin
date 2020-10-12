@@ -87,7 +87,7 @@ func (adminUser *AdminUser) GetShowMenu() map[int]orm.Params {
 	o := orm.NewOrm()
 
 	if adminUser.Id == 1 {
-		_, err := o.QueryTable(new(AdminMenu)).Filter("is_show", 1).OrderBy("sort_id", "id").Values(&maps, "id", "parent_id", "name", "url", "icon", "sort_id", "route_name")
+		_, err := o.QueryTable(new(AdminMenu)).Filter("is_show", 1).OrderBy("sort_id", "id").Values(&maps, "id", "parent_id", "name", "url", "icon", "sort_id")
 		if err == nil {
 			for _, m := range maps {
 				returnMaps[int(m["Id"].(int64))] = m
@@ -105,7 +105,7 @@ func (adminUser *AdminUser) GetShowMenu() map[int]orm.Params {
 		for _, m := range list {
 			urlIdArr = append(urlIdArr, strings.Split(m.(string), ",")...)
 		}
-		_, err := o.QueryTable(new(AdminMenu)).Filter("id__in", urlIdArr).Filter("is_show", 1).OrderBy("sort_id", "id").Values(&maps, "id", "parent_id", "name", "url", "icon", "sort_id", "route_name")
+		_, err := o.QueryTable(new(AdminMenu)).Filter("id__in", urlIdArr).Filter("is_show", 1).OrderBy("sort_id", "id").Values(&maps, "id", "parent_id", "name", "url", "icon", "sort_id")
 		if err == nil {
 			for _, m := range maps {
 				returnMaps[int(m["Id"].(int64))] = m

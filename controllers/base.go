@@ -36,7 +36,7 @@ func (this *baseController) Prepare() {
 
 	//query参数
 	queryParams = this.Input()
-	queryParams.Set("url", this.Ctx.Input.URL())
+	queryParams.Set("queryParamUrl", this.Ctx.Input.URL())
 	fmt.Println("queryParams = ", queryParams)
 	if len(queryParams) > 0 {
 		for k, val := range queryParams {

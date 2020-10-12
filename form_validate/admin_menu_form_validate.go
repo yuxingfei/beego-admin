@@ -11,6 +11,7 @@ type AdminMenuForm struct {
 	IsShow    int8   `form:"is_show" validate:"required"`
 	SortId    int    `form:"sort_id" validate:"required"`
 	LogMethod string `form:"log_method" validate:"required"`
+	IsCreate  int    `form:"_create"`
 }
 
 //自定义验证返回消息

@@ -313,11 +313,6 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 				nStr = strings.ReplaceAll(nStr, "$url", urlValue)
 			}
 
-			routeNameValue, ok := value["RouteName"].(string)
-			if ok {
-				nStr = strings.ReplaceAll(nStr, "$route_name", routeNameValue)
-			}
-
 			nStr = strings.ReplaceAll(nStr, "$parent_id", strconv.Itoa(parentIdInt))
 
 			iconValue, ok := value["Icon"].(string)

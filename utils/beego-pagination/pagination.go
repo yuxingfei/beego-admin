@@ -158,8 +158,8 @@ func (pagination *Pagination) getUrlRange(start, end int) map[int]string {
 func (pagination *Pagination) url(page int) string {
 	parameters := pagination.Parameters
 
-	urlValue := parameters.Get("url")
-	parameters.Del("url")
+	urlValue := parameters.Get("queryParamUrl")
+	parameters.Del("queryParamUrl")
 	parameters.Del("_pjax")
 
 	if len(parameters) > 0 {
