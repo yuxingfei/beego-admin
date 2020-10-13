@@ -24,6 +24,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="profile">
                         <form class="dataForm form-horizontal" id="dataForm1" action="/admin/admin_user/update_nickname" method="post">
+                            <input type="hidden" name="id" value="{{.admin.user.Id}}">
                             <div class="form-group">
                                 <label for="nickname" class="col-sm-2 control-label">昵称</label>
                                 <div class="col-sm-10 col-md-4">
@@ -42,6 +43,7 @@
 
                     <div class="tab-pane" id="privacy">
                         <form class="dataForm form-horizontal" id="dataForm2" action="/admin/admin_user/update_password" method="post">
+                            <input type="hidden" name="id" value="{{.admin.user.Id}}">
                             <div class="form-group">
                                 <label for="password" class="col-sm-2 control-label">当前密码</label>
                                 <div class="col-sm-10 col-md-4">
@@ -72,6 +74,7 @@
                     </div>
                     <div class="tab-pane" id="avatars">
                         <form class="dataForm form-horizontal" id="dataForm3" action="/admin/admin_user/update_avatar" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="{{.admin.user.Id}}">
                             <div class="form-group">
                                 <label for="avatar" class="col-sm-2 control-label">头像</label>
                                 <div class="col-sm-10 col-md-4">

@@ -54,6 +54,12 @@ func init() {
 
 		//系统管理-个人资料
 		beego.NSRouter("/admin_user/profile", &controllers.AdminUserController{}, "get:Profile"),
+		//系统管理-个人资料-修改昵称
+		beego.NSRouter("/admin_user/update_nickname", &controllers.AdminUserController{}, "post:UpdateNickName"),
+		//系统管理-个人资料-修改密码
+		beego.NSRouter("/admin_user/update_password", &controllers.AdminUserController{}, "post:UpdatePassword"),
+		//系统管理-个人资料-修改头像
+		beego.NSRouter("/admin_user/update_avatar", &controllers.AdminUserController{}, "post:UpdateAvatar"),
 	)
 
 	beego.AddNamespace(admin)

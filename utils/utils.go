@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"crypto/md5"
+	"crypto/sha1"
 	"fmt"
 	"github.com/dchest/captcha"
 	"golang.org/x/crypto/bcrypt"
+	"io"
 	"strconv"
 )
 
@@ -32,7 +35,7 @@ func KeyInMap(key string, m map[string]interface{}) bool {
 }
 
 //模仿php的in_array,判断是否存在string数组中
-func KeyInArrayForString(items []string, item string) bool {
+func InArrayForString(items []string, item string) bool {
 	for _, eachItem := range items {
 		if eachItem == item {
 			return true
@@ -42,7 +45,7 @@ func KeyInArrayForString(items []string, item string) bool {
 }
 
 //模仿php的in_array,判断是否存在int数组中
-func KeyInArrayForInt(items []int, item int) bool {
+func InArrayForInt(items []int, item int) bool {
 	for _, eachItem := range items {
 		if eachItem == item {
 			return true
@@ -70,4 +73,18 @@ func IntArrToStringArr(arr []int) []string {
 		stringArr = append(stringArr, strconv.Itoa(v))
 	}
 	return stringArr
+}
+
+//对字符串进行MD5哈希
+func GetMd5String(str string) string {
+	t := md5.New()
+	io.WriteString(t,str)
+	return fmt.Sprintf("%x",t.Sum(nil))
+}
+
+//对字符串进行SHA1哈希
+func GetSha1String(str string) string {
+	t := sha1.New()
+	io.WriteString(t,str)
+	return fmt.Sprintf("%x",t.Sum(nil))
 }

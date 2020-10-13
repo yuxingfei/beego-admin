@@ -1,7 +1,7 @@
 package services
 
 import (
-	utils2 "beego-admin/utils"
+	"beego-admin/utils"
 	beego_pagination "beego-admin/utils/beego-pagination"
 	"github.com/astaxie/beego/orm"
 	"net/url"
@@ -45,7 +45,7 @@ func (this *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values)
 	//字段条件查询
 	if len(this.WhereField) > 0 && len(parameters) > 0 {
 		for k, v := range parameters {
-			if v[0] != "" && utils2.KeyInArrayForString(this.WhereField, k) {
+			if v[0] != "" && utils.InArrayForString(this.WhereField, k) {
 				cond = cond.And(k, v[0])
 			}
 		}
@@ -54,7 +54,7 @@ func (this *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values)
 	//时间范围查询
 	if len(this.TimeField) > 0 && len(parameters) > 0 {
 		for key, value := range parameters {
-			if value[0] != "" && utils2.KeyInArrayForString(this.TimeField, key) {
+			if value[0] != "" && utils.InArrayForString(this.TimeField, key) {
 				timeRange := strings.Split(value[0], " - ")
 				startTimeStr := timeRange[0]
 				endTimeStr := timeRange[1]

@@ -89,3 +89,43 @@ func (*AdminUserService) GetAllAdminUser() []*models.AdminUser {
 		return adminUser
 	}
 }
+
+//系统管理-个人资料-修改昵称
+func (*AdminUserService) UpdateNickName(id int, nickname string) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("id", id).Update(orm.Params{
+		"nickname": nickname,
+	})
+	if err != nil || num <= 0 {
+		return 0
+	}
+	return int(num)
+}
+
+func (*AdminUserService) UpdatePassword(id int, newPassword string) int {
+	newPasswordForHash, err := utils.PasswordHash(newPassword)
+
+	if err != nil {
+		return 0
+	}
+
+	num, err := orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("id", id).Update(orm.Params{
+		"password": base64.StdEncoding.EncodeToString([]byte(newPasswordForHash)),
+	})
+
+	if err != nil || num <= 0 {
+		return 0
+	}
+
+	return int(num)
+}
+
+//系统管理-个人资料-修改头像
+func (*AdminUserService) UpdateAvatar(id int, avatar string) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("id", id).Update(orm.Params{
+		"avatar": avatar,
+	})
+	if err != nil || num <= 0 {
+		return 0
+	}
+	return int(num)
+}

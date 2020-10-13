@@ -157,7 +157,7 @@ func (adminTreeService *AdminTreeService) getAuthTree(myId int, currentId int, p
 
 			if len(adminTreeService.getChild(k)) > 0 {
 				textHtmlArr := textHtmlInterface.([]string)
-				if utils.KeyInArrayForInt(parentIds, k) {
+				if utils.InArrayForInt(parentIds, k) {
 					nStr = adminTreeService.strReplace(textHtmlArr[1], v)
 					adminTreeService.Html += nStr
 				} else {
