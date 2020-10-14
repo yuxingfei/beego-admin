@@ -70,7 +70,7 @@ func (this *AdminMenuController) Create() {
 	}
 
 	//添加之前url验重
-	if adminMenuService.IsUrlUnique(adminMenuForm.Url, adminMenuForm.Id) {
+	if adminMenuService.IsExistUrl(adminMenuForm.Url, adminMenuForm.Id) {
 		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", this.Ctx)
 		return
 	}
@@ -145,7 +145,7 @@ func (this *AdminMenuController) Update() {
 	}
 
 	//添加之前url验重
-	if adminMenuService.IsUrlUnique(adminMenuForm.Url, adminMenuForm.Id) {
+	if adminMenuService.IsExistUrl(adminMenuForm.Url, adminMenuForm.Id) {
 		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", this.Ctx)
 		return
 	}

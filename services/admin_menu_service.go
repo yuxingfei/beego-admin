@@ -123,7 +123,7 @@ func (*AdminMenuService) Update(form *form_validate.AdminMenuForm) int {
 }
 
 //Url验重
-func (*AdminMenuService) IsUrlUnique(url string, id int) bool {
+func (*AdminMenuService) IsExistUrl(url string, id int) bool {
 	if id == 0 {
 		return orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("url", url).Exist()
 	} else {

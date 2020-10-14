@@ -78,13 +78,13 @@ func IntArrToStringArr(arr []int) []string {
 //对字符串进行MD5哈希
 func GetMd5String(str string) string {
 	t := md5.New()
-	io.WriteString(t,str)
-	return fmt.Sprintf("%x",t.Sum(nil))
+	io.WriteString(t, str)
+	return fmt.Sprintf("%x", t.Sum(nil))
 }
 
 //对字符串进行SHA1哈希
 func GetSha1String(str string) string {
 	t := sha1.New()
-	io.WriteString(t,str)
-	return fmt.Sprintf("%x",t.Sum(nil))
+	io.WriteString(t, str)
+	return fmt.Sprintf("%x", t.Sum(nil))
 }

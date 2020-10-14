@@ -64,18 +64,18 @@ func (attachment *Attachment) GetSize() string {
 	size := float64(attachment.Size)
 	units := []string{" B", " KB", " MB", " GB", " TB"}
 	var i int
-	for i = 0; size >= 1024 && i < 4;i ++{
+	for i = 0; size >= 1024 && i < 4; i++ {
 		size /= 1024
 	}
-	return strconv.FormatFloat(math.Round(size),'f',-1,64) + units[i]
+	return strconv.FormatFloat(math.Round(size), 'f', -1, 64) + units[i]
 }
 
 //文件分类
 func (attachment *Attachment) GetFileType() string {
 	typeName := "其他"
 	extension := attachment.Extension
-	for name,arr := range attachment.FileType(){
-		if utils.InArrayForString(arr,extension){
+	for name, arr := range attachment.FileType() {
+		if utils.InArrayForString(arr, extension) {
 			typeName = name
 			break
 		}
@@ -90,21 +90,21 @@ func (attachment *Attachment) GetThumbnail() string {
 	thumbPath := beego.AppConfig.String("attachment::thumb_path")
 
 	fileThumb := map[string][]string{
-		"picture"                  : {"jpg", "bmp", "png", "jpeg", "gif", "svg"},
-		thumbPath + "txt.svg"      : {"txt", "pdf"},
-		thumbPath + "pdf.svg"      : {"pdf"},
-		thumbPath + "word.svg"     : {"doc", "docx"},
-		thumbPath + "excel.svg"    : {"xls", "xlsx"},
-		thumbPath + "archives.svg" : {"rar", "zip", "7z", "tar"},
-		thumbPath + "audio.svg"    : {"mp3", "ogg", "flac", "wma", "ape"},
-		thumbPath + "video.svg"    : {"mp4", "wmv", "avi", "rmvb", "mov", "mpg"},
+		"picture":                  {"jpg", "bmp", "png", "jpeg", "gif", "svg"},
+		thumbPath + "txt.svg":      {"txt", "pdf"},
+		thumbPath + "pdf.svg":      {"pdf"},
+		thumbPath + "word.svg":     {"doc", "docx"},
+		thumbPath + "excel.svg":    {"xls", "xlsx"},
+		thumbPath + "archives.svg": {"rar", "zip", "7z", "tar"},
+		thumbPath + "audio.svg":    {"mp3", "ogg", "flac", "wma", "ape"},
+		thumbPath + "video.svg":    {"mp4", "wmv", "avi", "rmvb", "mov", "mpg"},
 	}
 
-	for name,arr := range fileThumb{
-		if utils.InArrayForString(arr,extension){
-			if name == "picture"{
+	for name, arr := range fileThumb {
+		if utils.InArrayForString(arr, extension) {
+			if name == "picture" {
 				thumbnail = attachment.Url
-			}else {
+			} else {
 				thumbnail = name
 			}
 			break

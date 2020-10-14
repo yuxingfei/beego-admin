@@ -16,8 +16,8 @@ type BaseService struct {
 	WhereField []string
 	//可做为时间范围查询的字段
 	TimeField []string
-	//禁止删除的数据id
-	NoDeletionId []int
+	//禁止删除的数据id,在model中声明就可以了，可不用在此处声明
+	//NoDeletionId []int
 	//分页
 	Pagination beego_pagination.Pagination
 }

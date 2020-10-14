@@ -12,6 +12,16 @@ type AdminRole struct {
 	Status      int8   `orm:"column(status);size(1);default(1)" description:"是否启用 0：否 1：是"`
 }
 
+//定义模型的可搜索字段
+func (*AdminRole) SearchField() []string {
+	return []string{"name", "description"}
+}
+
+//禁止删除的数据id
+func (*AdminRole) NoDeletionId() []int {
+	return []int{1}
+}
+
 //自定义table 名称
 func (*AdminRole) TableName() string {
 	return "admin_role"

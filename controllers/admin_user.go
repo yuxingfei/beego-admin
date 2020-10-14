@@ -111,22 +111,22 @@ func (this *AdminUserController) UpdateAvatar() {
 
 	var (
 		attachmentService services.AttachmentService
-		adminUserService services.AdminUserService
+		adminUserService  services.AdminUserService
 	)
-	attachmentInfo ,err := attachmentService.Upload(this.Ctx,"avatar",loginUser.Id,0)
-	if err != nil || attachmentInfo == nil{
-		response.ErrorWithMessage(err.Error(),this.Ctx)
+	attachmentInfo, err := attachmentService.Upload(this.Ctx, "avatar", loginUser.Id, 0)
+	if err != nil || attachmentInfo == nil {
+		response.ErrorWithMessage(err.Error(), this.Ctx)
 		return
-	}else{
+	} else {
 		//头像上传成功，更新用户的avatar头像信息
-		num := adminUserService.UpdateAvatar(loginUser.Id,attachmentInfo.Url)
+		num := adminUserService.UpdateAvatar(loginUser.Id, attachmentInfo.Url)
 		if num > 0 {
 			//修改成功后，更新session的登录用户信息
 			loginAdminUser := adminUserService.GetAdminUserById(loginUser.Id)
 			this.SetSession(global.LOGIN_USER, *loginAdminUser)
-			response.SuccessWithMessageAndUrl("修改成功",global.URL_RELOAD,this.Ctx)
+			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
 			return
-		}else {
+		} else {
 			response.Error(this.Ctx)
 			return
 		}
