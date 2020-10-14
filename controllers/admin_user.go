@@ -40,7 +40,6 @@ func (this *AdminUserController) UpdateNickName() {
 
 	if nickname == "" || err != nil {
 		response.ErrorWithMessage("参数错误", this.Ctx)
-		return
 	}
 
 	var adminUserService services.AdminUserService
@@ -54,7 +53,6 @@ func (this *AdminUserController) UpdateNickName() {
 	} else {
 		response.Error(this.Ctx)
 	}
-	return
 }
 
 //系统管理-个人资料-修改密码
@@ -66,29 +64,24 @@ func (this *AdminUserController) UpdatePassword() {
 
 	if err != nil || password == "" || newPassword == "" || reNewPassword == "" {
 		response.ErrorWithMessage("Bad Parameter.", this.Ctx)
-		return
 	}
 
 	if newPassword != reNewPassword {
 		response.ErrorWithMessage("两次输入的密码不一致.", this.Ctx)
-		return
 	}
 
 	if password == newPassword {
 		response.ErrorWithMessage("新密码与旧密码一致，无需修改", this.Ctx)
-		return
 	}
 
 	loginUserPassword, err := base64.StdEncoding.DecodeString(loginUser.Password)
 
 	if err != nil {
 		response.ErrorWithMessage("err:"+err.Error(), this.Ctx)
-		return
 	}
 
 	if !utils.PasswordVerify(password, string(loginUserPassword)) {
 		response.ErrorWithMessage("当前密码不正确", this.Ctx)
-		return
 	}
 
 	var adminUserService services.AdminUserService
@@ -98,7 +91,6 @@ func (this *AdminUserController) UpdatePassword() {
 	} else {
 		response.Error(this.Ctx)
 	}
-	return
 }
 
 //系统管理-个人资料-修改头像
@@ -106,7 +98,6 @@ func (this *AdminUserController) UpdateAvatar() {
 	_, _, err := this.GetFile("avatar")
 	if err != nil {
 		response.ErrorWithMessage("上传头像错误"+err.Error(), this.Ctx)
-		return
 	}
 
 	var (
@@ -116,7 +107,6 @@ func (this *AdminUserController) UpdateAvatar() {
 	attachmentInfo, err := attachmentService.Upload(this.Ctx, "avatar", loginUser.Id, 0)
 	if err != nil || attachmentInfo == nil {
 		response.ErrorWithMessage(err.Error(), this.Ctx)
-		return
 	} else {
 		//头像上传成功，更新用户的avatar头像信息
 		num := adminUserService.UpdateAvatar(loginUser.Id, attachmentInfo.Url)
@@ -125,10 +115,8 @@ func (this *AdminUserController) UpdateAvatar() {
 			loginAdminUser := adminUserService.GetAdminUserById(loginUser.Id)
 			this.SetSession(global.LOGIN_USER, *loginAdminUser)
 			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
-			return
 		} else {
 			response.Error(this.Ctx)
-			return
 		}
 	}
 

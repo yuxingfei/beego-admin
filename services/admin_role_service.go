@@ -48,16 +48,75 @@ func (*AdminRoleService) IsExistName(name string, id int) bool {
 //创建角色
 func (*AdminRoleService) Create(form *form_validate.AdminRoleForm) int {
 	adminRole := models.AdminRole{
-		Name:form.Name,
-		Description:form.Description,
-		Url:"1,2,18",
-		Status:form.Status,
+		Name:        form.Name,
+		Description: form.Description,
+		Url:         "1,2,18",
+		Status:      form.Status,
 	}
 
 	insertId, err := orm.NewOrm().Insert(&adminRole)
-	if err != nil{
+	if err != nil {
 		return 0
-	}else {
+	} else {
 		return int(insertId)
+	}
+}
+
+//通过id获取菜单信息
+func (*AdminRoleService) GetAdminRoleById(id int) *models.AdminRole {
+	var adminRole models.AdminRole
+	err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id", id).One(&adminRole)
+	if err == nil {
+		return &adminRole
+	} else {
+		return nil
+	}
+}
+
+//更新角色信息
+func (*AdminRoleService) Update(form *form_validate.AdminRoleForm) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id", form.Id).Update(orm.Params{
+		"name":        form.Name,
+		"description": form.Description,
+		"status":      form.Status,
+	})
+	if err == nil {
+		return int(num)
+	} else {
+		return 0
+	}
+}
+
+//删除角色
+func (*AdminRoleService) Del(ids []int) int {
+	count, err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id__in", ids).Delete()
+	if err == nil {
+		return int(count)
+	} else {
+		return 0
+	}
+}
+
+//启用角色
+func (*AdminRoleService) Enable(ids []int) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id__in", ids).Update(orm.Params{
+		"status": 1,
+	})
+	if err == nil {
+		return int(num)
+	} else {
+		return 0
+	}
+}
+
+//禁用角色
+func (*AdminRoleService) Disable(ids []int) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id__in", ids).Update(orm.Params{
+		"status": 0,
+	})
+	if err == nil {
+		return int(num)
+	} else {
+		return 0
 	}
 }

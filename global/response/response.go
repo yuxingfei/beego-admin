@@ -2,6 +2,7 @@ package response
 
 import (
 	"beego-admin/global"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"net/http"
 )
@@ -38,6 +39,9 @@ func Result(code int, msg string, data interface{}, url string, wait int, header
 		}
 
 		ctx.Output.JSON(result, false, false)
+
+		//Controller中this.StopRun()用法
+		panic(beego.ErrAbort)
 	}
 
 	if url == "" {

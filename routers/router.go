@@ -67,6 +67,18 @@ func init() {
 		beego.NSRouter("/admin_role/add", &controllers.AdminRoleController{}, "get:Add"),
 		//系统管理-角色管理-添加
 		beego.NSRouter("/admin_role/create", &controllers.AdminRoleController{}, "post:Create"),
+		//菜单管理-角色管理-修改界面
+		beego.NSRouter("/admin_role/edit", &controllers.AdminRoleController{}, "get:Edit"),
+		//菜单管理-角色管理-修改
+		beego.NSRouter("/admin_role/update", &controllers.AdminRoleController{}, "post:Update"),
+		//菜单管理-角色管理-删除
+		beego.NSRouter("/admin_role/del", &controllers.AdminRoleController{}, "post:Del"),
+		//菜单管理-角色管理-启用角色
+		beego.NSRouter("/admin_role/enable", &controllers.AdminRoleController{}, "post:Enable"),
+		//菜单管理-角色管理-禁用角色
+		beego.NSRouter("/admin_role/disable", &controllers.AdminRoleController{}, "post:Disable"),
+		//菜单管理-角色管理-角色授权界面
+		beego.NSRouter("/admin_role/access", &controllers.AdminRoleController{}, "get:Access"),
 	)
 
 	beego.AddNamespace(admin)

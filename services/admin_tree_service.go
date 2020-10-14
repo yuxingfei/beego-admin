@@ -3,6 +3,7 @@ package services
 import (
 	"beego-admin/models"
 	"beego-admin/utils"
+	"fmt"
 	"github.com/astaxie/beego/orm"
 	"sort"
 	"strconv"
@@ -371,5 +372,130 @@ func (adminTreeService *AdminTreeService) Menu(selected int, currentId int) stri
 		return adminTreeService.GetTree(0, str, selected, "", "")
 	} else {
 		return ""
+	}
+}
+
+//生成菜单树
+func (adminTreeService *AdminTreeService) AdminMenuTree() string {
+	var adminMenuService AdminMenuService
+	adminMenus := adminMenuService.AllMenu()
+	if adminMenus != nil {
+		result := make(map[int]orm.Params)
+		var adminTreeService AdminTreeService
+		for _, adminMenu := range adminMenus {
+			n := adminMenu.Id
+			//初始化orm.Params map类型
+			if result[n] == nil {
+				result[n] = make(orm.Params)
+			}
+
+			result[n]["Id"] = adminMenu.Id
+			result[n]["ParentId"] = adminMenu.ParentId
+			result[n]["Name"] = adminMenu.Name
+			result[n]["Url"] = adminMenu.Url
+			result[n]["Icon"] = adminMenu.Icon
+			result[n]["IsShow"] = adminMenu.IsShow
+			result[n]["SortId"] = adminMenu.SortId
+
+			result[n]["Level"] = adminTreeService.GetLevel(adminMenu.Id, result, 0)
+			if adminMenu.ParentId > 0 {
+				result[n]["ParentIdNode"] = ` class="child-of-node-` + strconv.Itoa(adminMenu.ParentId) + `"`
+			} else {
+				result[n]["ParentIdNode"] = ""
+			}
+			result[n]["StrManage"] = `<a href="/admin/admin_menu/edit?id=` + strconv.Itoa(adminMenu.Id) + `" class="btn btn-primary btn-xs" title="修改" data-toggle="tooltip"><i class="fa fa-pencil"></i></a> <a class="btn btn-danger btn-xs AjaxButton" data-id="` + strconv.Itoa(adminMenu.Id) + `" data-url="del"  data-confirm-title="删除确认" data-confirm-content=\'您确定要删除ID为 <span class="text-red"> ` + strconv.Itoa(adminMenu.Id) + ` </span> 的数据吗\'  data-toggle="tooltip" title="删除"><i class="fa fa-trash"></i></a>`
+			if adminMenu.IsShow == 1 {
+				result[n]["IsShow"] = "显示"
+			} else {
+				result[n]["IsShow"] = "隐藏"
+			}
+			result[n]["LogMethod"] = adminMenu.LogMethod
+		}
+		str := `<tr id='node-$id' data-level='$level' $parent_id_node><td><input type='checkbox' onclick='checkThis(this)'
+                     name='data-checkbox' data-id='$id' class='checkbox data-list-check' value='$id' placeholder='选择/取消'>
+                    </td><td>$id</td><td>$spacer$name</td><td>$url</td>
+                    <td>$parent_id</td><td><i class='fa $icon'></i><span>($icon)</span></td>
+                    <td>$sort_id</td><td>$is_show</td><td>$log_method</td><td class='td-do'>$str_manage</td></tr>`
+
+		adminTreeService.initTree(result)
+
+		return adminTreeService.GetTree(0, str, 0, "", "")
+
+	} else {
+		return ""
+	}
+}
+
+//生成授权html
+func (adminTreeService *AdminTreeService) AuthorizeHtml(menu map[int]orm.Params, authMenus []string) string {
+	for id, _ := range menu {
+		if utils.InArrayForString(authMenus,strconv.Itoa(id)){
+			menu[id]["Checked"] = " checked"
+		}else {
+			menu[id]["Checked"] = ""
+		}
+		levelInt := adminTreeService.GetLevel(id,menu,0)
+		menu[id]["Level"] = levelInt
+		menu[id]["Width"] = 100 - levelInt
+	}
+
+	adminTreeService.initTree(menu)
+
+	adminTreeService.Text["other"] = `<label class='checkbox'  >
+	<input $checked  name='url[]' value='$id' level='$level'
+                        onclick='javascript:checkNode(this);' type='checkbox'>
+	$name
+	</label>`
+	adminTreeService.Text["0"] = []string{
+		`<dl class='checkMod'>
+                    <dt class='hd'>
+                        <label class='checkbox'>
+                            <input $checked name='url[]' value='$id' level='$level'
+                             onclick='javascript:checkNode(this);'
+                             type='checkbox'>
+                            $name
+                        </label>
+                    </dt>
+                    <dd class='bd'>`,
+                    `</dd></dl>`,
+	}
+
+	adminTreeService.Text["1"] = []string{
+		`<div class='menu_parent'>
+			<label class='checkbox'>
+				<input $checked  name='url[]' value='$id' level='$level'
+				onclick='javascript:checkNode(this);' type='checkbox'>
+			   $name
+			</label>
+		</div>
+		<div class='rule_check' style='width: $width%;'>`,
+		`</div><span class='child_row'></span>`,
+	}
+
+	return ""
+}
+
+//获取权限树
+func (adminTreeService *AdminTreeService) getAuthTreeAccess(myId int)  {
+	nStr := ""
+	child := adminTreeService.getChild(myId)
+
+	if len(child) > 0 {
+		//取key最小的一个，防止for range随机取，导致每次菜单顺序不同
+		sortId := 99999
+		for k, _ := range child {
+			if k < sortId {
+				sortId = k
+			}
+		}
+		level := make(map[string]interface{})
+		level = child[sortId]
+		fmt.Println("waiting.............................")
+		if _,ok := adminTreeService.Text[strconv.Itoa(level["Level"].(int))]; ok{
+
+		}
+		waiting
+		fmt.Println("waiting.............................")
+
 	}
 }

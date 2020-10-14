@@ -60,7 +60,6 @@ func (this *AuthController) CheckLogin() {
 
 	if err := this.ParseForm(&loginForm); err != nil {
 		response.ErrorWithMessage(err.Error(), this.Ctx)
-		return
 	}
 
 	v := validate.Struct(loginForm)
@@ -71,13 +70,11 @@ func (this *AuthController) CheckLogin() {
 		valid.Required(loginForm.Captcha, "captcha").Message("请输入验证码.")
 		if ok := captcha.VerifyString(loginForm.CaptchaId, loginForm.Captcha); !ok {
 			response.ErrorWithMessage("验证码错误.", this.Ctx)
-			return
 		}
 	}
 
 	if !v.Validate() {
 		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
-		return
 	}
 
 	//基础验证通过后，进行用户验证
@@ -85,7 +82,6 @@ func (this *AuthController) CheckLogin() {
 	loginUser, err := adminUserService.CheckLogin(loginForm, this.Ctx)
 	if err != nil {
 		response.ErrorWithMessage(err.Error(), this.Ctx)
-		return
 	}
 
 	//登录日志记录
@@ -97,8 +93,6 @@ func (this *AuthController) CheckLogin() {
 	} else {
 		response.SuccessWithMessageAndUrl("登录成功", "/admin/index/index", this.Ctx)
 	}
-
-	return
 }
 
 //刷新验证码

@@ -25,8 +25,8 @@ func (this *AdminMenuController) NestPrepare() {
 //菜单首页
 func (this *AdminMenuController) Index() {
 
-	var adminMenuService services.AdminMenuService
-	this.Data["data"] = adminMenuService.AdminMenuTree()
+	var adminTreeService services.AdminTreeService
+	this.Data["data"] = adminTreeService.AdminMenuTree()
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_menu/index.html"
@@ -53,7 +53,6 @@ func (this *AdminMenuController) Create() {
 
 	if err := this.ParseForm(&adminMenuForm); err != nil {
 		response.ErrorWithMessage(err.Error(), this.Ctx)
-		return
 	}
 
 	//去除Url前后两侧的空格
@@ -66,20 +65,17 @@ func (this *AdminMenuController) Create() {
 
 	if !v.Validate() {
 		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
-		return
 	}
 
 	//添加之前url验重
 	if adminMenuService.IsExistUrl(adminMenuForm.Url, adminMenuForm.Id) {
 		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", this.Ctx)
-		return
 	}
 
 	//创建
 	_, err := adminMenuService.Create(&adminMenuForm)
 	if err != nil {
 		response.Error(this.Ctx)
-		return
 	}
 
 	url := global.URL_BACK
@@ -88,7 +84,6 @@ func (this *AdminMenuController) Create() {
 	}
 
 	response.SuccessWithMessageAndUrl("添加成功", url, this.Ctx)
-	return
 }
 
 //编辑菜单界面
@@ -96,7 +91,6 @@ func (this *AdminMenuController) Edit() {
 	id, _ := this.GetInt("id", -1)
 	if id <= 0 {
 		response.ErrorWithMessage("Param is error.", this.Ctx)
-		return
 	}
 
 	var (
@@ -107,7 +101,6 @@ func (this *AdminMenuController) Edit() {
 	adminMenu := adminMenuService.GetAdminMenuById(id)
 	if adminMenu == nil {
 		response.ErrorWithMessage("Not Found Info By Id.", this.Ctx)
-		return
 	}
 
 	parentId := adminMenu.ParentId
@@ -128,7 +121,6 @@ func (this *AdminMenuController) Update() {
 
 	if err := this.ParseForm(&adminMenuForm); err != nil {
 		response.ErrorWithMessage(err.Error(), this.Ctx)
-		return
 	}
 
 	//去除Url前后两侧的空格
@@ -141,23 +133,19 @@ func (this *AdminMenuController) Update() {
 
 	if !v.Validate() {
 		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
-		return
 	}
 
 	//添加之前url验重
 	if adminMenuService.IsExistUrl(adminMenuForm.Url, adminMenuForm.Id) {
 		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", this.Ctx)
-		return
 	}
 
 	count := adminMenuService.Update(&adminMenuForm)
 
 	if count > 0 {
 		response.Success(this.Ctx)
-		return
 	} else {
 		response.Error(this.Ctx)
-		return
 	}
 }
 
@@ -180,14 +168,12 @@ func (this *AdminMenuController) Del() {
 
 	if len(idArr) == 0 {
 		response.ErrorWithMessage("参数id错误.", this.Ctx)
-		return
 	}
 
 	var adminMenuService services.AdminMenuService
 	//判断是否有子菜单
 	if adminMenuService.IsChildMenu(idArr) {
 		response.ErrorWithMessage("有子菜单不可删除！", this.Ctx)
-		return
 	}
 
 	noDeletionId := new(models.AdminMenu).NoDeletionId()
@@ -202,7 +188,6 @@ func (this *AdminMenuController) Del() {
 
 	if count > 0 {
 		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
-		return
 	} else {
 		response.Error(this.Ctx)
 	}
