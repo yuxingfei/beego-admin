@@ -5,14 +5,17 @@ import (
 	"beego-admin/global"
 	"beego-admin/models"
 	"beego-admin/utils"
+	beego_pagination "beego-admin/utils/beego-pagination"
 	"encoding/base64"
 	"errors"
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/orm"
+	"net/url"
 	"strconv"
 )
 
 type AdminUserService struct {
+	BaseService
 }
 
 //根据id获取一条admin_user数据
@@ -128,4 +131,19 @@ func (*AdminUserService) UpdateAvatar(id int, avatar string) int {
 		return 0
 	}
 	return int(num)
+}
+
+//通过分页获取adminuser
+func (this *AdminUserService) GetPaginateData(listRows int, params url.Values) ([]*models.AdminUser, beego_pagination.Pagination) {
+	//搜索、查询字段赋值
+	this.SearchField = append(this.SearchField, new(models.AdminUser).SearchField()...)
+
+	var adminUser []*models.AdminUser
+	o := orm.NewOrm().QueryTable(new(models.AdminUser))
+	_, err := this.PaginateAndScopeWhere(o, listRows, params).All(&adminUser)
+	if err != nil {
+		return nil, this.Pagination
+	} else {
+		return adminUser, this.Pagination
+	}
 }

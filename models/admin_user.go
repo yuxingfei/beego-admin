@@ -24,6 +24,26 @@ func (*AdminUser) TableName() string {
 	return "admin_user"
 }
 
+//定义模型的可搜索字段
+func (*AdminUser) SearchField() []string {
+	return []string{"nickname", "username"}
+}
+
+//禁止删除的数据id
+func (*AdminUser) NoDeletionId() []int {
+	return []int{}
+}
+
+//定义模型可作为条件的字段
+func (*AdminUser) WhereField() []string {
+	return []string{}
+}
+
+//定义可做为时间范围查询的字段
+func (*AdminUser) TimeField() []string {
+	return []string{}
+}
+
 //在init中注册定义的model
 func init() {
 	orm.RegisterModel(new(AdminUser))

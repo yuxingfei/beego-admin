@@ -60,6 +60,8 @@ func init() {
 		beego.NSRouter("/admin_user/update_password", &controllers.AdminUserController{}, "post:UpdatePassword"),
 		//系统管理-个人资料-修改头像
 		beego.NSRouter("/admin_user/update_avatar", &controllers.AdminUserController{}, "post:UpdateAvatar"),
+		//系统管理-用户管理-添加界面
+		beego.NSRouter("/admin_user/add", &controllers.AdminUserController{}, "get:Add"),
 
 		//系统管理-角色管理
 		beego.NSRouter("/admin_role/index", &controllers.AdminRoleController{}, "get:Index"),

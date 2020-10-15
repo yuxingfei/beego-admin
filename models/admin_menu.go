@@ -30,6 +30,21 @@ func (*AdminMenu) GetLogMethod() []string {
 	return []string{"不记录", "GET", "POST", "PUT", "DELETE"}
 }
 
+//定义模型的可搜索字段
+func (*AdminMenu) SearchField() []string {
+	return []string{}
+}
+
+//定义模型可作为条件的字段
+func (*AdminMenu) WhereField() []string {
+	return []string{}
+}
+
+//定义可做为时间范围查询的字段
+func (*AdminMenu) TimeField() []string {
+	return []string{}
+}
+
 //不允许删除的id
 func (*AdminMenu) NoDeletionId() []int {
 	return []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}

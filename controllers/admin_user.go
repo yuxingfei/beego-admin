@@ -18,13 +18,25 @@ func (this *AdminUserController) NestPrepare() {
 	//fmt.Println("AdminUserController NestPrepare")
 }
 
+////用户管理-首页
 func (this *AdminUserController) Index() {
-
-	//var adminUserService services.AdminUserService
-	//this.Data["data"] = adminUserService.GetAllData()
+	var adminUserService services.AdminUserService
+	data, pagination := adminUserService.GetPaginateData(admin["per_page"].(int), queryParams)
+	this.Data["data"] = data
+	this.Data["paginate"] = pagination
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_user/index.html"
+}
+
+//用户管理-添加界面
+func (this *AdminUserController) Add() {
+	var adminRoleService services.AdminRoleService
+	roles := adminRoleService.GetAllData()
+
+	this.Data["roles"] = roles
+	this.Layout = "public/base.html"
+	this.TplName = "admin_user/add.html"
 }
 
 //系统管理-个人资料

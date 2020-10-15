@@ -107,7 +107,7 @@ func (*AdminLogService) GetCount() int {
 }
 
 //获取所有adminuser
-func (this *AdminLogService) GetAllData(listRows int, params url.Values) ([]*models.AdminLog, beego_pagination.Pagination) {
+func (this *AdminLogService) GetPaginateData(listRows int, params url.Values) ([]*models.AdminLog, beego_pagination.Pagination) {
 	//搜索、查询字段赋值
 	this.SearchField = append(this.SearchField, new(models.AdminLog).SearchField()...)
 	this.WhereField = append(this.WhereField, new(models.AdminLog).WhereField()...)

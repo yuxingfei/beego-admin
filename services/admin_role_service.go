@@ -22,8 +22,15 @@ func (*AdminRoleService) GetCount() int {
 	return int(count)
 }
 
-//获取所有adminrole
-func (this *AdminRoleService) GetAllData(listRows int, params url.Values) ([]*models.AdminRole, beego_pagination.Pagination) {
+//获取所有admin role
+func (this *AdminRoleService) GetAllData() []*models.AdminRole {
+	var adminRoles []*models.AdminRole
+	orm.NewOrm().QueryTable(new(models.AdminRole)).All(&adminRoles)
+	return adminRoles
+}
+
+//分页获取adminrole
+func (this *AdminRoleService) GetPaginateData(listRows int, params url.Values) ([]*models.AdminRole, beego_pagination.Pagination) {
 	//搜索、查询字段赋值
 	this.SearchField = append(this.SearchField, new(models.AdminRole).SearchField()...)
 

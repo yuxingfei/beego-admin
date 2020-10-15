@@ -22,6 +22,16 @@ func (*AdminRole) NoDeletionId() []int {
 	return []int{1}
 }
 
+//定义模型可作为条件的字段
+func (*AdminRole) WhereField() []string {
+	return []string{}
+}
+
+//定义可做为时间范围查询的字段
+func (*AdminRole) TimeField() []string {
+	return []string{}
+}
+
 //自定义table 名称
 func (*AdminRole) TableName() string {
 	return "admin_role"

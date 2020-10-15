@@ -26,7 +26,7 @@ func (this *AdminRoleController) NestPrepare() {
 //角色管理首页
 func (this *AdminRoleController) Index() {
 	var adminRoleService services.AdminRoleService
-	data, pagination := adminRoleService.GetAllData(admin["per_page"].(int), queryParams)
+	data, pagination := adminRoleService.GetPaginateData(admin["per_page"].(int), queryParams)
 
 	this.Data["data"] = data
 	this.Data["paginate"] = pagination

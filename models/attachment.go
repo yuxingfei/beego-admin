@@ -31,6 +31,26 @@ func (*Attachment) TableName() string {
 	return "attachment"
 }
 
+//定义模型的可搜索字段
+func (*Attachment) SearchField() []string {
+	return []string{}
+}
+
+//禁止删除的数据id
+func (*Attachment) NoDeletionId() []int {
+	return []int{}
+}
+
+//定义模型可作为条件的字段
+func (*Attachment) WhereField() []string {
+	return []string{}
+}
+
+//定义可做为时间范围查询的字段
+func (*Attachment) TimeField() []string {
+	return []string{}
+}
+
 //在init中注册定义的model
 func init() {
 	orm.RegisterModel(new(Attachment))
