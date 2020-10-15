@@ -3,7 +3,6 @@ package services
 import (
 	"beego-admin/models"
 	"beego-admin/utils"
-	"fmt"
 	"github.com/astaxie/beego/orm"
 	"sort"
 	"strconv"
@@ -106,12 +105,22 @@ func (adminTreeService *AdminTreeService) getMenuParent(menu map[int]orm.Params,
 
 //递归获取级别
 func (adminTreeService *AdminTreeService) GetLevel(id int, menu map[int]orm.Params, i int) int {
+	parentId := 0
 	v, ok := menu[id]["ParentId"].(int64)
-	if (!ok || int(v) == 0) || id == int(v) {
+	if ok{
+		parentId = int(v)
+	}else {
+		v1,ok := menu[id]["ParentId"].(int)
+		if ok {
+			parentId = v1
+		}
+	}
+
+	if (parentId == 0) || id == parentId {
 		return i
 	}
 	i++
-	return adminTreeService.GetLevel(int(v), menu, i)
+	return adminTreeService.GetLevel(parentId, menu, i)
 }
 
 func (adminTreeService *AdminTreeService) initTree(menu map[int]orm.Params) {
@@ -441,11 +450,13 @@ func (adminTreeService *AdminTreeService) AuthorizeHtml(menu map[int]orm.Params,
 
 	adminTreeService.initTree(menu)
 
+	adminTreeService.Text = make(map[string]interface{})
 	adminTreeService.Text["other"] = `<label class='checkbox'  >
-	<input $checked  name='url[]' value='$id' level='$level'
+                        <input $checked  name='url[]' value='$id' level='$level'
                         onclick='javascript:checkNode(this);' type='checkbox'>
-	$name
-	</label>`
+                       $name
+                   </label>`
+
 	adminTreeService.Text["0"] = []string{
 		`<dl class='checkMod'>
                     <dt class='hd'>
@@ -461,22 +472,23 @@ func (adminTreeService *AdminTreeService) AuthorizeHtml(menu map[int]orm.Params,
 	}
 
 	adminTreeService.Text["1"] = []string{
-		`<div class='menu_parent'>
-			<label class='checkbox'>
-				<input $checked  name='url[]' value='$id' level='$level'
-				onclick='javascript:checkNode(this);' type='checkbox'>
-			   $name
-			</label>
-		</div>
-		<div class='rule_check' style='width: $width%;'>`,
+		`
+                        <div class='menu_parent'>
+                            <label class='checkbox'>
+                                <input $checked  name='url[]' value='$id' level='$level'
+                                onclick='javascript:checkNode(this);' type='checkbox'>
+                               $name
+                            </label>
+                        </div>
+                        <div class='rule_check' style='width: $width%;'>`,
 		`</div><span class='child_row'></span>`,
 	}
 
-	return ""
+	return adminTreeService.getAuthTreeAccess(0)
 }
 
 //获取权限树
-func (adminTreeService *AdminTreeService) getAuthTreeAccess(myId int)  {
+func (adminTreeService *AdminTreeService) getAuthTreeAccess(myId int) string {
 	nStr := ""
 	child := adminTreeService.getChild(myId)
 
@@ -490,12 +502,55 @@ func (adminTreeService *AdminTreeService) getAuthTreeAccess(myId int)  {
 		}
 		level := make(map[string]interface{})
 		level = child[sortId]
-		fmt.Println("waiting.............................")
-		if _,ok := adminTreeService.Text[strconv.Itoa(level["Level"].(int))]; ok{
 
+		//child排序
+		var ids []int
+		for id, _ := range child {
+			ids = append(ids, id)
 		}
-		waiting
-		fmt.Println("waiting.............................")
+		sort.Ints(ids)
 
+		var text []string
+		if v,ok := adminTreeService.Text[strconv.Itoa(level["Level"].(int))]; ok{
+			text = v.([]string)
+		}else{
+			text = adminTreeService.Text["1"].([]string)
+		}
+
+		for _, id := range ids {
+			k := id
+			v := child[id]
+			if len(adminTreeService.getChild(k)) > 0{
+				nStr = text[0]
+				nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(v["Id"].(int)))
+				nStr = strings.ReplaceAll(nStr, "$checked", v["Checked"].(string))
+				nStr = strings.ReplaceAll(nStr, "$level", strconv.Itoa(v["Level"].(int)))
+				nStr = strings.ReplaceAll(nStr, "$name", v["Name"].(string))
+				nStr = strings.ReplaceAll(nStr, "$width", strconv.Itoa(v["Width"].(int)))
+				adminTreeService.Html += nStr
+
+				adminTreeService.getAuthTreeAccess(k)
+
+				nStr = text[1]
+				nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(v["Id"].(int)))
+				nStr = strings.ReplaceAll(nStr, "$checked", v["Checked"].(string))
+				nStr = strings.ReplaceAll(nStr, "$level", strconv.Itoa(v["Level"].(int)))
+				nStr = strings.ReplaceAll(nStr, "$name", v["Name"].(string))
+				nStr = strings.ReplaceAll(nStr, "$width", strconv.Itoa(v["Width"].(int)))
+				adminTreeService.Html += nStr
+
+			}else {
+				nStr = adminTreeService.Text["other"].(string)
+				nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(v["Id"].(int)))
+				nStr = strings.ReplaceAll(nStr, "$checked", v["Checked"].(string))
+				nStr = strings.ReplaceAll(nStr, "$level", strconv.Itoa(v["Level"].(int)))
+				nStr = strings.ReplaceAll(nStr, "$name", v["Name"].(string))
+				adminTreeService.Html += nStr
+			}
+		}
+
+		return adminTreeService.Html
 	}
+
+	return ""
 }

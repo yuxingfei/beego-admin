@@ -24,7 +24,7 @@ func GetCaptcha() *CaptchaResponse {
 	}
 }
 
-//模仿php的in_array,判断是否存在map中
+//模仿php的array_key_exists,判断是否存在map中
 func KeyInMap(key string, m map[string]interface{}) bool {
 	_, ok := m[key]
 	if ok {

@@ -263,10 +263,10 @@ func (this *AdminRoleController) Access() {
 		menuMap[id]["LogMethod"] = adminMenu.LogMethod
 	}
 
-	adminTreeService.AuthorizeHtml(menuMap, strings.Split(data.Url, ","))
+	html := adminTreeService.AuthorizeHtml(menuMap, strings.Split(data.Url, ","))
 
 	this.Data["data"] = data
-	this.Data["menu"] = menu
+	this.Data["html"] = html
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_role/access.html"
