@@ -6,6 +6,7 @@ import (
 	beego_pagination "beego-admin/utils/beego-pagination"
 	"github.com/astaxie/beego/orm"
 	"net/url"
+	"strings"
 )
 
 type AdminRoleService struct {
@@ -117,6 +118,18 @@ func (*AdminRoleService) Disable(ids []int) int {
 	if err == nil {
 		return int(num)
 	} else {
+		return 0
+	}
+}
+
+//授权菜单
+func (*AdminRoleService) StoreAccess(id int , url []string) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id",id).Update(orm.Params{
+		"url":strings.Join(url,","),
+	})
+	if err == nil {
+		return int(num)
+	}else {
 		return 0
 	}
 }
