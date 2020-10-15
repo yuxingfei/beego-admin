@@ -273,28 +273,28 @@ func (this *AdminRoleController) Access() {
 }
 
 //菜单管理-角色管理-角色授权
-func (this *AdminRoleController) AccessOperate()  {
-	id,_ := this.GetInt("id",-1)
+func (this *AdminRoleController) AccessOperate() {
+	id, _ := this.GetInt("id", -1)
 	if id < 0 {
-		response.ErrorWithMessage("Params is Error.",this.Ctx)
+		response.ErrorWithMessage("Params is Error.", this.Ctx)
 	}
 
-	url := make([]string,0)
-	this.Ctx.Input.Bind(&url,"url")
+	url := make([]string, 0)
+	this.Ctx.Input.Bind(&url, "url")
 
-	if len(url) == 0{
-		response.ErrorWithMessage("请选择授权的菜单",this.Ctx)
+	if len(url) == 0 {
+		response.ErrorWithMessage("请选择授权的菜单", this.Ctx)
 	}
 
-	if !utils.InArrayForString(url,"1") {
-		response.ErrorWithMessage("首页权限必选",this.Ctx)
+	if !utils.InArrayForString(url, "1") {
+		response.ErrorWithMessage("首页权限必选", this.Ctx)
 	}
 
 	var adminRoleService services.AdminRoleService
-	num := adminRoleService.StoreAccess(id,url)
-	if num > 0{
+	num := adminRoleService.StoreAccess(id, url)
+	if num > 0 {
 		response.Success(this.Ctx)
-	}else {
+	} else {
 		response.Error(this.Ctx)
 	}
 

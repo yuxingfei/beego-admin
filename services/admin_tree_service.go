@@ -107,10 +107,10 @@ func (adminTreeService *AdminTreeService) getMenuParent(menu map[int]orm.Params,
 func (adminTreeService *AdminTreeService) GetLevel(id int, menu map[int]orm.Params, i int) int {
 	parentId := 0
 	v, ok := menu[id]["ParentId"].(int64)
-	if ok{
+	if ok {
 		parentId = int(v)
-	}else {
-		v1,ok := menu[id]["ParentId"].(int)
+	} else {
+		v1, ok := menu[id]["ParentId"].(int)
 		if ok {
 			parentId = v1
 		}
@@ -438,12 +438,12 @@ func (adminTreeService *AdminTreeService) AdminMenuTree() string {
 //生成授权html
 func (adminTreeService *AdminTreeService) AuthorizeHtml(menu map[int]orm.Params, authMenus []string) string {
 	for id, _ := range menu {
-		if utils.InArrayForString(authMenus,strconv.Itoa(id)){
+		if utils.InArrayForString(authMenus, strconv.Itoa(id)) {
 			menu[id]["Checked"] = " checked"
-		}else {
+		} else {
 			menu[id]["Checked"] = ""
 		}
-		levelInt := adminTreeService.GetLevel(id,menu,0)
+		levelInt := adminTreeService.GetLevel(id, menu, 0)
 		menu[id]["Level"] = levelInt
 		menu[id]["Width"] = 100 - levelInt
 	}
@@ -468,7 +468,7 @@ func (adminTreeService *AdminTreeService) AuthorizeHtml(menu map[int]orm.Params,
                         </label>
                     </dt>
                     <dd class='bd'>`,
-                    `</dd></dl>`,
+		`</dd></dl>`,
 	}
 
 	adminTreeService.Text["1"] = []string{
@@ -511,16 +511,16 @@ func (adminTreeService *AdminTreeService) getAuthTreeAccess(myId int) string {
 		sort.Ints(ids)
 
 		var text []string
-		if v,ok := adminTreeService.Text[strconv.Itoa(level["Level"].(int))]; ok{
+		if v, ok := adminTreeService.Text[strconv.Itoa(level["Level"].(int))]; ok {
 			text = v.([]string)
-		}else{
+		} else {
 			text = adminTreeService.Text["1"].([]string)
 		}
 
 		for _, id := range ids {
 			k := id
 			v := child[id]
-			if len(adminTreeService.getChild(k)) > 0{
+			if len(adminTreeService.getChild(k)) > 0 {
 				nStr = text[0]
 				nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(v["Id"].(int)))
 				nStr = strings.ReplaceAll(nStr, "$checked", v["Checked"].(string))
@@ -539,7 +539,7 @@ func (adminTreeService *AdminTreeService) getAuthTreeAccess(myId int) string {
 				nStr = strings.ReplaceAll(nStr, "$width", strconv.Itoa(v["Width"].(int)))
 				adminTreeService.Html += nStr
 
-			}else {
+			} else {
 				nStr = adminTreeService.Text["other"].(string)
 				nStr = strings.ReplaceAll(nStr, "$id", strconv.Itoa(v["Id"].(int)))
 				nStr = strings.ReplaceAll(nStr, "$checked", v["Checked"].(string))

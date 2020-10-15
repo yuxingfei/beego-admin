@@ -1,0 +1,22 @@
+package form_validate
+
+import "github.com/gookit/validate"
+
+//admin_user 表单
+type AdminUserForm struct {
+	Username string `form:"username" validate:"required"`
+	Password string `form:"password" validate:"required"`
+	Nickname string `form:"nickname" validate:"required"`
+	Role     string `form:"role" validate:"required"`
+	Status   int    `form:"status"`
+}
+
+//自定义验证返回消息
+func (f AdminUserForm) Messages() map[string]string {
+	return validate.MS{
+		"Username.required": "请填写账号.",
+		"Password.required": "请填写密码.",
+		"Nickname.required": "请填写昵称.",
+		"Role.required":     "请选择角色.",
+	}
+}

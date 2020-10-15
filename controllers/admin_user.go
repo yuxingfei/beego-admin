@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"beego-admin/form_validate"
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/services"
 	"beego-admin/utils"
 	"encoding/base64"
+	"fmt"
+	"github.com/gookit/validate"
 	"strings"
 )
 
@@ -37,6 +40,32 @@ func (this *AdminUserController) Add() {
 	this.Data["roles"] = roles
 	this.Layout = "public/base.html"
 	this.TplName = "admin_user/add.html"
+}
+
+//用户管理-添加界面
+func (this *AdminUserController) Create() {
+	var adminUserForm form_validate.AdminUserForm
+	if err := this.ParseForm(&adminUserForm); err != nil {
+		response.ErrorWithMessage(err.Error(), this.Ctx)
+	}
+	roles := make([]string, 0)
+	this.Ctx.Input.Bind(&roles, "role")
+
+	adminUserForm.Role = strings.Join(roles, ",")
+
+	fmt.Println("adminUserForm = ", adminUserForm)
+	v := validate.Struct(adminUserForm)
+
+	if !v.Validate() {
+		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+	}
+
+	//账号验重
+	var adminUserService services.AdminUserService
+	if adminUserService.IsExistName(strings.TrimSpace(adminUserForm.Username), 0) {
+		response.ErrorWithMessage("账号已经存在", this.Ctx)
+	}
+
 }
 
 //系统管理-个人资料

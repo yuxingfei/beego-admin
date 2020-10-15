@@ -147,3 +147,12 @@ func (this *AdminUserService) GetPaginateData(listRows int, params url.Values) (
 		return adminUser, this.Pagination
 	}
 }
+
+//名称验重
+func (*AdminUserService) IsExistName(username string, id int) bool {
+	if id == 0 {
+		return orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("username", username).Exist()
+	} else {
+		return orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("username", username).Exclude("id", id).Exist()
+	}
+}

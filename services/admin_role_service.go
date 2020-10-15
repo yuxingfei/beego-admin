@@ -130,13 +130,13 @@ func (*AdminRoleService) Disable(ids []int) int {
 }
 
 //授权菜单
-func (*AdminRoleService) StoreAccess(id int , url []string) int {
-	num, err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id",id).Update(orm.Params{
-		"url":strings.Join(url,","),
+func (*AdminRoleService) StoreAccess(id int, url []string) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminRole)).Filter("id", id).Update(orm.Params{
+		"url": strings.Join(url, ","),
 	})
 	if err == nil {
 		return int(num)
-	}else {
+	} else {
 		return 0
 	}
 }
