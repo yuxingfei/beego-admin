@@ -4,6 +4,7 @@ import "github.com/gookit/validate"
 
 //admin_user 表单
 type AdminUserForm struct {
+	Id          int    `form:"id"`
 	Username string `form:"username" validate:"required"`
 	Password string `form:"password" validate:"required"`
 	Nickname string `form:"nickname" validate:"required"`

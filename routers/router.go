@@ -64,6 +64,16 @@ func init() {
 		beego.NSRouter("/admin_user/add", &controllers.AdminUserController{}, "get:Add"),
 		//系统管理-用户管理-添加
 		beego.NSRouter("/admin_user/create", &controllers.AdminUserController{}, "post:Create"),
+		//系统管理-用户管理-修改界面
+		beego.NSRouter("/admin_user/edit", &controllers.AdminUserController{}, "get:Edit"),
+		//系统管理-用户管理-修改
+		beego.NSRouter("/admin_user/update", &controllers.AdminUserController{}, "post:Update"),
+		//系统管理-用户管理-启用
+		beego.NSRouter("/admin_user/enable", &controllers.AdminUserController{}, "post:Enable"),
+		//系统管理-用户管理-禁用
+		beego.NSRouter("/admin_user/disable", &controllers.AdminUserController{}, "post:Disable"),
+		//系统管理-用户管理-删除
+		beego.NSRouter("/admin_user/del", &controllers.AdminUserController{}, "post:Del"),
 
 		//系统管理-角色管理
 		beego.NSRouter("/admin_role/index", &controllers.AdminRoleController{}, "get:Index"),

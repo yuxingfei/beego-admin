@@ -180,3 +180,62 @@ func (*AdminUserService) Create(form *form_validate.AdminUserForm) int {
 		return 0
 	}
 }
+
+//更新用户信息
+func (*AdminUserService) Update(form *form_validate.AdminUserForm) int {
+	o := orm.NewOrm()
+	adminUser := models.AdminUser{Id:form.Id}
+	if o.Read(&adminUser) == nil {
+		adminUser.Username = form.Username
+		adminUser.Nickname = form.Nickname
+		adminUser.Role = form.Role
+		adminUser.Status = int8(form.Status)
+		if adminUser.Password != form.Password {
+			newPasswordForHash, err := utils.PasswordHash(form.Password)
+			if err == nil{
+				adminUser.Password = base64.StdEncoding.EncodeToString([]byte(newPasswordForHash))
+			}
+		}
+		num, err := o.Update(&adminUser)
+		if err == nil{
+			return int(num)
+		}else {
+			return 0
+		}
+	}
+	return 0
+}
+
+//启用用户
+func (*AdminUserService) Enable(ids []int) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("id__in", ids).Update(orm.Params{
+		"status": 1,
+	})
+	if err == nil {
+		return int(num)
+	} else {
+		return 0
+	}
+}
+
+//禁用用户
+func (*AdminUserService) Disable(ids []int) int {
+	num, err := orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("id__in", ids).Update(orm.Params{
+		"status": 0,
+	})
+	if err == nil {
+		return int(num)
+	} else {
+		return 0
+	}
+}
+
+//删除用户
+func (*AdminUserService) Del(ids []int) int {
+	count, err := orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("id__in", ids).Delete()
+	if err == nil {
+		return int(count)
+	} else {
+		return 0
+	}
+}

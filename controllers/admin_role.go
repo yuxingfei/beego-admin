@@ -74,7 +74,7 @@ func (this *AdminRoleController) Create() {
 	}
 }
 
-////菜单管理-角色管理-修改界面
+//菜单管理-角色管理-修改界面
 func (this *AdminRoleController) Edit() {
 	id, _ := this.GetInt("id", -1)
 	if id <= 0 {
@@ -96,7 +96,7 @@ func (this *AdminRoleController) Edit() {
 	this.TplName = "admin_role/edit.html"
 }
 
-////菜单管理-角色管理-修改
+//菜单管理-角色管理-修改
 func (this *AdminRoleController) Update() {
 	var adminRoleForm form_validate.AdminRoleForm
 	if err := this.ParseForm(&adminRoleForm); err != nil {
