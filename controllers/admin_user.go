@@ -65,6 +65,21 @@ func (this *AdminUserController) Create() {
 	if adminUserService.IsExistName(strings.TrimSpace(adminUserForm.Username), 0) {
 		response.ErrorWithMessage("账号已经存在", this.Ctx)
 	}
+	//默认头像
+	adminUserForm.Avatar = "/static/admin/images/avatar.png"
+
+	insertId := adminUserService.Create(&adminUserForm)
+
+	url := global.URL_BACK
+	if adminUserForm.IsCreate == 1{
+		url = global.URL_RELOAD
+	}
+
+	if insertId > 0 {
+		response.SuccessWithMessageAndUrl("添加成功",url,this.Ctx)
+	}else {
+		response.Error(this.Ctx)
+	}
 
 }
 

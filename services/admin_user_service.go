@@ -156,3 +156,27 @@ func (*AdminUserService) IsExistName(username string, id int) bool {
 		return orm.NewOrm().QueryTable(new(models.AdminUser)).Filter("username", username).Exclude("id", id).Exist()
 	}
 }
+
+//新增admin user用户
+func (*AdminUserService) Create(form *form_validate.AdminUserForm) int {
+	newPasswordForHash, err := utils.PasswordHash(form.Password)
+	if err != nil{
+		return 0
+	}
+
+	adminUser := models.AdminUser{
+		Username:form.Username,
+		Password:base64.StdEncoding.EncodeToString([]byte(newPasswordForHash)),
+		Nickname:form.Nickname,
+		Avatar:form.Avatar,
+		Role:form.Role,
+		Status:int8(form.Status),
+	}
+	id, err := orm.NewOrm().Insert(&adminUser)
+
+	if err == nil{
+		return int(id)
+	}else {
+		return 0
+	}
+}
