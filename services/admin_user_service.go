@@ -160,23 +160,23 @@ func (*AdminUserService) IsExistName(username string, id int) bool {
 //新增admin user用户
 func (*AdminUserService) Create(form *form_validate.AdminUserForm) int {
 	newPasswordForHash, err := utils.PasswordHash(form.Password)
-	if err != nil{
+	if err != nil {
 		return 0
 	}
 
 	adminUser := models.AdminUser{
-		Username:form.Username,
-		Password:base64.StdEncoding.EncodeToString([]byte(newPasswordForHash)),
-		Nickname:form.Nickname,
-		Avatar:form.Avatar,
-		Role:form.Role,
-		Status:int8(form.Status),
+		Username: form.Username,
+		Password: base64.StdEncoding.EncodeToString([]byte(newPasswordForHash)),
+		Nickname: form.Nickname,
+		Avatar:   form.Avatar,
+		Role:     form.Role,
+		Status:   int8(form.Status),
 	}
 	id, err := orm.NewOrm().Insert(&adminUser)
 
-	if err == nil{
+	if err == nil {
 		return int(id)
-	}else {
+	} else {
 		return 0
 	}
 }
@@ -184,7 +184,7 @@ func (*AdminUserService) Create(form *form_validate.AdminUserForm) int {
 //更新用户信息
 func (*AdminUserService) Update(form *form_validate.AdminUserForm) int {
 	o := orm.NewOrm()
-	adminUser := models.AdminUser{Id:form.Id}
+	adminUser := models.AdminUser{Id: form.Id}
 	if o.Read(&adminUser) == nil {
 		adminUser.Username = form.Username
 		adminUser.Nickname = form.Nickname
@@ -192,14 +192,14 @@ func (*AdminUserService) Update(form *form_validate.AdminUserForm) int {
 		adminUser.Status = int8(form.Status)
 		if adminUser.Password != form.Password {
 			newPasswordForHash, err := utils.PasswordHash(form.Password)
-			if err == nil{
+			if err == nil {
 				adminUser.Password = base64.StdEncoding.EncodeToString([]byte(newPasswordForHash))
 			}
 		}
 		num, err := o.Update(&adminUser)
-		if err == nil{
+		if err == nil {
 			return int(num)
-		}else {
+		} else {
 			return 0
 		}
 	}

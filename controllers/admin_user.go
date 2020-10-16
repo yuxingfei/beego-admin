@@ -8,7 +8,6 @@ import (
 	"beego-admin/services"
 	"beego-admin/utils"
 	"encoding/base64"
-	"fmt"
 	"github.com/adam-hanna/arrayOperations"
 	"github.com/gookit/validate"
 	"strconv"
@@ -73,13 +72,13 @@ func (this *AdminUserController) Create() {
 	insertId := adminUserService.Create(&adminUserForm)
 
 	url := global.URL_BACK
-	if adminUserForm.IsCreate == 1{
+	if adminUserForm.IsCreate == 1 {
 		url = global.URL_RELOAD
 	}
 
 	if insertId > 0 {
-		response.SuccessWithMessageAndUrl("添加成功",url,this.Ctx)
-	}else {
+		response.SuccessWithMessageAndUrl("添加成功", url, this.Ctx)
+	} else {
 		response.Error(this.Ctx)
 	}
 
@@ -105,7 +104,7 @@ func (this *AdminUserController) Edit() {
 	roles := adminRoleService.GetAllData()
 	this.Data["roles"] = roles
 	this.Data["data"] = adminUser
-	this.Data["role_arr"] = strings.Split(adminUser.Role,",")
+	this.Data["role_arr"] = strings.Split(adminUser.Role, ",")
 
 	this.Layout = "public/base.html"
 	this.TplName = "admin_user/edit.html"
@@ -119,7 +118,7 @@ func (this *AdminUserController) Update() {
 	}
 
 	if adminUserForm.Id <= 0 {
-		response.ErrorWithMessage("Params is Error.",this.Ctx)
+		response.ErrorWithMessage("Params is Error.", this.Ctx)
 	}
 
 	roles := make([]string, 0)
@@ -127,7 +126,6 @@ func (this *AdminUserController) Update() {
 
 	adminUserForm.Role = strings.Join(roles, ",")
 
-	fmt.Println("adminUserForm = ", adminUserForm)
 	v := validate.Struct(adminUserForm)
 
 	if !v.Validate() {
@@ -144,7 +142,7 @@ func (this *AdminUserController) Update() {
 
 	if num > 0 {
 		response.Success(this.Ctx)
-	}else {
+	} else {
 		response.Error(this.Ctx)
 	}
 }
@@ -229,7 +227,6 @@ func (this *AdminUserController) Del() {
 	if len(idArr) == 0 {
 		response.ErrorWithMessage("参数id错误.", this.Ctx)
 	}
-
 
 	noDeletionId := new(models.AdminUser).NoDeletionId()
 
