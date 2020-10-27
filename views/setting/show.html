@@ -31,7 +31,7 @@
                         <form class="form-horizontal dataForm" action="/admin/setting/update" method="post"
                               enctype="multipart/form-data">
                             <div class="box-body">
-                                <input name="id" value="{{$key}}" hidden>
+                                <input name="id" value="{{$item.Id}}" hidden>
 
                                 {{range $key1,$val := $item.ContentStrut }}
                                     {{str2html $val.Form}}
