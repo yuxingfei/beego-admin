@@ -93,7 +93,7 @@ func GetSha1String(str string) string {
 }
 
 //字符串命名风格转换
-func ParseName(name string,ptype int,ucfirst bool) string {
+func ParseName(name string, ptype int, ucfirst bool) string {
 	if ptype > 0 {
 		//解释正则表达式
 		reg := regexp.MustCompile(`_([a-zA-Z])`)
@@ -103,16 +103,16 @@ func ParseName(name string,ptype int,ucfirst bool) string {
 		}
 		//提取关键信息
 		result := reg.FindAllStringSubmatch(name, -1)
-		for _,v := range result{
-			name = strings.ReplaceAll(name,v[0],strings.ToUpper(v[1]))
+		for _, v := range result {
+			name = strings.ReplaceAll(name, v[0], strings.ToUpper(v[1]))
 		}
 
 		if ucfirst {
 			return Ucfirst(name)
-		}else {
+		} else {
 			return Lcfirst(name)
 		}
-	}else {
+	} else {
 		//解释正则表达式
 		reg := regexp.MustCompile(`[A-Z]`)
 		if reg == nil {
@@ -122,8 +122,8 @@ func ParseName(name string,ptype int,ucfirst bool) string {
 		//提取关键信息
 		result := reg.FindAllStringSubmatch(name, -1)
 
-		for _,v := range result{
-			name = strings.ReplaceAll(name,v[0],"_"+v[0])
+		for _, v := range result {
+			name = strings.ReplaceAll(name, v[0], "_"+v[0])
 		}
 		return strings.ToLower(name)
 	}

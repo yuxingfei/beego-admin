@@ -6,12 +6,12 @@ import (
 
 //将Content json字符串转换为结构体，便于html界面中range
 type Content struct {
-	Name string
-	Field string
-	Type string
+	Name    string
+	Field   string
+	Type    string
 	Content string
-	Option string
-	Form string
+	Option  string
+	Form    string
 }
 
 type Setting struct {
@@ -23,10 +23,10 @@ type Setting struct {
 	Content        string `orm:"column(content);type(text)" description:"设置配置及内容" json:"content"`
 	//将Content json字符串转换为结构体
 	ContentStrut []*Content `orm:"-"`
-	SortNumber   int    `orm:"column(sort_number);size(10);default(1000)" description:"排序" json:"sort_number"`
-	CreateTime   int    `orm:"column(create_time);size(10);default(0)" description:"操作时间"`
-	UpdateTime   int    `orm:"column(update_time);size(10);default(0)" description:"更新时间"`
-	DeleteTime   int    `orm:"column(delete_time);;size(10);default(0)" description:"删除时间" json:"delete_time"`
+	SortNumber   int        `orm:"column(sort_number);size(10);default(1000)" description:"排序" json:"sort_number"`
+	CreateTime   int        `orm:"column(create_time);size(10);default(0)" description:"操作时间"`
+	UpdateTime   int        `orm:"column(update_time);size(10);default(0)" description:"更新时间"`
+	DeleteTime   int        `orm:"column(delete_time);;size(10);default(0)" description:"删除时间" json:"delete_time"`
 }
 
 //自定义table 名称

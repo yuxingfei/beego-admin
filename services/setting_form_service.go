@@ -10,7 +10,7 @@ type SettingFormService struct {
 }
 
 var formHtml map[string]string = map[string]string{
-	"checkboxHtml":`<div class="form-group">
+	"checkboxHtml": `<div class="form-group">
 		<label class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<div class="checkbox">
@@ -21,7 +21,7 @@ var formHtml map[string]string = map[string]string{
 		</div>
 	</div>`,
 
-	"colorHtml":`<div class="form-group">
+	"colorHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<div class="input-group" id="color-[FIELD_NAME]">
@@ -34,7 +34,7 @@ var formHtml map[string]string = map[string]string{
 		$('#color-[FIELD_NAME]').colorpicker();
 	</script>`,
 
-	"dateHtml":`<div class="form-group">
+	"dateHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-date">
@@ -46,7 +46,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"dateRangeHtml":`<div class="form-group">
+	"dateRangeHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-date-range">
@@ -59,7 +59,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"datatimeHtml":`<div class="form-group">
+	"datatimeHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-datetime">
@@ -72,7 +72,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"datetimeRangeHtml":`<div class="form-group">
+	"datetimeRangeHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-datetime-range">
@@ -86,7 +86,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"EditorHtml":`<div class="form-group">
+	"EditorHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 			<div class="col-sm-10">
 				<script id="[FIELD_NAME]" name="[FIELD_NAME]" type="text/plain">{\$data.[FIELD_NAME]|raw|default='[FIELD_DEFAULT]'}</script>
@@ -99,14 +99,14 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"emailhtml":`<div class="form-group">
+	"emailhtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请输入[FORM_NAME]" type="email" class="form-control field-email">
 		</div>
 	</div>`,
 
-	"fileHtml":`<div class="form-group">
+	"fileHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4"> 
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" data-initial-preview="{\$data.[FIELD_NAME]|default=''}" placeholder="请上传[FORM_NAME]" type="file" class="form-control field-file" >
@@ -125,7 +125,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"iconHtml":`<div class="form-group">
+	"iconHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<div class="input-group iconpicker-container">
@@ -140,14 +140,14 @@ var formHtml map[string]string = map[string]string{
 		$('#[FIELD_NAME]').iconpicker({placement: 'bottomLeft'});
 	</script>`,
 
-	"idCardHtml":`<div class="form-group">
+	"idCardHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请输入[FORM_NAME]" type="text" maxlength="18" class="form-control field-id-card">
 		</div>
 	</div>`,
 
-	"imageHtml":`<div class="form-group">
+	"imageHtml": `<div class="form-group">
         <label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
         <div class="col-sm-10 col-md-4"> 
             <input id="[FIELD_NAME]" name="[FIELD_NAME]"  placeholder="请上传[FORM_NAME]" data-initial-preview="[FIELD_CONTENT]" type="file" class="form-control field-image" >
@@ -167,14 +167,14 @@ var formHtml map[string]string = map[string]string{
     });
     </script>`,
 
-    "ipHtml":`<div class="form-group">
+	"ipHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请输入[FORM_NAME]" type="text" class="form-control field-map">
 		</div>
 	</div>`,
 
-	"ampHtml":`<div class="form-group">
+	"ampHtml": `<div class="form-group">
 		<label class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-8 ">
 			<div id="map-container" style="width: 100%; height: 350px;position: relative; background-color: rgb(229, 227, 223);overflow: hidden;transform: translateZ(0px);">
@@ -214,14 +214,14 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"mobileHtml":`<div class="form-group">
+	"mobileHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请输入[FORM_NAME]" type="tel" maxlength="11" class="form-control field-mobile">
 		</div>
 	</div>`,
 
-	"multiFileHtml":`<div class="form-group">
+	"multiFileHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-8"> 
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]"  placeholder="请上传[FORM_NAME]" type="file" class="form-control field-multi-file" >
@@ -244,7 +244,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"multiImageHtml":`<div class="form-group">
+	"multiImageHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4"> 
 			<input id="[FIELD_NAME]" name="[FIELD_NAME][]"  placeholder="请上传[FORM_NAME]" multiple="multiple" type="file" class="form-control field-multi-image" >
@@ -269,7 +269,7 @@ var formHtml map[string]string = map[string]string{
 	})
 	</script>`,
 
-	"multiSelectHtml":`<div class="form-group">
+	"multiSelectHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<select name="[FIELD_NAME][]" id="[FIELD_NAME]" data-placeholder="请选择[FORM_NAME]" class="form-control field-multi-select" multiple="multiple">
@@ -281,7 +281,7 @@ var formHtml map[string]string = map[string]string{
 	 $('#[FIELD_NAME]').select2();
 	</script>`,
 
-	"numberHtml":`<div class="form-group">
+	"numberHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			 <div class="input-group">
@@ -298,21 +298,21 @@ var formHtml map[string]string = map[string]string{
 			});
 	</script>`,
 
-	"passwordHtml":`<div class="form-group">
+	"passwordHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请输入[FORM_NAME]" type="password" class="form-control field-password">
 		</div>
 	</div>`,
 
-	"radioHtml":`<div class="radio">
+	"radioHtml": `<div class="radio">
 		<label>
 			<input type="radio" name="[FIELD_NAME]" value="" checked="">
 			[FORM_NAME]
 		</label>
 	</div>`,
 
-	"selectHtml":`<div class="form-group">
+	"selectHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<select name="[FIELD_NAME]" id="[FIELD_NAME]" class="form-control field-select" data-placeholder="请选择[FORM_NAME]">
@@ -325,7 +325,7 @@ var formHtml map[string]string = map[string]string{
 	 $('#[FIELD_NAME]').select2();
 	</script>`,
 
-	"switchHtml":`<div class="form-group">
+	"switchHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 		<input class="input-switch"  id="[FIELD_NAME]" value="1" [SWITCH_CHECKED] type="checkbox" />
@@ -344,21 +344,21 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"textHtml":`<div class="form-group">
+	"textHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请输入[FORM_NAME]" type="text" class="form-control field-text">
 		</div>
 	</div>`,
 
-	"textareaHtml":`<div class="form-group">
+	"textareaHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<textarea id="[FIELD_NAME]" name="[FIELD_NAME]" class="form-control" rows="[ROWS]" placeholder="请输入[FORM_NAME]">[FIELD_CONTENT]</textarea>
 		</div>
 	</div>`,
 
-	"timeHtml":`<div class="form-group">
+	"timeHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-time">
@@ -371,7 +371,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"timeRangeHtml":`<div class="form-group">
+	"timeRangeHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-time-range">
@@ -385,14 +385,14 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"urlHtml":`<div class="form-group">
+	"urlHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请输入[FORM_NAME]" type="text" class="form-control field-map">
 		</div>
 	</div>`,
 
-	"yearHtml":`<div class="form-group">
+	"yearHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-year">
@@ -405,7 +405,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"yearMonthHtml":`<div class="form-group">
+	"yearMonthHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-year-month">
@@ -418,7 +418,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"yearMonthRangeHtml":`<div class="form-group">
+	"yearMonthRangeHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-year-month-range">
@@ -432,7 +432,7 @@ var formHtml map[string]string = map[string]string{
 		});
 	</script>`,
 
-	"yearRangeHtml":`<div class="form-group">
+	"yearRangeHtml": `<div class="form-group">
 		<label for="[FIELD_NAME]" class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
 			<input id="[FIELD_NAME]" name="[FIELD_NAME]" value="[FIELD_CONTENT]" placeholder="请选择[FORM_NAME]" type="text" class="form-control filed-year-range">
@@ -448,46 +448,46 @@ var formHtml map[string]string = map[string]string{
 }
 
 //获取表单字段
-func (*SettingFormService) GetFieldForm(typeS string,name string,field string,content string,option string) string {
-	htmlVar := utils.ParseName(typeS,1,false) + "Html"
+func (*SettingFormService) GetFieldForm(typeS string, name string, field string, content string, option string) string {
+	htmlVar := utils.ParseName(typeS, 1, false) + "Html"
 
-	form,ok := formHtml[htmlVar]
+	form, ok := formHtml[htmlVar]
 
 	if !ok {
 		return ""
 	}
 
 	switch typeS {
-		case "switch":
-			form = strings.ReplaceAll(form,"[ON_TEXT]","是")
-			form = strings.ReplaceAll(form,"[OFF_TEXT]","否")
-			if content == ""{
-				form = strings.ReplaceAll(form,"[SWITCH_CHECKED]","")
-			}else {
-				form = strings.ReplaceAll(form,"[SWITCH_CHECKED]","checked")
+	case "switch":
+		form = strings.ReplaceAll(form, "[ON_TEXT]", "是")
+		form = strings.ReplaceAll(form, "[OFF_TEXT]", "否")
+		if content == "" {
+			form = strings.ReplaceAll(form, "[SWITCH_CHECKED]", "")
+		} else {
+			form = strings.ReplaceAll(form, "[SWITCH_CHECKED]", "checked")
+		}
+		break
+	case "select":
+		optionHtml := ""
+		optionArr := strings.Split(option, "\r\n")
+		for _, item := range optionArr {
+			optionKeyValueArr := strings.Split(item, "||")
+			selectStr := ""
+			if len(optionKeyValueArr) > 0 && content == optionKeyValueArr[0] {
+				selectStr = "selected"
 			}
-			break
-		case "select":
-			optionHtml := ""
-			optionArr := strings.Split(option,"\r\n")
-			for _,item := range optionArr{
-				optionKeyValueArr := strings.Split(item,"||")
-				selectStr := ""
-				if len(optionKeyValueArr) > 0 && content == optionKeyValueArr[0]{
-					selectStr = "selected"
-				}
-				if len(optionKeyValueArr) > 0{
-					optionHtml += `<option value="` + optionKeyValueArr[0] + `" ` + selectStr + `>` + optionKeyValueArr[1] + `</option>`
-				}
+			if len(optionKeyValueArr) > 0 {
+				optionHtml += `<option value="` + optionKeyValueArr[0] + `" ` + selectStr + `>` + optionKeyValueArr[1] + `</option>`
 			}
-			form = strings.ReplaceAll(form,"[OPTION_DATA]",optionHtml)
-			break
-		default:
-			break
+		}
+		form = strings.ReplaceAll(form, "[OPTION_DATA]", optionHtml)
+		break
+	default:
+		break
 	}
 
-	form = strings.ReplaceAll(form,"[FIELD_NAME]",field)
-	form = strings.ReplaceAll(form,"[FORM_NAME]",name)
-	form = strings.ReplaceAll(form,"[FIELD_CONTENT]",content)
+	form = strings.ReplaceAll(form, "[FIELD_NAME]", field)
+	form = strings.ReplaceAll(form, "[FORM_NAME]", name)
+	form = strings.ReplaceAll(form, "[FIELD_CONTENT]", content)
 	return form
 }

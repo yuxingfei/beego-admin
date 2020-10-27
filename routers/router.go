@@ -98,7 +98,6 @@ func init() {
 
 		//设置中心-后台设置
 		beego.NSRouter("/setting/admin", &controllers.SettingController{}, "get:Admin"),
-
 	)
 
 	beego.AddNamespace(admin)
