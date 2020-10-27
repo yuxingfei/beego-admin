@@ -7,7 +7,10 @@ import (
 	"github.com/dchest/captcha"
 	"golang.org/x/crypto/bcrypt"
 	"io"
+	"regexp"
 	"strconv"
+	"strings"
+	"unicode"
 )
 
 type CaptchaResponse struct {
@@ -87,4 +90,57 @@ func GetSha1String(str string) string {
 	t := sha1.New()
 	io.WriteString(t, str)
 	return fmt.Sprintf("%x", t.Sum(nil))
+}
+
+//字符串命名风格转换
+func ParseName(name string,ptype int,ucfirst bool) string {
+	if ptype > 0 {
+		//解释正则表达式
+		reg := regexp.MustCompile(`_([a-zA-Z])`)
+		if reg == nil {
+			fmt.Println("MustCompile err")
+			return ""
+		}
+		//提取关键信息
+		result := reg.FindAllStringSubmatch(name, -1)
+		for _,v := range result{
+			name = strings.ReplaceAll(name,v[0],strings.ToUpper(v[1]))
+		}
+
+		if ucfirst {
+			return Ucfirst(name)
+		}else {
+			return Lcfirst(name)
+		}
+	}else {
+		//解释正则表达式
+		reg := regexp.MustCompile(`[A-Z]`)
+		if reg == nil {
+			fmt.Println("MustCompile err")
+			return ""
+		}
+		//提取关键信息
+		result := reg.FindAllStringSubmatch(name, -1)
+
+		for _,v := range result{
+			name = strings.ReplaceAll(name,v[0],"_"+v[0])
+		}
+		return strings.ToLower(name)
+	}
+}
+
+//首字母大写
+func Ucfirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
+}
+
+//首字母小写
+func Lcfirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
 }

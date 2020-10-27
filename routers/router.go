@@ -95,6 +95,10 @@ func init() {
 		beego.NSRouter("/admin_role/access", &controllers.AdminRoleController{}, "get:Access"),
 		//菜单管理-角色管理-角色授权
 		beego.NSRouter("/admin_role/access_operate", &controllers.AdminRoleController{}, "post:AccessOperate"),
+
+		//设置中心-后台设置
+		beego.NSRouter("/setting/admin", &controllers.SettingController{}, "get:Admin"),
+
 	)
 
 	beego.AddNamespace(admin)
