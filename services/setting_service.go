@@ -49,3 +49,22 @@ func (*SettingService) getDataBySettingGroupId(settingGroupId int) []*models.Set
 		return settings
 	}
 }
+
+//根据设置id，获取对应的setting info
+func (*SettingService) GetSettingInfoById(id int) *models.Setting {
+	setting := models.Setting{Id: id}
+	orm.NewOrm().Read(&setting)
+	return &setting
+}
+
+//根据id修改content的内容
+func (*SettingService) UpdateSettingInfoToContent(id int, content string) int {
+	affectRow, err := orm.NewOrm().QueryTable(new(models.Setting)).Filter("id", id).Update(orm.Params{
+		"content": content,
+	})
+	if err == nil {
+		return int(affectRow)
+	} else {
+		return 0
+	}
+}

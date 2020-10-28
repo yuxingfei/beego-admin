@@ -461,7 +461,7 @@ func (*SettingFormService) GetFieldForm(typeS string, name string, field string,
 	case "switch":
 		form = strings.ReplaceAll(form, "[ON_TEXT]", "是")
 		form = strings.ReplaceAll(form, "[OFF_TEXT]", "否")
-		if content == "" {
+		if content == "" || content == "0" {
 			form = strings.ReplaceAll(form, "[SWITCH_CHECKED]", "")
 		} else {
 			form = strings.ReplaceAll(form, "[SWITCH_CHECKED]", "checked")
