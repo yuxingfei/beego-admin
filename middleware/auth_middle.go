@@ -51,7 +51,8 @@ func AuthMiddle() {
 			}
 		}
 
-		checkAuth, _ := strconv.Atoi(ctx.Input.Param("check_auth"))
+		checkAuth, _ := strconv.Atoi(ctx.Request.PostForm.Get("check_auth"))
+
 		if checkAuth == 1 {
 			response.Success(ctx)
 			return

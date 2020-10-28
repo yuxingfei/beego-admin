@@ -100,6 +100,15 @@ func init() {
 		beego.NSRouter("/setting/admin", &controllers.SettingController{}, "get:Admin"),
 		//设置中心-更新设置
 		beego.NSRouter("/setting/update", &controllers.SettingController{}, "post:Update"),
+
+		//系统管理-开发管理-数据维护
+		beego.NSRouter("/database/table", &controllers.DatabaseController{}, "get:Table"),
+		//系统管理-开发管理-数据维护-优化表
+		beego.NSRouter("/database/optimize", &controllers.DatabaseController{}, "post:Optimize"),
+		//系统管理-开发管理-数据维护-修复表
+		beego.NSRouter("/database/repair", &controllers.DatabaseController{}, "post:Repair"),
+		//系统管理-开发管理-数据维护-查看详情
+		beego.NSRouter("/database/view", &controllers.DatabaseController{}, "get,post:View"),
 	)
 
 	beego.AddNamespace(admin)

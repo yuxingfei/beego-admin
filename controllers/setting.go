@@ -56,7 +56,6 @@ func (this *SettingController) Update() {
 			//单个文件上传
 			var attachmentService services.AttachmentService
 			attachmentInfo, err := attachmentService.Upload(this.Ctx, value.Field, loginUser.Id, 0)
-			fmt.Println("attachmentInfo = ", attachmentInfo)
 			if err == nil && attachmentInfo != nil {
 				//图片上传成功
 				setting.ContentStrut[key].Content = attachmentInfo.Url
@@ -84,7 +83,6 @@ func (this *SettingController) Update() {
 
 	//修改内容
 	contentStrutByte, err := json.Marshal(&setting.ContentStrut)
-	fmt.Println("contentStrutByte = ", string(contentStrutByte))
 	if err == nil {
 		affectRow := settingService.UpdateSettingInfoToContent(idInt, string(contentStrutByte))
 		if affectRow > 0 {
