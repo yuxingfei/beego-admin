@@ -14,12 +14,11 @@ func (this *AdminLogController) NestPrepare() {
 }
 
 func (this *AdminLogController) Index() {
-
 	var (
 		adminLogService  services.AdminLogService
 		adminUserService services.AdminUserService
 	)
-	data, pagination := adminLogService.GetPaginateData(admin["per_page"].(int), queryParams)
+	data, pagination := adminLogService.GetPaginateData(admin["per_page"].(int), gQueryParams)
 
 	this.Data["admin_user_list"] = adminUserService.GetAllAdminUser()
 

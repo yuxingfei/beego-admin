@@ -26,25 +26,28 @@ var (
 	//当前用户
 	loginUser models.AdminUser
 	//参数
-	queryParams url.Values
+	gQueryParams url.Values
 )
 
 //父控制器初始化
 func (this *baseController) Prepare() {
 	//访问url
-	url := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(), "/"))
+	requestUrl := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(), "/"))
 
 	//query参数
-	queryParams = this.Input()
-	queryParams.Set("queryParamUrl", this.Ctx.Input.URL())
-	fmt.Println("queryParams = ", queryParams)
-	if len(queryParams) > 0 {
-		for k, val := range queryParams {
-			v, ok := strconv.Atoi(val[0])
-			if ok == nil {
-				this.Data[k] = v
-			} else {
-				this.Data[k] = val[0]
+	//只有分页首页列表时才会使用
+	if this.Ctx.Input.IsGet(){
+		gQueryParams,_ = url.ParseQuery(this.Ctx.Request.URL.RawQuery)
+		gQueryParams.Set("queryParamUrl", this.Ctx.Input.URL())
+		fmt.Println("queryParams = ", gQueryParams)
+		if len(gQueryParams) > 0 {
+			for k, val := range gQueryParams {
+				v, ok := strconv.Atoi(val[0])
+				if ok == nil {
+					this.Data[k] = v
+				} else {
+					this.Data[k] = val[0]
+				}
 			}
 		}
 	}
@@ -81,21 +84,21 @@ func (this *baseController) Prepare() {
 
 	//记录日志
 	var adminMenuService services.AdminMenuService
-	adminMenu := adminMenuService.GetAdminMenuByUrl(url)
+	adminMenu := adminMenuService.GetAdminMenuByUrl(requestUrl)
 	title := ""
 	if adminMenu != nil {
 		title = adminMenu.Name
 		if strings.ToLower(adminMenu.LogMethod) == strings.ToLower(this.Ctx.Input.Method()) {
 			var adminLogService services.AdminLogService
-			adminLogService.CreateAdminLog(&loginUser, adminMenu, url, this.Ctx)
+			adminLogService.CreateAdminLog(&loginUser, adminMenu, requestUrl, this.Ctx)
 		}
 	}
 
 	//左侧菜单
 	menu := ""
-	if "admin/auth/login" != url && !(this.Ctx.Input.Header("X-PJAX") == "true") && isOk {
+	if "admin/auth/login" != requestUrl && !(this.Ctx.Input.Header("X-PJAX") == "true") && isOk {
 		var adminTreeService services.AdminTreeService
-		menu = adminTreeService.GetLeftMenu(url, loginUser)
+		menu = adminTreeService.GetLeftMenu(requestUrl, loginUser)
 	}
 
 	admin = map[string]interface{}{

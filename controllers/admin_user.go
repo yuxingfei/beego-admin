@@ -26,7 +26,7 @@ func (this *AdminUserController) NestPrepare() {
 ////用户管理-首页
 func (this *AdminUserController) Index() {
 	var adminUserService services.AdminUserService
-	data, pagination := adminUserService.GetPaginateData(admin["per_page"].(int), queryParams)
+	data, pagination := adminUserService.GetPaginateData(admin["per_page"].(int), gQueryParams)
 	this.Data["data"] = data
 	this.Data["paginate"] = pagination
 
