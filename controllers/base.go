@@ -36,8 +36,8 @@ func (this *baseController) Prepare() {
 
 	//query参数
 	//只有分页首页列表时才会使用
-	if this.Ctx.Input.IsGet(){
-		gQueryParams,_ = url.ParseQuery(this.Ctx.Request.URL.RawQuery)
+	if this.Ctx.Input.IsGet() {
+		gQueryParams, _ = url.ParseQuery(this.Ctx.Request.URL.RawQuery)
 		gQueryParams.Set("queryParamUrl", this.Ctx.Input.URL())
 		fmt.Println("queryParams = ", gQueryParams)
 		if len(gQueryParams) > 0 {

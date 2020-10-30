@@ -81,7 +81,6 @@ func (this *AdminUserController) Create() {
 	} else {
 		response.Error(this.Ctx)
 	}
-
 }
 
 //系统管理-用户管理-修改界面

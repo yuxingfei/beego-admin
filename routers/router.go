@@ -109,6 +109,23 @@ func init() {
 		beego.NSRouter("/database/repair", &controllers.DatabaseController{}, "post:Repair"),
 		//系统管理-开发管理-数据维护-查看详情
 		beego.NSRouter("/database/view", &controllers.DatabaseController{}, "get,post:View"),
+
+		//用户等级管理
+		beego.NSRouter("/user_level/index", &controllers.UserLevelController{}, "get:Index"),
+		//用户等级管理-添加界面
+		beego.NSRouter("/user_level/add", &controllers.UserLevelController{}, "get:Add"),
+		//用户等级管理-添加
+		beego.NSRouter("/user_level/create", &controllers.UserLevelController{}, "post:Create"),
+		//用户等级管理-修改界面
+		beego.NSRouter("/user_level/edit", &controllers.UserLevelController{}, "get:Edit"),
+		//用户等级管理-修改
+		beego.NSRouter("/user_level/update", &controllers.UserLevelController{}, "post:Update"),
+		//用户等级管理-启用
+		beego.NSRouter("/user_level/enable", &controllers.UserLevelController{}, "post:Enable"),
+		//用户等级管理-禁用
+		beego.NSRouter("/user_level/disable", &controllers.UserLevelController{}, "post:Disable"),
+		//用户等级管理-删除
+		beego.NSRouter("/user_level/del", &controllers.UserLevelController{}, "post:Del"),
 	)
 
 	beego.AddNamespace(admin)
