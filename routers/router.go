@@ -126,6 +126,8 @@ func init() {
 		beego.NSRouter("/user_level/disable", &controllers.UserLevelController{}, "post:Disable"),
 		//用户等级管理-删除
 		beego.NSRouter("/user_level/del", &controllers.UserLevelController{}, "post:Del"),
+		//用户等级管理-导出
+		beego.NSRouter("/user_level/export", &controllers.UserLevelController{}, "get:Export"),
 	)
 
 	beego.AddNamespace(admin)

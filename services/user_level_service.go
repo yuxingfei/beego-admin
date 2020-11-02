@@ -28,6 +28,20 @@ func (this *UserLevelService) GetPaginateData(listRows int, params url.Values) (
 	}
 }
 
+//获取导出数据
+func (this *UserLevelService) GetExportData(params url.Values) []*models.UserLevel {
+	//搜索、查询字段赋值
+	this.SearchField = append(this.SearchField, new(models.UserLevel).SearchField()...)
+	var userLevel []*models.UserLevel
+	o := orm.NewOrm().QueryTable(new(models.UserLevel))
+	_, err := this.ScopeWhere(o, params).All(&userLevel)
+	if err != nil {
+		return nil
+	} else {
+		return userLevel
+	}
+}
+
 //新增用户等级
 func (*UserLevelService) Create(form *form_validate.UserLevelForm) int {
 	userLevel := models.UserLevel{

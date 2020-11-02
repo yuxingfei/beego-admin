@@ -7,10 +7,13 @@ import (
 	"beego-admin/models"
 	"beego-admin/services"
 	"beego-admin/utils"
+	excel_office "beego-admin/utils/excel-office"
+	"beego-admin/utils/template"
 	"github.com/adam-hanna/arrayOperations"
 	"github.com/gookit/validate"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type UserLevelController struct {
@@ -26,6 +29,34 @@ func (this *UserLevelController) Index() {
 
 	this.Layout = "public/base.html"
 	this.TplName = "user_level/index.html"
+}
+
+func (this *UserLevelController) Export()  {
+	exportData := this.GetString("export_data")
+	if exportData == "1"{
+		var userLevelService services.UserLevelService
+		data := userLevelService.GetExportData(gQueryParams)
+		header := []string{"ID", "名称", "简介", "是否启用", "创建时间"}
+		body := [][]string{}
+		for _,item := range data{
+			record := []string{
+				strconv.Itoa(item.Id),
+				item.Name,
+				item.Description,
+			}
+			if item.Status == 1{
+				record = append(record,"是")
+			}else{
+				record = append(record,"否")
+			}
+			record = append(record,template.UnixTimeForFormat(item.CreateTime))
+			body = append(body,record)
+		}
+		this.Ctx.ResponseWriter.Header().Set("a","b")
+		excel_office.ExportData(header,body,"user_level-" + time.Now().Format("2006-01-02-15-04-05"),"","",this.Ctx.ResponseWriter)
+	}
+
+	response.Error(this.Ctx)
 }
 
 //用户等级-添加界面
