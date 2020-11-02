@@ -97,6 +97,17 @@ func (*UserLevelService) GetUserLevelById(id int) *models.UserLevel {
 	return &userLevel
 }
 
+//获取所有用户等级
+func (*UserLevelService) GetUserLevel() []*models.UserLevel {
+	var userLevels []*models.UserLevel
+	_, err := orm.NewOrm().QueryTable(new(models.UserLevel)).All(&userLevels)
+	if err == nil {
+		return userLevels
+	} else {
+		return nil
+	}
+}
+
 //启用
 func (*UserLevelService) Enable(ids []int) int {
 	num, err := orm.NewOrm().QueryTable(new(models.UserLevel)).Filter("id__in", ids).Update(orm.Params{

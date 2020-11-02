@@ -19,6 +19,9 @@ func init() {
 
 	//admin模块路由
 	admin := beego.NewNamespace("/admin",
+		//UEditor控制器
+		beego.NSRouter("/editor/server", &controllers.EditorController{}, "get,post:Server"),
+
 		//登录页
 		beego.NSRouter("/auth/login", &controllers.AuthController{}, "get:Login"),
 		//退出登录
@@ -129,8 +132,24 @@ func init() {
 		//用户等级管理-导出
 		beego.NSRouter("/user_level/export", &controllers.UserLevelController{}, "get:Export"),
 
-		//用户等级管理
+		//用户管理
 		beego.NSRouter("/user/index", &controllers.UserController{}, "get:Index"),
+		//用户管理-添加界面
+		beego.NSRouter("/user/add", &controllers.UserController{}, "get:Add"),
+		//用户管理-添加
+		beego.NSRouter("/user/create", &controllers.UserController{}, "post:Create"),
+		//用户管理-修改界面
+		beego.NSRouter("/user/edit", &controllers.UserController{}, "get:Edit"),
+		//用户管理-修改
+		beego.NSRouter("/user/update", &controllers.UserController{}, "post:Update"),
+		//用户管理-启用
+		beego.NSRouter("/user/enable", &controllers.UserController{}, "post:Enable"),
+		//用户管理-禁用
+		beego.NSRouter("/user/disable", &controllers.UserController{}, "post:Disable"),
+		//用户管理-删除
+		beego.NSRouter("/user/del", &controllers.UserController{}, "post:Del"),
+		//用户管理-导出
+		beego.NSRouter("/user/export", &controllers.UserController{}, "get:Export"),
 	)
 
 	beego.AddNamespace(admin)
