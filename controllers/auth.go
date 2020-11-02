@@ -6,12 +6,10 @@ import (
 	"beego-admin/global/response"
 	"beego-admin/services"
 	"beego-admin/utils"
-	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 	"github.com/dchest/captcha"
 	"github.com/gookit/validate"
-	"gopkg.in/ini.v1"
 	"net/http"
 )
 
@@ -28,28 +26,16 @@ func (this *AuthController) NestPrepare() {
 
 //登录界面
 func (this *AuthController) Login() {
-
-	//获取登录配置信息,不适用beego的获取配置方式
-	//beego获取配置会写入缓存，只有程序重启后，才会重新加载配置信息
-	cfg, err := ini.Load("conf/admin.conf")
-
-	var loginConfig struct {
+	//获取登录配置信息
+	loginConfig := struct {
 		Token      string
 		Captcha    string
 		Background string
+	}{
+		Token:      beego.AppConfig.DefaultString("login::token", "1"),
+		Captcha:    beego.AppConfig.DefaultString("login::captcha", "1"),
+		Background: beego.AppConfig.DefaultString("login::background", "/static/admin/images/default_background.jpeg"),
 	}
-
-	if err != nil {
-		fmt.Printf("Fail to read file conf/admin.conf: %v", err)
-		loginConfig.Token = "1"
-		loginConfig.Captcha = "1"
-		loginConfig.Background = "/static/admin/images/default_background.jpeg"
-	} else {
-		loginConfig.Token = cfg.Section("login").Key("token").String()
-		loginConfig.Captcha = cfg.Section("login").Key("captcha").String()
-		loginConfig.Background = cfg.Section("login").Key("background").String()
-	}
-
 	this.Data["login_config"] = loginConfig
 
 	//登录验证码
