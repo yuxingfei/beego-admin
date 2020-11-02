@@ -31,29 +31,29 @@ func (this *UserLevelController) Index() {
 	this.TplName = "user_level/index.html"
 }
 
-func (this *UserLevelController) Export()  {
+func (this *UserLevelController) Export() {
 	exportData := this.GetString("export_data")
-	if exportData == "1"{
+	if exportData == "1" {
 		var userLevelService services.UserLevelService
 		data := userLevelService.GetExportData(gQueryParams)
 		header := []string{"ID", "名称", "简介", "是否启用", "创建时间"}
 		body := [][]string{}
-		for _,item := range data{
+		for _, item := range data {
 			record := []string{
 				strconv.Itoa(item.Id),
 				item.Name,
 				item.Description,
 			}
-			if item.Status == 1{
-				record = append(record,"是")
-			}else{
-				record = append(record,"否")
+			if item.Status == 1 {
+				record = append(record, "是")
+			} else {
+				record = append(record, "否")
 			}
-			record = append(record,template.UnixTimeForFormat(item.CreateTime))
-			body = append(body,record)
+			record = append(record, template.UnixTimeForFormat(item.CreateTime))
+			body = append(body, record)
 		}
-		this.Ctx.ResponseWriter.Header().Set("a","b")
-		excel_office.ExportData(header,body,"user_level-" + time.Now().Format("2006-01-02-15-04-05"),"","",this.Ctx.ResponseWriter)
+		this.Ctx.ResponseWriter.Header().Set("a", "b")
+		excel_office.ExportData(header, body, "user_level-"+time.Now().Format("2006-01-02-15-04-05"), "", "", this.Ctx.ResponseWriter)
 	}
 
 	response.Error(this.Ctx)

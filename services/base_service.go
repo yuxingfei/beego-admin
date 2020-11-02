@@ -87,8 +87,15 @@ func (this *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values)
 	if order == "" {
 		order = "id"
 	}
+
 	if by == "" {
 		by = "-"
+	} else {
+		if by == "asc" {
+			by = ""
+		} else {
+			by = "-"
+		}
 	}
 
 	//排序
