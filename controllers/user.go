@@ -49,7 +49,7 @@ func (this *UserController) Export() {
 		var userLevelService services.UserLevelService
 		userLevel := userLevelService.GetUserLevel()
 		userLevelMap := make(map[int]string)
-		for _,item := range userLevel{
+		for _, item := range userLevel {
 			userLevelMap[item.Id] = item.Name
 		}
 
@@ -61,9 +61,9 @@ func (this *UserController) Export() {
 				strconv.Itoa(item.Id),
 				item.Avatar,
 			}
-			userLevelName,ok := userLevelMap[item.UserLevelId]
+			userLevelName, ok := userLevelMap[item.UserLevelId]
 			if ok {
-				record = append(record,userLevelName)
+				record = append(record, userLevelName)
 			}
 			record = append(record, item.Username)
 			record = append(record, item.Mobile)
