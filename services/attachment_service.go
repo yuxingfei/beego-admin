@@ -41,7 +41,7 @@ func (*AttachmentService) Upload(ctx *context.Context, name string, adminUserId 
 	//后缀带. (.png)
 	fileExt := path.Ext(h.Filename)
 	savePath := beego.AppConfig.String("attachment::path") + saveName + fileExt
-	saveRealDir := filepath.ToSlash(beego.AppPath) + "/" + beego.AppConfig.String("attachment::path")
+	saveRealDir := filepath.ToSlash(beego.AppPath + "/" + beego.AppConfig.String("attachment::path"))
 
 	_, err = os.Stat(saveRealDir)
 	if err != nil {
@@ -123,7 +123,7 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 		//后缀带. (.png)
 		fileExt := path.Ext(h.Filename)
 		savePath := beego.AppConfig.String("attachment::path") + saveName + fileExt
-		saveRealDir := filepath.ToSlash(beego.AppPath) + "/" + beego.AppConfig.String("attachment::path")
+		saveRealDir := filepath.ToSlash(beego.AppPath + "/" + beego.AppConfig.String("attachment::path"))
 
 		_, err = os.Stat(saveRealDir)
 		if err != nil {
