@@ -76,7 +76,7 @@ beego-admin目录下 go mod tidy 将自动下载依赖包
 
 #### [beego-admin](https://github.com/yuxingfei/beego-admin)通用后台系统效果图
 
-![Image](https://raw.githubusercontent.com/yuxingfei/images/master/beego-login-1.png)
+![Image](https://raw.githubusercontent.com/yuxingfei/images/master/beego-login-1.jpg)
 
 ![Image](https://raw.githubusercontent.com/yuxingfei/images/master/beego-index-2.png)
 
