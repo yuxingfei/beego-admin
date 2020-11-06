@@ -18,12 +18,7 @@ type AdminUserController struct {
 	baseController
 }
 
-//控制器，初始化函数，基础自父控制器
-func (this *AdminUserController) NestPrepare() {
-	//fmt.Println("AdminUserController NestPrepare")
-}
-
-////用户管理-首页
+//用户管理-首页
 func (this *AdminUserController) Index() {
 	var adminUserService services.AdminUserService
 	data, pagination := adminUserService.GetPaginateData(admin["per_page"].(int), gQueryParams)

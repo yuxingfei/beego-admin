@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"fmt"
+	"github.com/astaxie/beego"
 	"github.com/dchest/captcha"
 	"golang.org/x/crypto/bcrypt"
 	"io"
@@ -98,7 +99,7 @@ func ParseName(name string, ptype int, ucfirst bool) string {
 		//解释正则表达式
 		reg := regexp.MustCompile(`_([a-zA-Z])`)
 		if reg == nil {
-			fmt.Println("MustCompile err")
+			beego.Error("MustCompile err")
 			return ""
 		}
 		//提取关键信息
@@ -116,7 +117,7 @@ func ParseName(name string, ptype int, ucfirst bool) string {
 		//解释正则表达式
 		reg := regexp.MustCompile(`[A-Z]`)
 		if reg == nil {
-			fmt.Println("MustCompile err")
+			beego.Error("MustCompile err")
 			return ""
 		}
 		//提取关键信息

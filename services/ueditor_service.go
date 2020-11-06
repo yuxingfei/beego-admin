@@ -119,7 +119,7 @@ func (this *UeditorService) ListImage(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	allowFiles := beego.AppConfig.String("ueditor::imageManagerAllowFiles")
 	//ext前面的.号去掉
-	allowFiles = strings.ReplaceAll(allowFiles,".","")
+	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
 	listSize := beego.AppConfig.String("ueditor::imageManagerListSize")
 	if allowFiles == "" || listSize == "" || len(get) <= 0 {
 		result["state"] = "config params error."
@@ -262,7 +262,7 @@ func (this *UeditorService) ListFile(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	allowFiles := beego.AppConfig.String("ueditor::fileManagerAllowFiles")
 	//ext前面的.号去掉
-	allowFiles = strings.ReplaceAll(allowFiles,".","")
+	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
 	listSize := beego.AppConfig.String("ueditor::fileManagerListSize")
 	if allowFiles == "" || listSize == "" || len(get) <= 0 {
 		result["state"] = "config params error."
@@ -281,7 +281,7 @@ func (this *UeditorService) UploadScrawl(get url.Values) map[string]interface{} 
 	maxSize := beego.AppConfig.String("ueditor::scrawlMaxSize")
 	allowFiles := beego.AppConfig.String("ueditor::scrawlAllowFiles")
 	//ext前面的.号去掉
-	allowFiles = strings.ReplaceAll(allowFiles,".","")
+	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
 	oriName := beego.AppConfig.String("ueditor::scrawlFieldName")
 
 	if pathFormat == "" || maxSize == "" || allowFiles == "" || oriName == "" {
@@ -371,7 +371,7 @@ func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interfac
 	maxSize := beego.AppConfig.String("ueditor::catcherMaxSize")
 	allowFiles := beego.AppConfig.String("ueditor::catcherAllowFiles")
 	//ext前面的.号去掉
-	allowFiles = strings.ReplaceAll(allowFiles,".","")
+	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
 	oriName := "remote.png"
 
 	if pathFormat == "" || maxSize == "" || allowFiles == "" {

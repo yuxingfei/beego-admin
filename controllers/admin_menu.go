@@ -17,14 +17,8 @@ type AdminMenuController struct {
 	baseController
 }
 
-//控制器，初始化函数，基础自父控制器
-func (this *AdminMenuController) NestPrepare() {
-	//fmt.Println("AdminMenuController NestPrepare")
-}
-
 //菜单首页
 func (this *AdminMenuController) Index() {
-
 	var adminTreeService services.AdminTreeService
 	this.Data["data"] = adminTreeService.AdminMenuTree()
 

@@ -24,7 +24,6 @@ type PackageLib struct {
 }
 
 func (this *IndexController) Index() {
-
 	indexConfig, err := beego.AppConfig.GetSection("index")
 	this.Data["login_user"] = loginUser
 

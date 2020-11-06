@@ -39,7 +39,6 @@ func (this *baseController) Prepare() {
 	if this.Ctx.Input.IsGet() {
 		gQueryParams, _ = url.ParseQuery(this.Ctx.Request.URL.RawQuery)
 		gQueryParams.Set("queryParamUrl", this.Ctx.Input.URL())
-		fmt.Println("queryParams = ", gQueryParams)
 		if len(gQueryParams) > 0 {
 			for k, val := range gQueryParams {
 				v, ok := strconv.Atoi(val[0])

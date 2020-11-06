@@ -3,6 +3,7 @@ package ini_utils
 import (
 	"beego-admin/models"
 	"fmt"
+	"github.com/astaxie/beego"
 	"gopkg.in/ini.v1"
 )
 
@@ -15,7 +16,7 @@ func UpdateAdminConf(setting *models.Setting) bool {
 
 	cfg, err := ini.Load("conf/admin.conf")
 	if err != nil {
-		fmt.Printf("Fail to read file conf/admin.conf: %v", err)
+		beego.Error(fmt.Sprintf("Fail to read file conf/admin.conf: %v", err))
 		return false
 	}
 
