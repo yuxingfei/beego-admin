@@ -140,13 +140,24 @@ func (this *IndexController) getSystemInfo() map[string]interface{} {
 				continue
 			}
 			if string(line) != "" {
-				strArr := strings.Split(string(line), " ")
-				if strArr[0] == "require" && len(strArr) >= 3 {
+				strArr := strings.Split(strings.TrimSpace(string(line)), " ")
+				lenStrArr := len(strArr)
+				//常规require方式
+				if strArr[0] == "require" && lenStrArr >= 3 {
 					packageLib := PackageLib{
 						Name:    strArr[1],
 						Version: strArr[2],
 					}
 					requireList = append(requireList, &packageLib)
+				}else {
+					//require多个时候
+					if lenStrArr >= 2 && strings.Contains(strArr[0],"/"){
+						packageLib := PackageLib{
+							Name:    strArr[0],
+							Version: strArr[1],
+						}
+						requireList = append(requireList, &packageLib)
+					}
 				}
 			}
 		}

@@ -11,7 +11,7 @@
  Target Server Version : 50730
  File Encoding         : 65001
 
- Date: 06/11/2020 16:34:02
+ Date: 06/11/2020 16:58:30
 */
 
 SET NAMES utf8mb4;
@@ -31,7 +31,7 @@ CREATE TABLE `admin_log`  (
   `create_time` int(10) NOT NULL DEFAULT 0 COMMENT '操作时间',
   `update_time` int(10) NOT NULL DEFAULT 0 COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1024 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '后台操作日志' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1028 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '后台操作日志' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of admin_log
@@ -1059,6 +1059,10 @@ INSERT INTO `admin_log` VALUES (1020, 1, '修改用户', 'admin/user/update', 'P
 INSERT INTO `admin_log` VALUES (1021, 1, '禁用用户', 'admin/user/disable', 'POST', '::1', 1604644560, 1604644560);
 INSERT INTO `admin_log` VALUES (1022, 1, '启用用户', 'admin/user/enable', 'POST', '::1', 1604644564, 1604644564);
 INSERT INTO `admin_log` VALUES (1023, 1, '登录', 'admin/auth/login', 'POST', '10.1.2.49', 1604647247, 1604647247);
+INSERT INTO `admin_log` VALUES (1024, 1, '登录', 'admin/auth/login', 'POST', '::1', 1604652655, 1604652655);
+INSERT INTO `admin_log` VALUES (1025, 1, '更新设置', 'admin/setting/update', 'POST', '::1', 1604652680, 1604652680);
+INSERT INTO `admin_log` VALUES (1026, 1, '修改密码', 'admin/admin_user/update_password', 'POST', '::1', 1604652706, 1604652706);
+INSERT INTO `admin_log` VALUES (1027, 1, '登录', 'admin/auth/login', 'POST', '::1', 1604652772, 1604652772);
 
 -- ----------------------------
 -- Table structure for admin_log_data
@@ -1069,7 +1073,7 @@ CREATE TABLE `admin_log_data`  (
   `admin_log_id` int(11) NOT NULL COMMENT '日志ID',
   `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '日志内容',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1014 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '后台操作日志数据' ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1018 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '后台操作日志数据' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of admin_log_data
@@ -2087,6 +2091,10 @@ INSERT INTO `admin_log_data` VALUES (1010, 1020, '29Td4975v61BbAd6k7kf33EuxJCxOl
 INSERT INTO `admin_log_data` VALUES (1011, 1021, 'A9MaEGQOFd3k4b7or/b88g==');
 INSERT INTO `admin_log_data` VALUES (1012, 1022, 'A9MaEGQOFd3k4b7or/b88g==');
 INSERT INTO `admin_log_data` VALUES (1013, 1023, '1FxSkF29D7f/80EJzW6I4OL5X+50teY5hDOtUAiIKNfQmuZ8ApTChI/C1M4nxuVWC/s2fkzfYxLUpwUsaMqhv0bMagw8Pp8ZIH5RIoyTq7vPUG1GQ/BxRblAQC8iysydkPEvIy2vh4tuqoPlS33GZjG0ZU9jRxgF9uq3pqIIDbxVUw5jY/iIH2fsjXf2xroDazKDJRZ2gKihWQBJ+ywNBtlqNIBJd4B+iN/q+mg7gkI=');
+INSERT INTO `admin_log_data` VALUES (1014, 1024, 'Q3Iv23mRTgPIgUVTbQQqfv8RekkYJAdxKkPmAVHHYyxG7vTsRmKR3w5hIXe8yJ6CJQQWuC1ZYFZeY0JjuBV5J/DzGLB8RTBFbeDzC4XnOpyCSp9eYPTKitEga4Xq5fPKDu30RFsUDyWZ14G73V8j+ek+rrzgJ88s3XO+uqq1EEIiY1jxNJpNpAADGJZgvfBZrBs2PxOcECx+0BMIsjnukVob9k3YESV29XfL/JKfT7o=');
+INSERT INTO `admin_log_data` VALUES (1015, 1025, 'Q3Iv23mRTgPIgUVTbQQqfv8RekkYJAdxKkPmAVHHYyxKvXmqJmysGy0aU1ONaWqpbL8wxayWVNn6BBlTfkK2q0gG1q+tdoHjZOn8GSufCHzh4nJTBGgpJ0h8X0MzSBAzKBHn2KEbcN+qQCEBMaisPVGJ0/1H+J7GtIdDAd5BQj+35FAnPhnXvHs0ocxGP/it64H3vXyiEzPJDgPdb8Kyccxuueh/iJ2O9NO4FrouPEw=');
+INSERT INTO `admin_log_data` VALUES (1016, 1026, 'Q3Iv23mRTgPIgUVTbQQqfv8RekkYJAdxKkPmAVHHYywRLn2HLIsXMTMv25+yk8MptsMgHlbXmcfX2VXT7YiSBiVSWFRs3wR34jjIxUJ2tWVHMPhMnnUMWxCl4I+OznewinkXAFAJKRGgoE2ZSGZtij375WBDSrtIkHlSFEk7GBOwUsx7nQH5n1jMBGkSJqz8N9uMO+3FBCHbWRc5xNMwig==');
+INSERT INTO `admin_log_data` VALUES (1017, 1027, 'Q3Iv23mRTgPIgUVTbQQqfv8RekkYJAdxKkPmAVHHYyxG7vTsRmKR3w5hIXe8yJ6CtD28GU473xTRpBVtN6kOUi8ZMwwOJKZJWvgHaP7GjELAfUx9e/wN/zGhmolRXs/DqIaCe5VkMWbh6d6Vr1JDV010EsHYrj2b+dOa1AcyqAZK+W8RqY9CP/VC6t83t+zN6HyyoeGdLv5YkMp9+AmzxnerVxTVPxCYjVmlah3xEIY=');
 
 -- ----------------------------
 -- Table structure for admin_menu
@@ -2209,7 +2217,7 @@ CREATE TABLE `admin_user`  (
 -- ----------------------------
 -- Records of admin_user
 -- ----------------------------
-INSERT INTO `admin_user` VALUES (1, 'super_admin', 'JDJhJDEwJEtjL1ZkMUZObnZIaUtRZjc1blFKRE9ScXFPaElBLlpPVVh5UDNFbkR4Nkh2MC9Vc2ZGeEtp', '超级管理员', '/static/uploads/attachment/aecb9fb7-871b-43fc-9414-a4265d0cb72d.png', '1', 1, 0);
+INSERT INTO `admin_user` VALUES (1, 'super_admin', 'JDJhJDEwJGdMTC80bkp1T0MzWjhXcFhwVUdCVC40bkliMGV1WW5oeW51bHJsUC5UMk1kZ2l0djRzSlUy', '超级管理员', '/static/uploads/attachment/aecb9fb7-871b-43fc-9414-a4265d0cb72d.png', '1', 1, 0);
 INSERT INTO `admin_user` VALUES (2, 'test01', 'JDJ5JDEwJGhVbXFoeExxUklZZDZBSDc4UU1VSWVwZjRJQnlOV3FCN1ZaUEpkSzhndVJFaW9sZk11MXh5', '测试人员', '/storage/attachment/UUcsQTJXYqPfD7rAC97yqLOk1ns8fVUy3ViGYGyS.png', '2,3', 1, 0);
 INSERT INTO `admin_user` VALUES (3, 'test03', 'JDJhJDEwJGFNbjdBeGJXcDRwWXg4ZHJ0QXE4UWVGRUt1d1M1SHhEemkzeXl3NXIwamZpL2lsVVFvUU1D', 'test03', '/static/admin/images/avatar.png', '2', 1, 0);
 
@@ -2358,7 +2366,7 @@ CREATE TABLE `setting`  (
 -- ----------------------------
 -- Records of setting
 -- ----------------------------
-INSERT INTO `setting` VALUES (1, 1, '基本设置', '后台的基本信息设置', 'base', '[{\"Name\":\"后台名称\",\"Field\":\"name\",\"Type\":\"text\",\"Content\":\"beego\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"后台简称\",\"Field\":\"short_name\",\"Type\":\"text\",\"Content\":\"beego\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"后台作者\",\"Field\":\"author\",\"Type\":\"text\",\"Content\":\"虞行飞\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"后台版本\",\"Field\":\"version\",\"Type\":\"text\",\"Content\":\"0.1\",\"Option\":\"\",\"Form\":\"\"}]', 1000, 1587879871, 1596008207, 0);
+INSERT INTO `setting` VALUES (1, 1, '基本设置', '后台的基本信息设置', 'base', '[{\"Name\":\"后台名称\",\"Field\":\"name\",\"Type\":\"text\",\"Content\":\"beego通用后台系统\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"后台简称\",\"Field\":\"short_name\",\"Type\":\"text\",\"Content\":\"beego通用后台系统\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"后台作者\",\"Field\":\"author\",\"Type\":\"text\",\"Content\":\"虞行飞\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"后台版本\",\"Field\":\"version\",\"Type\":\"text\",\"Content\":\"0.1\",\"Option\":\"\",\"Form\":\"\"}]', 1000, 1587879871, 1596008207, 0);
 INSERT INTO `setting` VALUES (2, 1, '登录设置', '后台登录相关设置', 'login', '[{\"Name\":\"登录token验证\",\"Field\":\"token\",\"Type\":\"switch\",\"Content\":\"1\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"验证码\",\"Field\":\"captcha\",\"Type\":\"select\",\"Content\":\"1\",\"Option\":\"0||不开启\\r\\n1||图形验证码\",\"Form\":\"\"},{\"Name\":\"登录背景\",\"Field\":\"background\",\"Type\":\"image\",\"Content\":\"/static/uploads/attachment/ea08c391-0eb4-4c6a-8e4f-9846c51d61cc.jpg\",\"Option\":\"\",\"Form\":\"\"}]', 1, 1587879871, 1595556703, 0);
 INSERT INTO `setting` VALUES (3, 1, '首页设置', '后台首页参数设置', 'index', '[{\"Name\":\"默认密码警告\",\"Field\":\"password_warning\",\"Type\":\"switch\",\"Content\":\"1\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"是否显示提示信息\",\"Field\":\"show_notice\",\"Type\":\"switch\",\"Content\":\"1\",\"Option\":\"\",\"Form\":\"\"},{\"Name\":\"提示信息内容\",\"Field\":\"notice_content\",\"Type\":\"text\",\"Content\":\"欢迎来到使用本系统，左侧为菜单区域，右侧为功能区。\",\"Option\":\"\",\"Form\":\"\"}]', 1, 1587879871, 1596008219, 0);
 
