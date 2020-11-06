@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/base64"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/google/uuid"
@@ -117,6 +118,8 @@ func (*UeditorService) upFile(fieldName string, ctx *context.Context) map[string
 func (this *UeditorService) ListImage(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	allowFiles := beego.AppConfig.String("ueditor::imageManagerAllowFiles")
+	//ext前面的.号去掉
+	allowFiles = strings.ReplaceAll(allowFiles,".","")
 	listSize := beego.AppConfig.String("ueditor::imageManagerListSize")
 	if allowFiles == "" || listSize == "" || len(get) <= 0 {
 		result["state"] = "config params error."
@@ -258,6 +261,8 @@ func (this *UeditorService) UploadFile(ctx *context.Context) map[string]interfac
 func (this *UeditorService) ListFile(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	allowFiles := beego.AppConfig.String("ueditor::fileManagerAllowFiles")
+	//ext前面的.号去掉
+	allowFiles = strings.ReplaceAll(allowFiles,".","")
 	listSize := beego.AppConfig.String("ueditor::fileManagerListSize")
 	if allowFiles == "" || listSize == "" || len(get) <= 0 {
 		result["state"] = "config params error."
@@ -275,6 +280,8 @@ func (this *UeditorService) UploadScrawl(get url.Values) map[string]interface{} 
 	pathFormat := beego.AppConfig.String("ueditor::scrawlPathFormat")
 	maxSize := beego.AppConfig.String("ueditor::scrawlMaxSize")
 	allowFiles := beego.AppConfig.String("ueditor::scrawlAllowFiles")
+	//ext前面的.号去掉
+	allowFiles = strings.ReplaceAll(allowFiles,".","")
 	oriName := beego.AppConfig.String("ueditor::scrawlFieldName")
 
 	if pathFormat == "" || maxSize == "" || allowFiles == "" || oriName == "" {
@@ -363,6 +370,8 @@ func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interfac
 	pathFormat := beego.AppConfig.String("ueditor::catcherPathFormat")
 	maxSize := beego.AppConfig.String("ueditor::catcherMaxSize")
 	allowFiles := beego.AppConfig.String("ueditor::catcherAllowFiles")
+	//ext前面的.号去掉
+	allowFiles = strings.ReplaceAll(allowFiles,".","")
 	oriName := "remote.png"
 
 	if pathFormat == "" || maxSize == "" || allowFiles == "" {
