@@ -2,7 +2,6 @@ package services
 
 import (
 	"encoding/base64"
-	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/google/uuid"

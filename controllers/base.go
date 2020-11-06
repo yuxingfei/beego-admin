@@ -4,7 +4,6 @@ import (
 	"beego-admin/global"
 	"beego-admin/models"
 	"beego-admin/services"
-	"fmt"
 	"github.com/astaxie/beego"
 	"net/url"
 	"strconv"
