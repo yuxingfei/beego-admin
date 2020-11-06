@@ -13,7 +13,7 @@
                             <select name="admin_user_id" id="admin_user_id" class="form-control input-sm">
                                 <option value="">选择用户</option>
                                 {{range $key,$item := .admin_user_list }}
-                                <option value="{{$item.Id}}" {{if eq .admin_user_id $item.Id}}selected{{end}}>
+                                <option value="{{$item.Id}}" {{if compare $.admin_user_id $item.Id }} selected {{end}}>
                                 {{$item.Nickname}}[{{$item.Username}}]
                                 </option>
                                 {{end}}
@@ -75,7 +75,7 @@
                         {{range $key,$item := .data}}
                         <tr>
                             <td>{{$item.Id}}</td>
-                            <td>已删除</td>
+                            <td>{{range $key2,$item2 := $.admin_user_list }}{{if eq $item.AdminUserId $item2.Id}}{{$item2.Nickname}}{{end}}{{end}}</td>
                             <td>{{$item.Name}}</td>
                             <td>{{$item.Url}}</td>
                             <td>{{$item.LogMethod}}</td>
@@ -94,6 +94,7 @@
                 </div>
 
                 <!-- 数据列表底部 -->
+                {{if ne "" .paginate.BootStrapRenderLink}}
                 <div class="box-footer">
                     {{ str2html .paginate.BootStrapRenderLink}}
                     <label class="control-label pull-right" style="margin-right: 10px; font-weight: 100;">
@@ -109,6 +110,7 @@
                         <small>条记录</small>
                     </label>
                 </div>
+                {{end}}
 
             </div>
         </div>

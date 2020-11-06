@@ -119,21 +119,23 @@
                     </table>
                 </div>
                 <!-- 数据列表底部 -->
-                <div class="box-footer">
-                    $data->withQueryString()->links()
-                    <label class="control-label pull-right" style="margin-right: 10px; font-weight: 100;">
-                        <small>共$data->total()条记录</small>&nbsp;
-                        <small>每页显示</small>
-                        &nbsp;
-                        <select class="input-sm" onchange="changePerPage(this)">
-                            {{range $index, $val := $.admin.per_page_config}}
-                            <option value="{{$val}}" {{if eq $val $.admin.per_page}} selected {{end}}>{{$val}}</option>
-                            {{end}}
-                        </select>
-                        &nbsp;
-                        <small>条记录</small>
-                    </label>
-                </div>
+                {{if ne "" .paginate.BootStrapRenderLink}}
+                    <div class="box-footer">
+                        {{ str2html .paginate.BootStrapRenderLink}}
+                        <label class="control-label pull-right" style="margin-right: 10px; font-weight: 100;">
+                            <small>共{{.paginate.Total}}条记录</small>&nbsp;
+                            <small>每页显示</small>
+                            &nbsp;
+                            <select class="input-sm" onchange="changePerPage(this)">
+                                {{range $index, $val := $.admin.per_page_config}}
+                                    <option value="{{$val}}" {{if eq $val $.admin.per_page}} selected {{end}}>{{$val}}</option>
+                                {{end}}
+                            </select>
+                            &nbsp;
+                            <small>条记录</small>
+                        </label>
+                    </div>
+                {{end}}
             </div>
         </div>
     </div>

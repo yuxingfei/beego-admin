@@ -19,27 +19,26 @@ type IndexController struct {
 
 //加载的包信息
 type PackageLib struct {
-	Name string
+	Name    string
 	Version string
 }
 
-func (this *IndexController) Index()  {
-
-	indexConfig,err := beego.AppConfig.GetSection("index")
+func (this *IndexController) Index() {
+	indexConfig, err := beego.AppConfig.GetSection("index")
 	this.Data["login_user"] = loginUser
 
 	//默认密码修改检测
 	this.Data["password_danger"] = 0
 
-	if err == nil{
+	if err == nil {
 		//是否首页显示提示信息
 		this.Data["show_notice"] = indexConfig["show_notice"]
 		//提示内容
 		this.Data["notice_content"] = indexConfig["notice_content"]
 
 		//默认密码修改检测
-		loginUserPassword,_ := base64.StdEncoding.DecodeString(loginUser.Password)
-		if indexConfig["password_warning"] == "1" && utils.PasswordVerify("123456",string(loginUserPassword)){
+		loginUserPassword, _ := base64.StdEncoding.DecodeString(loginUser.Password)
+		if indexConfig["password_warning"] == "1" && utils.PasswordVerify("123456", string(loginUserPassword)) {
 			this.Data["password_danger"] = 1
 		}
 	}
@@ -65,7 +64,7 @@ func (this *IndexController) Index()  {
 }
 
 //获取系统信息
-func (this *IndexController)getSystemInfo() map[string]interface{} {
+func (this *IndexController) getSystemInfo() map[string]interface{} {
 	systemInfo := make(map[string]interface{})
 	//服务器系统
 	systemInfo["server_os"] = runtime.GOOS
@@ -90,32 +89,32 @@ func (this *IndexController)getSystemInfo() map[string]interface{} {
 	userAgent := this.Ctx.Input.Header("user-agent")
 
 	userOs := "Other"
-	if strings.Contains(userAgent,"win"){
+	if strings.Contains(userAgent, "win") {
 		userOs = "Windows"
-	}else if strings.Contains(userAgent,"mac"){
+	} else if strings.Contains(userAgent, "mac") {
 		userOs = "MAC"
-	}else if strings.Contains(userAgent,"linux"){
+	} else if strings.Contains(userAgent, "linux") {
 		userOs = "Linux"
-	}else if strings.Contains(userAgent,"unix"){
+	} else if strings.Contains(userAgent, "unix") {
 		userOs = "Unix"
-	}else if strings.Contains(userAgent,"bsd"){
+	} else if strings.Contains(userAgent, "bsd") {
 		userOs = "BSD"
-	}else if strings.Contains(userAgent,"iPad") || strings.Contains(userAgent,"iPhone"){
+	} else if strings.Contains(userAgent, "iPad") || strings.Contains(userAgent, "iPhone") {
 		userOs = "IOS"
-	}else if strings.Contains(userAgent,"android"){
+	} else if strings.Contains(userAgent, "android") {
 		userOs = "Android"
 	}
 
 	userBrowser := "Other"
-	if strings.Contains(userAgent,"MSIE"){
+	if strings.Contains(userAgent, "MSIE") {
 		userBrowser = "MSIE"
-	}else if strings.Contains(userAgent,"Firefox"){
+	} else if strings.Contains(userAgent, "Firefox") {
 		userBrowser = "Firefox"
-	}else if strings.Contains(userAgent,"Chrome"){
+	} else if strings.Contains(userAgent, "Chrome") {
 		userBrowser = "Chrome"
-	}else if strings.Contains(userAgent,"Safari"){
+	} else if strings.Contains(userAgent, "Safari") {
 		userBrowser = "Safari"
-	}else if strings.Contains(userAgent,"Opera"){
+	} else if strings.Contains(userAgent, "Opera") {
 		userBrowser = "Opera"
 	}
 
@@ -125,29 +124,29 @@ func (this *IndexController)getSystemInfo() map[string]interface{} {
 	systemInfo["user_browser"] = userBrowser
 
 	//读取go.mod文件
-	var requireList[]*PackageLib
-	srcFile,err := os.Open("go.mod")
-	if err != nil{
+	var requireList []*PackageLib
+	srcFile, err := os.Open("go.mod")
+	if err != nil {
 		beego.Error(err)
-	}else{
+	} else {
 		defer srcFile.Close()
 		reader := bufio.NewReader(srcFile)
 		for {
-			line,_,err := reader.ReadLine()
-			if err == io.EOF{
+			line, _, err := reader.ReadLine()
+			if err == io.EOF {
 				break
 			}
-			if err != nil{
+			if err != nil {
 				continue
 			}
-			if string(line) != ""{
-				strArr := strings.Split(string(line)," ")
-				if strArr[0] == "require" && len(strArr) >= 3{
+			if string(line) != "" {
+				strArr := strings.Split(string(line), " ")
+				if strArr[0] == "require" && len(strArr) >= 3 {
 					packageLib := PackageLib{
-						Name:strArr[1],
-						Version:strArr[2],
+						Name:    strArr[1],
+						Version: strArr[2],
 					}
-					requireList = append(requireList,&packageLib)
+					requireList = append(requireList, &packageLib)
 				}
 			}
 		}
