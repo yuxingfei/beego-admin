@@ -35,7 +35,7 @@ go build main.go 将自动下载依赖包
 #### 1、安装beego和bee
 参考[Beego](https://beego.me/docs/install/)和[Bee](https://beego.me/docs/install/bee.md)安装手册
 
-#### 2、clone 项目到本地 GOPATH src目录下
+#### 2、clone 项目到本地 GOPATH src目录之外的路径下
 ```
 GitHub:   git clone git@github.com:yuxingfei/beego-admin.git
 ```
