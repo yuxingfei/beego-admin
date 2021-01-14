@@ -22,7 +22,8 @@ GitHub:   git clone git@github.com:yuxingfei/beego-admin.git
 #### 3、配置数据库
 ```
 将目录中beego-admin.sql文件导入mysql数据库
-更改 `conf/app.conf` 文件内的数据库连接配置信息
+
+更改根目录下的config.yaml文件内的数据库连接信息
 ```
 
 #### 4、安装项目依赖
@@ -34,7 +35,7 @@ beego-admin目录下 go mod tidy 将自动下载依赖包
 
 #### 运行系统
 ```
-直接运行编译好的main执行文件，或者使用bee run在项目下运行项目，进行调试开发
+直接运行go run main.go，或者使用bee run在项目下运行，开始进行调试开发
 ```
 
 #### 访问后台
