@@ -1,5 +1,7 @@
 package global
 
+import "beego-admin/conf"
+
 //不做任何操作
 const URL_CURRENT = "url://current"
 
@@ -23,3 +25,7 @@ const LOGIN_USER_ID = "LoginUserId"
 
 //登录用户签名
 const LOGIN_USER_ID_SIGN = "loginUserIdSign"
+
+var (
+	BA_CONFIG conf.Server
+)

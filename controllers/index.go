@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"beego-admin/global"
 	"beego-admin/services"
 	"beego-admin/utils"
 	"bufio"
@@ -24,23 +25,20 @@ type PackageLib struct {
 }
 
 func (this *IndexController) Index() {
-	indexConfig, err := beego.AppConfig.GetSection("index")
 	this.Data["login_user"] = loginUser
 
 	//默认密码修改检测
 	this.Data["password_danger"] = 0
 
-	if err == nil {
-		//是否首页显示提示信息
-		this.Data["show_notice"] = indexConfig["show_notice"]
-		//提示内容
-		this.Data["notice_content"] = indexConfig["notice_content"]
+	//是否首页显示提示信息
+	this.Data["show_notice"] = global.BA_CONFIG.Base.ShowNotice
+	//提示内容
+	this.Data["notice_content"] = global.BA_CONFIG.Base.NoticeContent
 
-		//默认密码修改检测
-		loginUserPassword, _ := base64.StdEncoding.DecodeString(loginUser.Password)
-		if indexConfig["password_warning"] == "1" && utils.PasswordVerify("123456", string(loginUserPassword)) {
-			this.Data["password_danger"] = 1
-		}
+	//默认密码修改检测
+	loginUserPassword, _ := base64.StdEncoding.DecodeString(loginUser.Password)
+	if global.BA_CONFIG.Base.PasswordWarning == "1" && utils.PasswordVerify("123456", string(loginUserPassword)) {
+		this.Data["password_danger"] = 1
 	}
 
 	//后台用户数量
@@ -75,7 +73,7 @@ func (this *IndexController) getSystemInfo() map[string]interface{} {
 	//beego版本
 	systemInfo["beego_version"] = beego.VERSION
 	//当前后台版本
-	systemInfo["admin_version"] = beego.AppConfig.String("base::version")
+	systemInfo["admin_version"] = global.BA_CONFIG.Base.Version
 	//mysql版本
 	var databaseService services.DatabaseService
 	systemInfo["db_version"] = databaseService.GetMysqlVersion()
@@ -149,9 +147,9 @@ func (this *IndexController) getSystemInfo() map[string]interface{} {
 						Version: strArr[2],
 					}
 					requireList = append(requireList, &packageLib)
-				}else {
+				} else {
 					//require多个时候
-					if lenStrArr >= 2 && strings.Contains(strArr[0],"/"){
+					if lenStrArr >= 2 && strings.Contains(strArr[0], "/") {
 						packageLib := PackageLib{
 							Name:    strArr[0],
 							Version: strArr[1],

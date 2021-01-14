@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"beego-admin/global"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -15,16 +16,12 @@ func init() {
 	}
 
 	//dataSource := "root:root@tcp(127.0.0.1:3306)/test"
-	mysqlConfig, err := beego.AppConfig.GetSection("mysql")
-	if err != nil {
-		beego.Error("mysql get config fail! error:", err)
-	}
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
-		mysqlConfig["username"],
-		mysqlConfig["password"],
-		mysqlConfig["host"],
-		mysqlConfig["port"],
-		mysqlConfig["database"],
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8",
+		global.BA_CONFIG.Mysql.Username,
+		global.BA_CONFIG.Mysql.Password,
+		global.BA_CONFIG.Mysql.Host,
+		global.BA_CONFIG.Mysql.Port,
+		global.BA_CONFIG.Mysql.Database,
 	)
 
 	err = orm.RegisterDataBase("default", "mysql", dataSource)
