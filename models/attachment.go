@@ -1,8 +1,8 @@
 package models
 
 import (
+	"beego-admin/global"
 	"beego-admin/utils"
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"math"
 	"strconv"
@@ -105,9 +105,9 @@ func (attachment *Attachment) GetFileType() string {
 
 //文件预览
 func (attachment *Attachment) GetThumbnail() string {
-	thumbnail := beego.AppConfig.String("attachment::thumb_path") + "unknown.svg"
+	thumbnail := global.BA_CONFIG.Attachment.ThumbPath + "unknown.svg"
 	extension := attachment.Extension
-	thumbPath := beego.AppConfig.String("attachment::thumb_path")
+	thumbPath := global.BA_CONFIG.Attachment.ThumbPath
 
 	fileThumb := map[string][]string{
 		"picture":                  {"jpg", "bmp", "png", "jpeg", "gif", "svg"},

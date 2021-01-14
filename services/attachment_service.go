@@ -1,6 +1,7 @@
 package services
 
 import (
+	"beego-admin/global"
 	"beego-admin/models"
 	"beego-admin/utils"
 	"errors"
@@ -40,15 +41,15 @@ func (*AttachmentService) Upload(ctx *context.Context, name string, adminUserId 
 	saveName := uuid.New().String()
 	//后缀带. (.png)
 	fileExt := path.Ext(h.Filename)
-	savePath := beego.AppConfig.String("attachment::path") + saveName + fileExt
-	saveRealDir := filepath.ToSlash(beego.AppPath + "/" + beego.AppConfig.String("attachment::path"))
+	savePath := global.BA_CONFIG.Attachment.Path + saveName + fileExt
+	saveRealDir := filepath.ToSlash(beego.AppPath + "/" + global.BA_CONFIG.Attachment.Path)
 
 	_, err = os.Stat(saveRealDir)
 	if err != nil {
 		err = os.MkdirAll(saveRealDir, os.ModePerm)
 	}
 
-	saveUrl := "/" + beego.AppConfig.String("attachment::url") + saveName + fileExt
+	saveUrl := "/" + global.BA_CONFIG.Attachment.Url + saveName + fileExt
 
 	f, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
@@ -122,15 +123,15 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 		saveName := uuid.New().String()
 		//后缀带. (.png)
 		fileExt := path.Ext(h.Filename)
-		savePath := beego.AppConfig.String("attachment::path") + saveName + fileExt
-		saveRealDir := filepath.ToSlash(beego.AppPath + "/" + beego.AppConfig.String("attachment::path"))
+		savePath := global.BA_CONFIG.Attachment.Path + saveName + fileExt
+		saveRealDir := filepath.ToSlash(beego.AppPath + "/" + global.BA_CONFIG.Attachment.Path)
 
 		_, err = os.Stat(saveRealDir)
 		if err != nil {
 			err = os.MkdirAll(saveRealDir, os.ModePerm)
 		}
 
-		saveUrl := "/" + beego.AppConfig.String("attachment::url") + saveName + fileExt
+		saveUrl := "/" + global.BA_CONFIG.Attachment.Url + saveName + fileExt
 
 		f, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 		if err != nil {
@@ -176,8 +177,8 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 
 //attachment自定义验证
 func validateForAttachment(h *multipart.FileHeader) error {
-	validateSize, _ := strconv.Atoi(beego.AppConfig.String("attachment::validate_size"))
-	validateExt := beego.AppConfig.String("attachment::validate_ext")
+	validateSize, _ :=  strconv.Atoi(global.BA_CONFIG.Attachment.ValidateSize)
+	validateExt := global.BA_CONFIG.Attachment.ValidateExt
 	if int(h.Size) > validateSize {
 		return errors.New("文件超过限制大小")
 	}

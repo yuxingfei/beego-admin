@@ -6,11 +6,11 @@ import (
 	"beego-admin/global/response"
 	"beego-admin/services"
 	"beego-admin/utils"
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 	"github.com/dchest/captcha"
 	"github.com/gookit/validate"
 	"net/http"
+	"strconv"
 )
 
 var adminLogService services.AdminLogService
@@ -21,15 +21,23 @@ type AuthController struct {
 
 //登录界面
 func (this *AuthController) Login() {
+
+	//加载登录配置信息
+	var settingService services.SettingService
+	data := settingService.Show(1)
+	for _,setting := range data {
+		settingService.LoadGlobalBaseConfig(setting)
+	}
+
 	//获取登录配置信息
 	loginConfig := struct {
 		Token      string
 		Captcha    string
 		Background string
 	}{
-		Token:      beego.AppConfig.DefaultString("login::token", "1"),
-		Captcha:    beego.AppConfig.DefaultString("login::captcha", "1"),
-		Background: beego.AppConfig.DefaultString("login::background", "/static/admin/images/default_background.jpeg"),
+		Token:      global.BA_CONFIG.Login.Token,
+		Captcha:    global.BA_CONFIG.Login.Captcha,
+		Background: global.BA_CONFIG.Login.Background,
 	}
 	this.Data["login_config"] = loginConfig
 
@@ -60,7 +68,7 @@ func (this *AuthController) CheckLogin() {
 	v := validate.Struct(loginForm)
 
 	//看是否需要校验验证码
-	isCaptcha, _ := beego.AppConfig.Int("login::captcha")
+	isCaptcha, _ := strconv.Atoi(global.BA_CONFIG.Login.Captcha)
 	if isCaptcha > 0 {
 		valid.Required(loginForm.Captcha, "captcha").Message("请输入验证码.")
 		if ok := captcha.VerifyString(loginForm.CaptchaId, loginForm.Captcha); !ok {

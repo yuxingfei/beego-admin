@@ -1,6 +1,7 @@
 package services
 
 import (
+	"beego-admin/global"
 	"beego-admin/models"
 	beego_pagination "beego-admin/utils/beego-pagination"
 	"beego-admin/utils/encrypter"
@@ -45,7 +46,7 @@ func (*AdminLogService) CreateAdminLog(loginUser *models.AdminUser, menu *models
 
 	//adminLogData数据表添加数据
 	jsonData, _ := json.Marshal(ctx.Request.PostForm)
-	cryptData := encrypter.Encrypt(jsonData, []byte(beego.AppConfig.String("log_aes_key")))
+	cryptData := encrypter.Encrypt(jsonData, []byte(global.BA_CONFIG.Other.LogAesKey))
 	var adminLogData models.AdminLogData
 	adminLogData.AdminLogId = int(adminLogId)
 	adminLogData.Data = cryptData
@@ -83,7 +84,7 @@ func (*AdminLogService) LoginLog(loginUserId int, ctx *context.Context) {
 
 	//adminLogData数据表添加数据
 	jsonData, _ := json.Marshal(ctx.Request.PostForm)
-	cryptData := encrypter.Encrypt(jsonData, []byte(beego.AppConfig.String("log_aes_key")))
+	cryptData := encrypter.Encrypt(jsonData, []byte(global.BA_CONFIG.Other.LogAesKey))
 
 	var adminLogData models.AdminLogData
 	adminLogData.AdminLogId = int(adminLogId)

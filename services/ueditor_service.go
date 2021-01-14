@@ -1,6 +1,7 @@
 package services
 
 import (
+	"beego-admin/global"
 	"encoding/base64"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
@@ -48,7 +49,7 @@ func (*UeditorService) GetConfig() map[string]interface{} {
 
 //上传图片
 func (this *UeditorService) UploadImage(ctx *context.Context) map[string]interface{} {
-	fieldName := beego.AppConfig.String("ueditor::imageFieldName")
+	fieldName := global.BA_CONFIG.Ueditor.ImageFieldName
 	if fieldName == "" {
 		return map[string]interface{}{
 			"state": "not found field ueditor::imageFieldName.",
@@ -116,10 +117,10 @@ func (*UeditorService) upFile(fieldName string, ctx *context.Context) map[string
 //列出图片
 func (this *UeditorService) ListImage(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
-	allowFiles := beego.AppConfig.String("ueditor::imageManagerAllowFiles")
+	allowFiles := global.BA_CONFIG.Ueditor.ImageManagerAllowFiles
 	//ext前面的.号去掉
 	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
-	listSize := beego.AppConfig.String("ueditor::imageManagerListSize")
+	listSize := global.BA_CONFIG.Ueditor.ImageManagerListSize
 	if allowFiles == "" || listSize == "" || len(get) <= 0 {
 		result["state"] = "config params error."
 	}
@@ -234,7 +235,7 @@ func (this *UeditorService) getFiles(dir, allowFiles string) []map[string]string
 
 //上传视频
 func (this *UeditorService) UploadVideo(ctx *context.Context) map[string]interface{} {
-	fieldName := beego.AppConfig.String("ueditor::videoFieldName")
+	fieldName := global.BA_CONFIG.Ueditor.VideoFieldName
 	if fieldName == "" {
 		return map[string]interface{}{
 			"state": "not found field ueditor::videoFieldName.",
@@ -246,7 +247,7 @@ func (this *UeditorService) UploadVideo(ctx *context.Context) map[string]interfa
 
 //上传文件
 func (this *UeditorService) UploadFile(ctx *context.Context) map[string]interface{} {
-	fieldName := beego.AppConfig.String("ueditor::fileFieldName")
+	fieldName := global.BA_CONFIG.Ueditor.FileFieldName
 	if fieldName == "" {
 		return map[string]interface{}{
 			"state": "not found field ueditor::fileFieldName.",
@@ -259,15 +260,15 @@ func (this *UeditorService) UploadFile(ctx *context.Context) map[string]interfac
 //列出文件
 func (this *UeditorService) ListFile(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
-	allowFiles := beego.AppConfig.String("ueditor::fileManagerAllowFiles")
+	allowFiles := global.BA_CONFIG.Ueditor.FileManagerAllowFiles
 	//ext前面的.号去掉
 	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
-	listSize := beego.AppConfig.String("ueditor::fileManagerListSize")
-	if allowFiles == "" || listSize == "" || len(get) <= 0 {
+	listSize := global.BA_CONFIG.Ueditor.FileManagerListSize
+	if allowFiles == "" || listSize == 0 || len(get) <= 0 {
 		result["state"] = "config params error."
 	}
 
-	listSizeInt, _ := strconv.Atoi(listSize)
+	listSizeInt := listSize
 	result = this.fileList(allowFiles, listSizeInt, get)
 
 	return result
@@ -276,21 +277,21 @@ func (this *UeditorService) ListFile(get url.Values) map[string]interface{} {
 //上传涂鸦
 func (this *UeditorService) UploadScrawl(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
-	pathFormat := beego.AppConfig.String("ueditor::scrawlPathFormat")
-	maxSize := beego.AppConfig.String("ueditor::scrawlMaxSize")
-	allowFiles := beego.AppConfig.String("ueditor::scrawlAllowFiles")
+	pathFormat := global.BA_CONFIG.Ueditor.ScrawlPathFormat
+	maxSize := global.BA_CONFIG.Ueditor.ScrawlMaxSize
+	allowFiles := global.BA_CONFIG.Ueditor.ScrawlAllowFiles
 	//ext前面的.号去掉
 	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
-	oriName := beego.AppConfig.String("ueditor::scrawlFieldName")
+	oriName := global.BA_CONFIG.Ueditor.ScrawlFieldName
 
-	if pathFormat == "" || maxSize == "" || allowFiles == "" || oriName == "" {
+	if pathFormat == "" || maxSize == 0 || allowFiles == "" || oriName == "" {
 		result["state"] = "config params error."
 		return result
 	}
 
 	config := map[string]string{
 		"pathFormat": pathFormat,
-		"maxSize":    maxSize,
+		"maxSize":    strconv.Itoa(maxSize),
 		"allowFiles": allowFiles,
 		"oriName":    oriName,
 	}
@@ -366,26 +367,26 @@ func (this *UeditorService) upBase64(config map[string]string, base64Data string
 //抓取远程文件
 func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interface{} {
 	result := make(map[string]interface{})
-	pathFormat := beego.AppConfig.String("ueditor::catcherPathFormat")
-	maxSize := beego.AppConfig.String("ueditor::catcherMaxSize")
-	allowFiles := beego.AppConfig.String("ueditor::catcherAllowFiles")
+	pathFormat := global.BA_CONFIG.Ueditor.CatcherPathFormat
+	maxSize := global.BA_CONFIG.Ueditor.CatcherMaxSize
+	allowFiles := global.BA_CONFIG.Ueditor.CatcherAllowFiles
 	//ext前面的.号去掉
 	allowFiles = strings.ReplaceAll(allowFiles, ".", "")
 	oriName := "remote.png"
 
-	if pathFormat == "" || maxSize == "" || allowFiles == "" {
+	if pathFormat == "" || maxSize == 0 || allowFiles == "" {
 		result["state"] = "config params error."
 		return result
 	}
 
 	config := map[string]string{
 		"pathFormat": pathFormat,
-		"maxSize":    maxSize,
+		"maxSize":    strconv.Itoa(maxSize),
 		"allowFiles": allowFiles,
 		"oriName":    oriName,
 	}
 
-	fieldName := beego.AppConfig.String("ueditor::catcherFieldName")
+	fieldName := global.BA_CONFIG.Ueditor.CatcherFieldName
 
 	source := make([]string, 0)
 	ctx.Input.Bind(&source, fieldName)

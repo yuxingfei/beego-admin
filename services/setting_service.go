@@ -1,6 +1,7 @@
 package services
 
 import (
+	"beego-admin/global"
 	"beego-admin/models"
 	"encoding/json"
 	"github.com/astaxie/beego/orm"
@@ -67,4 +68,54 @@ func (*SettingService) UpdateSettingInfoToContent(id int, content string) int {
 	} else {
 		return 0
 	}
+}
+
+//加载全局登录、系统配置信息
+func (*SettingService) LoadGlobalBaseConfig(setting *models.Setting) bool {
+	if setting == nil {
+		return false
+	}
+
+	if setting.Code == "base" {
+		for _, content := range setting.ContentStrut {
+			switch content.Field {
+			case "name":
+				global.BA_CONFIG.Base.Name = content.Content
+			case "short_name":
+				global.BA_CONFIG.Base.ShortName = content.Content
+			case "author":
+				global.BA_CONFIG.Base.Author = content.Content
+			case "version":
+				global.BA_CONFIG.Base.Version = content.Content
+			case "link":
+				global.BA_CONFIG.Base.Link = content.Content
+			}
+		}
+	} else if setting.Code == "login" {
+		for _, content := range setting.ContentStrut {
+			switch content.Field {
+			case "token":
+				global.BA_CONFIG.Login.Token = content.Content
+			case "captcha":
+				global.BA_CONFIG.Login.Captcha = content.Content
+			case "background":
+				global.BA_CONFIG.Login.Background = content.Content
+			}
+		}
+	} else if setting.Code == "index" {
+		for _, content := range setting.ContentStrut {
+			switch content.Field {
+			case "password_warning":
+				global.BA_CONFIG.Base.PasswordWarning = content.Content
+			case "show_notice":
+				global.BA_CONFIG.Base.ShowNotice = content.Content
+			case "notice_content":
+				global.BA_CONFIG.Base.NoticeContent = content.Content
+			}
+		}
+	} else {
+		return false
+	}
+
+	return true
 }

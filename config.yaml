@@ -1,0 +1,79 @@
+# beego-admin global configuration
+# redis configuration
+redis:
+  db: 0
+  addr: '127.0.0.1:6379'
+  password: ''
+
+# mysql connect configuration
+mysql:
+  host: '127.0.0.1'
+  port: 3306
+  database: 'beego-admin'
+  username: 'root'
+  password: 'root'
+
+# other configuration
+other:
+  log_aes_key: 'AES256Key-32Characters1234567890'
+
+# attachment configuration
+attachment:
+  thumb_path: '/static/attachment/thumbnail/'
+  path: 'static/uploads/attachment/'
+  url: 'static/uploads/attachment/'
+  validate_size: 52428800
+  validate_ext: 'bmp,ico,psd,jpg,jpeg,png,gif,doc,docx,xls,xlsx,pdf,zip,rar,7z,tz,mp3,mp4,mov,swf,flv,avi,mpg,ogg,wav,flac,ape'
+
+# ueditor configuration
+ueditor:
+  image_action_name: 'uploadimage'
+  image_field_name: 'upfile'
+  image_max_size: 2048000
+  image_allow_files: '.png|.jpg|.jpeg|.gif|.bmp'
+  image_compress_enable: true
+  image_compress_border: 1600
+  image_insert_align: 'none'
+  image_url_prefix: ''
+  image_path_format: '/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}'
+  scrawl_action_name: 'uploadscrawl'
+  scrawl_field_name: 'upfile'
+  scrawl_path_format: '/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}'
+  scrawl_max_size: 2048000
+  scrawl_url_prefix: ''
+  scrawl_insert_align: 'none'
+  scrawl_allow_files: '.png|.jpg|.jpeg|.gif|.bmp'
+  snapscreen_action_name: 'uploadimage'
+  snapscreen_path_format: '/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}'
+  snapscreen_url_prefix: ''
+  snapscreen_insert_align: 'none'
+  catcher_local_domain: '127.0.0.1|localhost|img.baidu.com'
+  catcher_action_name: 'catchimage'
+  catcher_field_name: 'source'
+  catcher_path_format: '/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}'
+  catcher_url_prefix: ''
+  catcher_max_size: 2048000
+  catcher_allow_files: '.png|.jpg|.jpeg|.gif|.bmp'
+  video_action_name: 'uploadvideo'
+  video_field_name: 'upfile'
+  video_path_format: '/ueditor/php/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}'
+  video_url_prefix: ''
+  video_max_size: 102400000
+  video_allow_files: '.flv|.swf|.mkv|.avi|.rm|.rmvb|.mpeg|.mpg|.ogg|.ogv|.mov|.wmv|.mp4|.webm|.mp3|.wav|.mid'
+  file_action_name: 'uploadfile'
+  file_field_name: 'upfile'
+  file_path_format: '/ueditor/php/upload/file/{yyyy}{mm}{dd}/{time}{rand:6}'
+  file_url_prefix: ''
+  file_max_size: 51200000
+  file_allow_files: '.png|.jpg|.jpeg|.gif|.bmp|.flv|.swf|.mkv|.avi|.rm|.rmvb|.mpeg|.mpg|.ogg|.ogv|.mov|.wmv|.mp4|.webm|.mp3|.wav|.mid|.rar|.zip|.tar|.gz|.7z|.bz2|.cab|.iso|.doc|.docx|.xls|.xlsx|.ppt|.pptx|.pdf|.txt|.md|.xml'
+  image_manager_action_name: 'listimage'
+  image_manager_list_path: '/ueditor/php/upload/image/'
+  image_manager_list_size: 20
+  image_manager_url_prefix: ''
+  image_manager_insert_align: 'none'
+  image_manager_allow_files: '.png|.jpg|.jpeg|.gif|.bmp'
+  file_manager_action_name: 'listfile'
+  file_manager_list_path: '/ueditor/php/upload/file/'
+  file_manager_url_prefix: ''
+  file_manager_list_size: 20
+  file_manager_allow_files: '.png|.jpg|.jpeg|.gif|.bmp|.flv|.swf|.mkv|.avi|.rm|.rmvb|.mpeg|.mpg|.ogg|.ogv|.mov|.wmv|.mp4|.webm|.mp3|.wav|.mid|.rar|.zip|.tar|.gz|.7z|.bz2|.cab|.iso|.doc|.docx|.xls|.xlsx|.ppt|.pptx|.pdf|.txt|.md|.xml'

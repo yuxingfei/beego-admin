@@ -30,6 +30,7 @@ var (
 
 //父控制器初始化
 func (this *baseController) Prepare() {
+
 	//访问url
 	requestUrl := strings.ToLower(strings.TrimLeft(this.Ctx.Input.URL(), "/"))
 
@@ -63,11 +64,6 @@ func (this *baseController) Prepare() {
 	}
 	this.Data["cookie_prefix"] = ""
 
-	//admin基础配置
-	adminConfig, err := beego.AppConfig.GetSection("base")
-	if err != nil {
-		beego.Error("get base config fail. error:", err)
-	}
 	//每页预览的数量
 	perPageStr := this.Ctx.GetCookie("admin_per_page")
 	var perPage int
@@ -103,11 +99,11 @@ func (this *baseController) Prepare() {
 		"pjax":            this.Ctx.Input.Header("X-PJAX") == "true",
 		"user":            &loginUser,
 		"menu":            menu,
-		"name":            adminConfig["name"],
-		"author":          adminConfig["author"],
-		"version":         adminConfig["version"],
-		"short_name":      adminConfig["short_name"],
-		"link":            adminConfig["link"],
+		"name":            global.BA_CONFIG.Base.Name,
+		"author":          global.BA_CONFIG.Base.Author,
+		"version":         global.BA_CONFIG.Base.Version,
+		"short_name":      global.BA_CONFIG.Base.ShortName,
+		"link":            global.BA_CONFIG.Base.Link,
 		"per_page":        perPage,
 		"per_page_config": []int{10, 20, 30, 50, 100},
 		"title":           title,

@@ -4,7 +4,6 @@ import (
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/services"
-	ini_utils "beego-admin/utils/ini-utils"
 	"encoding/json"
 	"strconv"
 )
@@ -85,8 +84,6 @@ func (this *SettingController) Update() {
 	if err == nil {
 		affectRow := settingService.UpdateSettingInfoToContent(idInt, string(contentStrutByte))
 		if affectRow > 0 {
-			//自动更新配置文件
-			ini_utils.UpdateAdminConf(setting)
 			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
 		} else {
 			response.ErrorWithMessage("没有可更新的信息", this.Ctx)

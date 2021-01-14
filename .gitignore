@@ -3,3 +3,5 @@ static/uploads/*
 .idea/*
 main.exe
 main
+vendor/*
+go.sum
