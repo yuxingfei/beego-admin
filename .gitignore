@@ -2,3 +2,4 @@ beego-admin.*exe*
 static/uploads/*
 .idea/*
 main.exe
+main
