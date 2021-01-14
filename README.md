@@ -1,36 +1,10 @@
 # beego-admin 通用后台系统
 
-#### [beego-admin](https://github.com/yuxingfei/beego-admin) v1.0版本，基于beego框架和AdminLte前端框架，开发的go语言通用后台系统，在beego框架的基础上，封装了后台系统的分页功能，excel数据导出功能等丰富常用的扩展，基于MVC模式，html界面随心定义，相较于某些后台复杂代码生成的前端html元素，使用原生的html原生作为前端显示，更加的灵活自由。[beego-admin](https://github.com/yuxingfei/beego-admin)通用的后台系统真正的做到了开箱即用，欢迎大家使用。技术交流群：1151174994
+#### [beego-admin](https://github.com/yuxingfei/beego-admin) v2.0版本，基于beego框架和AdminLte前端框架，开发的go语言通用后台系统，在beego框架的基础上，封装了后台系统的分页功能，excel数据导出功能等丰富常用的扩展，基于MVC模式，html界面随心定义，相较于某些后台复杂代码生成的前端html元素，使用原生的html原生作为前端显示，更加的灵活自由。[beego-admin](https://github.com/yuxingfei/beego-admin)通用的后台系统真正的做到了开箱即用，欢迎大家使用。技术交流群：1151174994
 
 ## beego-admin 安装
 
-### 安装方式一 (GOPATH方式安装)
-
-#### 1、安装beego和bee
-参考[Beego](https://beego.me/docs/install/)和[Bee](https://beego.me/docs/install/bee.md)安装手册
-
-#### 2、clone 项目到本地 GOPATH src目录下
-```
-GitHub:   git clone git@github.com:yuxingfei/beego-admin.git
-```
-或
-```
-码云:   git clone git@gitee.com:yuxingfei/beego-admin.git
-```
-
-
-#### 3、配置数据库
-```
-将目录中beego-admin.sql文件导入mysql数据库
-更改 `conf/app.conf` 文件内的数据库连接配置信息
-```
-
-#### 4、安装项目依赖
-```
-go build main.go 将自动下载依赖包
-```
-
-### 安装方式二 (GO MOD方式安装)
+### 安装方式 (GO MOD方式安装,已移除 GOPATH方式安装说明，需要的请查看 tag v1.0.1)
 
 #### 1、安装beego和bee
 参考[Beego](https://beego.me/docs/install/)和[Bee](https://beego.me/docs/install/bee.md)安装手册
