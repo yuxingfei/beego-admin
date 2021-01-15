@@ -84,6 +84,8 @@ func (this *SettingController) Update() {
 	if err == nil {
 		affectRow := settingService.UpdateSettingInfoToContent(idInt, string(contentStrutByte))
 		if affectRow > 0 {
+			//更新全局配置
+			settingService.LoadOrUpdateGlobalBaseConfig(setting)
 			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
 		} else {
 			response.ErrorWithMessage("没有可更新的信息", this.Ctx)

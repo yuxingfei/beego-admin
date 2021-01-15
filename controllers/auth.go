@@ -26,7 +26,7 @@ func (this *AuthController) Login() {
 	var settingService services.SettingService
 	data := settingService.Show(1)
 	for _,setting := range data {
-		settingService.LoadGlobalBaseConfig(setting)
+		settingService.LoadOrUpdateGlobalBaseConfig(setting)
 	}
 
 	//获取登录配置信息

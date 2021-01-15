@@ -70,8 +70,8 @@ func (*SettingService) UpdateSettingInfoToContent(id int, content string) int {
 	}
 }
 
-//加载全局登录、系统配置信息
-func (*SettingService) LoadGlobalBaseConfig(setting *models.Setting) bool {
+//加载或者更新全局登录、系统配置信息
+func (*SettingService) LoadOrUpdateGlobalBaseConfig(setting *models.Setting) bool {
 	if setting == nil {
 		return false
 	}
