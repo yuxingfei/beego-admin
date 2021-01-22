@@ -4,7 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-//将Content json字符串转换为结构体，便于html界面中range
+//Content 将Content json字符串转换为结构体，便于html界面中range
 type Content struct {
 	Name    string
 	Field   string
@@ -14,6 +14,7 @@ type Content struct {
 	Form    string
 }
 
+// Setting struct
 type Setting struct {
 	Id             int    `orm:"column(id);auto;size(11)" description:"表ID" json:"id"`
 	SettingGroupId int    `orm:"column(setting_group_id);size(10);default(0)" description:"所属分组" json:"setting_group_id"`
@@ -29,27 +30,27 @@ type Setting struct {
 	DeleteTime   int        `orm:"column(delete_time);;size(10);default(0)" description:"删除时间" json:"delete_time"`
 }
 
-//自定义table 名称
+// TableName 自定义table 名称
 func (*Setting) TableName() string {
 	return "setting"
 }
 
-//定义模型的可搜索字段
+// SearchField 定义模型的可搜索字段
 func (*Setting) SearchField() []string {
 	return []string{"name", "description", "code"}
 }
 
-//禁止删除的数据id
+// NoDeletionId 禁止删除的数据id
 func (*Setting) NoDeletionId() []int {
 	return []int{1, 2, 3, 4, 5}
 }
 
-//定义模型可作为条件的字段
+// WhereField 定义模型可作为条件的字段
 func (*Setting) WhereField() []string {
 	return []string{}
 }
 
-//定义可做为时间范围查询的字段
+// TimeField 定义可做为时间范围查询的字段
 func (*Setting) TimeField() []string {
 	return []string{}
 }

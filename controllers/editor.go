@@ -6,53 +6,56 @@ import (
 	"strings"
 )
 
+// EditorController struct
 type EditorController struct {
 	baseController
 }
 
-func (this *EditorController) Prepare() {
+// Prepare 预准备
+func (ec *EditorController) Prepare() {
 	//取消_xsrf验证
-	this.EnableXSRF = false
+	ec.EnableXSRF = false
 }
 
-func (this *EditorController) Server() {
+// Server 方法
+func (ec *EditorController) Server() {
 	result := make(map[string]interface{})
 
 	var ueditorService services.UeditorService
-	action := this.GetString("action")
+	action := ec.GetString("action")
 	switch action {
 	case "config":
 		result = ueditorService.GetConfig()
 	case "uploadimage":
 		//上传图片
-		result = ueditorService.UploadImage(this.Ctx)
+		result = ueditorService.UploadImage(ec.Ctx)
 	case "uploadscrawl":
 		//上传涂鸦
 		//带+号的值如果不处理，会被转为空格
-		this.Ctx.Request.URL.RawQuery = strings.ReplaceAll(this.Ctx.Request.URL.RawQuery, "+", "%2b")
-		values, _ := url.ParseQuery(this.Ctx.Request.URL.RawQuery)
+		ec.Ctx.Request.URL.RawQuery = strings.ReplaceAll(ec.Ctx.Request.URL.RawQuery, "+", "%2b")
+		values, _ := url.ParseQuery(ec.Ctx.Request.URL.RawQuery)
 		result = ueditorService.UploadScrawl(values)
 	case "uploadvideo":
 		//上传视频
-		result = ueditorService.UploadVideo(this.Ctx)
+		result = ueditorService.UploadVideo(ec.Ctx)
 	case "uploadfile":
 		//上传文件
-		result = ueditorService.UploadFile(this.Ctx)
+		result = ueditorService.UploadFile(ec.Ctx)
 	case "listimage":
 		//列出图片
-		result = ueditorService.ListImage(this.Input())
+		result = ueditorService.ListImage(ec.Input())
 	case "listfile":
 		//列出文件
-		result = ueditorService.ListFile(this.Input())
+		result = ueditorService.ListFile(ec.Input())
 	case "catchimage":
 		//抓取远程文件
-		result = ueditorService.CatchImage(this.Ctx)
+		result = ueditorService.CatchImage(ec.Ctx)
 	default:
-		this.Data["json"] = map[string]string{
+		ec.Data["json"] = map[string]string{
 			"state": "请求地址出错",
 		}
 	}
-	this.Data["json"] = result
-	this.ServeJSON()
+	ec.Data["json"] = result
+	ec.ServeJSON()
 
 }

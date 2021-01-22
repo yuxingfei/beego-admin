@@ -1,4 +1,4 @@
-package excel_office
+package exceloffice
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// ExportData 导出数据
 func ExportData(head []string, body [][]string, name string, version string, title string, responseWriter *context.Response) {
 	if name == "" {
 		name = time.Now().Format("2006-01-02-15-04-05")

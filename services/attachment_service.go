@@ -20,10 +20,11 @@ import (
 	"time"
 )
 
+// AttachmentService struct
 type AttachmentService struct {
 }
 
-//上传单个文件
+// Upload 上传单个文件
 func (*AttachmentService) Upload(ctx *context.Context, name string, adminUserId int, userId int) (*models.Attachment, error) {
 	file, h, err := ctx.Request.FormFile(name)
 	if err != nil {
@@ -49,7 +50,7 @@ func (*AttachmentService) Upload(ctx *context.Context, name string, adminUserId 
 		err = os.MkdirAll(saveRealDir, os.ModePerm)
 	}
 
-	saveUrl := "/" + global.BA_CONFIG.Attachment.Url + saveName + fileExt
+	saveURL := "/" + global.BA_CONFIG.Attachment.Url + saveName + fileExt
 
 	f, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
@@ -64,7 +65,7 @@ func (*AttachmentService) Upload(ctx *context.Context, name string, adminUserId 
 		OriginalName: h.Filename,
 		SaveName:     saveName,
 		SavePath:     saveRealDir + saveName + fileExt,
-		Url:          saveUrl,
+		Url:          saveURL,
 		Extension:    strings.TrimLeft(fileExt, "."),
 		Mime:         h.Header.Get("Content-Type"),
 		Size:         h.Size,
@@ -74,16 +75,15 @@ func (*AttachmentService) Upload(ctx *context.Context, name string, adminUserId 
 		UpdateTime:   int(time.Now().Unix()),
 	}
 
-	insertId, err := orm.NewOrm().Insert(&attachmentInfo)
+	insertID, err := orm.NewOrm().Insert(&attachmentInfo)
 	if err == nil {
-		attachmentInfo.Id = int(insertId)
+		attachmentInfo.Id = int(insertID)
 		return &attachmentInfo, nil
-	} else {
-		return nil, err
 	}
+	return nil, err
 }
 
-//上传多个文件
+// UploadMulti 上传多个文件
 func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUserId int, userId int) ([]*models.Attachment, error) {
 	var result []*models.Attachment
 	//GetFiles return multi-upload files
@@ -92,7 +92,7 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 		return nil, http.ErrMissingFile
 	}
 
-	for i, _ := range files {
+	for i := range files {
 		h := files[i]
 		//for each fileheader, get a handle to the actual file
 		file, err := files[i].Open()
@@ -131,7 +131,7 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 			err = os.MkdirAll(saveRealDir, os.ModePerm)
 		}
 
-		saveUrl := "/" + global.BA_CONFIG.Attachment.Url + saveName + fileExt
+		saveURL := "/" + global.BA_CONFIG.Attachment.Url + saveName + fileExt
 
 		f, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 		if err != nil {
@@ -146,7 +146,7 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 			OriginalName: h.Filename,
 			SaveName:     saveName,
 			SavePath:     saveRealDir + saveName + fileExt,
-			Url:          saveUrl,
+			Url:          saveURL,
 			Extension:    strings.TrimLeft(fileExt, "."),
 			Mime:         h.Header.Get("Content-Type"),
 			Size:         h.Size,
@@ -156,9 +156,9 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 			UpdateTime:   int(time.Now().Unix()),
 		}
 
-		insertId, err := orm.NewOrm().Insert(&attachmentInfo)
+		insertID, err := orm.NewOrm().Insert(&attachmentInfo)
 		if err == nil {
-			attachmentInfo.Id = int(insertId)
+			attachmentInfo.Id = int(insertID)
 			//return &attachmentInfo, nil
 			result = append(result, &attachmentInfo)
 		} else {
@@ -169,13 +169,12 @@ func (*AttachmentService) UploadMulti(ctx *context.Context, name string, adminUs
 	//返回上传文件的对象信息
 	if result != nil {
 		return result, nil
-	} else {
-		return nil, errors.New("无法获取文件")
 	}
+	return nil, errors.New("无法获取文件")
 
 }
 
-//attachment自定义验证
+// validateForAttachment attachment自定义验证
 func validateForAttachment(h *multipart.FileHeader) error {
 	validateSize, _ :=  strconv.Atoi(global.BA_CONFIG.Attachment.ValidateSize)
 	validateExt := global.BA_CONFIG.Attachment.ValidateExt

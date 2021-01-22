@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// User struct
 type User struct {
 	Id          int    `orm:"column(id);auto;size(11)" description:"表ID" json:"id"`
 	Avatar      string `orm:"column(avatar);size(255)" description:"头像" json:"avatar"`
@@ -19,27 +20,27 @@ type User struct {
 	DeleteTime  int    `orm:"column(delete_time);;size(10);default(0)" description:"删除时间" json:"delete_time"`
 }
 
-//自定义table 名称
+// TableName 自定义table 名称
 func (*User) TableName() string {
 	return "user"
 }
 
-//定义模型的可搜索字段
+// SearchField 定义模型的可搜索字段
 func (*User) SearchField() []string {
 	return []string{"username", "mobile", "nickname"}
 }
 
-//禁止删除的数据id
+// NoDeletionId 禁止删除的数据id
 func (*User) NoDeletionId() []int {
 	return []int{}
 }
 
-//定义模型可作为条件的字段
+// WhereField 定义模型可作为条件的字段
 func (*User) WhereField() []string {
 	return []string{}
 }
 
-//定义可做为时间范围查询的字段
+// TimeField 定义可做为时间范围查询的字段
 func (*User) TimeField() []string {
 	return []string{}
 }

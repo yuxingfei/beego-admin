@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// SettingGroup struct
 type SettingGroup struct {
 	Id             int    `orm:"column(id);auto;size(11)" description:"表ID" json:"id"`
 	Module         string `orm:"column(module);size(30)" description:"作用模块" json:"module"`
@@ -19,27 +20,27 @@ type SettingGroup struct {
 	DeleteTime     int    `orm:"column(delete_time);;size(10);default(0)" description:"删除时间" json:"delete_time"`
 }
 
-//自定义table 名称
+// TableName 自定义table 名称
 func (*SettingGroup) TableName() string {
 	return "setting_group"
 }
 
-//定义模型的可搜索字段
+// SearchField 定义模型的可搜索字段
 func (*SettingGroup) SearchField() []string {
 	return []string{"name", "description", "code"}
 }
 
-//禁止删除的数据id
+// NoDeletionId 禁止删除的数据id
 func (*SettingGroup) NoDeletionId() []int {
 	return []int{1, 2, 3, 4, 5}
 }
 
-//定义模型可作为条件的字段
+// WhereField 定义模型可作为条件的字段
 func (*SettingGroup) WhereField() []string {
 	return []string{}
 }
 
-//定义可做为时间范围查询的字段
+// TimeField 定义可做为时间范围查询的字段
 func (*SettingGroup) TimeField() []string {
 	return []string{}
 }

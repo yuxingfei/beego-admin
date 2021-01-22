@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// AdminLog struct
 type AdminLog struct {
 	Id          int    `orm:"column(id);auto;size(11)" description:"表ID"`
 	AdminUserId int    `orm:"column(admin_user_id);size(10);default(0)" description:"用户id"`
@@ -15,32 +16,32 @@ type AdminLog struct {
 	UpdateTime  int    `orm:"column(update_time);size(10);default(0)" description:"更新时间"`
 }
 
-//定义模型的可搜索字段
+// SearchField 定义模型的可搜索字段
 func (*AdminLog) SearchField() []string {
 	return []string{"name", "url", "log_ip"}
 }
 
-//定义模型可作为条件的字段
+// WhereField 定义模型可作为条件的字段
 func (*AdminLog) WhereField() []string {
 	return []string{"admin_user_id"}
 }
 
-//定义可做为时间范围查询的字段
+// TimeField 定义可做为时间范围查询的字段
 func (*AdminLog) TimeField() []string {
 	return []string{"create_time"}
 }
 
-//禁止删除的数据id
+// NoDeletionId 禁止删除的数据id
 func (*AdminLog) NoDeletionId() []int {
 	return []int{}
 }
 
-//自定义table 名称
+// TableName 自定义table 名称
 func (*AdminLog) TableName() string {
 	return "admin_log"
 }
 
-//在init中注册定义的model
+// init 在init中注册定义的model
 func init() {
 	orm.RegisterModel(new(AdminLog))
 }

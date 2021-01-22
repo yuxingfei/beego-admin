@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"beego-admin/form_validate"
+	"beego-admin/formvalidate"
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/models"
@@ -14,45 +14,46 @@ import (
 	"strings"
 )
 
+// AdminRoleController struct.
 type AdminRoleController struct {
 	baseController
 }
 
-//角色管理首页
-func (this *AdminRoleController) Index() {
+// Index 角色管理首页.
+func (arc *AdminRoleController) Index() {
 	var adminRoleService services.AdminRoleService
 	data, pagination := adminRoleService.GetPaginateData(admin["per_page"].(int), gQueryParams)
 
-	this.Data["data"] = data
-	this.Data["paginate"] = pagination
-	this.Layout = "public/base.html"
-	this.TplName = "admin_role/index.html"
+	arc.Data["data"] = data
+	arc.Data["paginate"] = pagination
+	arc.Layout = "public/base.html"
+	arc.TplName = "admin_role/index.html"
 }
 
-//角色管理-添加界面
-func (this *AdminRoleController) Add() {
-	this.Layout = "public/base.html"
-	this.TplName = "admin_role/add.html"
+// Add 角色管理-添加界面.
+func (arc *AdminRoleController) Add() {
+	arc.Layout = "public/base.html"
+	arc.TplName = "admin_role/add.html"
 }
 
-//角色管理-添加角色
-func (this *AdminRoleController) Create() {
-	var adminRoleForm form_validate.AdminRoleForm
-	if err := this.ParseForm(&adminRoleForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+// Create 角色管理-添加角色.
+func (arc *AdminRoleController) Create() {
+	var adminRoleForm formvalidate.AdminRoleForm
+	if err := arc.ParseForm(&adminRoleForm); err != nil {
+		response.ErrorWithMessage(err.Error(), arc.Ctx)
 	}
 
 	v := validate.Struct(adminRoleForm)
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), arc.Ctx)
 	}
 
 	var adminRoleService services.AdminRoleService
 
 	//名称验重
 	if adminRoleService.IsExistName(adminRoleForm.Name, 0) {
-		response.ErrorWithMessage("名称已存在.", this.Ctx)
+		response.ErrorWithMessage("名称已存在.", arc.Ctx)
 	}
 
 	url := global.URL_BACK
@@ -61,19 +62,19 @@ func (this *AdminRoleController) Create() {
 	}
 
 	//添加
-	insertId := adminRoleService.Create(&adminRoleForm)
-	if insertId > 0 {
-		response.SuccessWithMessageAndUrl("添加成功", url, this.Ctx)
+	insertID := adminRoleService.Create(&adminRoleForm)
+	if insertID > 0 {
+		response.SuccessWithMessageAndUrl("添加成功", url, arc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(arc.Ctx)
 	}
 }
 
-//菜单管理-角色管理-修改界面
-func (this *AdminRoleController) Edit() {
-	id, _ := this.GetInt("id", -1)
+// Edit 菜单管理-角色管理-修改界面.
+func (arc *AdminRoleController) Edit() {
+	id, _ := arc.GetInt("id", -1)
 	if id <= 0 {
-		response.ErrorWithMessage("Param is error.", this.Ctx)
+		response.ErrorWithMessage("Param is error.", arc.Ctx)
 	}
 
 	var (
@@ -82,57 +83,57 @@ func (this *AdminRoleController) Edit() {
 
 	adminRole := adminRoleService.GetAdminRoleById(id)
 	if adminRole == nil {
-		response.ErrorWithMessage("Not Found Info By Id.", this.Ctx)
+		response.ErrorWithMessage("Not Found Info By Id.", arc.Ctx)
 	}
 
-	this.Data["data"] = adminRole
+	arc.Data["data"] = adminRole
 
-	this.Layout = "public/base.html"
-	this.TplName = "admin_role/edit.html"
+	arc.Layout = "public/base.html"
+	arc.TplName = "admin_role/edit.html"
 }
 
-//菜单管理-角色管理-修改
-func (this *AdminRoleController) Update() {
-	var adminRoleForm form_validate.AdminRoleForm
-	if err := this.ParseForm(&adminRoleForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+// Update 菜单管理-角色管理-修改.
+func (arc *AdminRoleController) Update() {
+	var adminRoleForm formvalidate.AdminRoleForm
+	if err := arc.ParseForm(&adminRoleForm); err != nil {
+		response.ErrorWithMessage(err.Error(), arc.Ctx)
 	}
 
 	//id验证
 	if adminRoleForm.Id == 0 {
-		response.ErrorWithMessage("id错误.", this.Ctx)
+		response.ErrorWithMessage("id错误.", arc.Ctx)
 	}
 
 	//字段验证
 	v := validate.Struct(adminRoleForm)
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), arc.Ctx)
 	}
 
 	var adminRoleService services.AdminRoleService
 
 	//名称验重
 	if adminRoleService.IsExistName(adminRoleForm.Name, adminRoleForm.Id) {
-		response.ErrorWithMessage("名称已存在.", this.Ctx)
+		response.ErrorWithMessage("名称已存在.", arc.Ctx)
 	}
 
 	//修改
 	num := adminRoleService.Update(&adminRoleForm)
 	if num > 0 {
-		response.Success(this.Ctx)
+		response.Success(arc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(arc.Ctx)
 	}
 }
 
-//删除
-func (this *AdminRoleController) Del() {
-	idStr := this.GetString("id")
+// Del 删除.
+func (arc *AdminRoleController) Del() {
+	idStr := arc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		arc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -143,36 +144,36 @@ func (this *AdminRoleController) Del() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("参数id错误.", this.Ctx)
+		response.ErrorWithMessage("参数id错误.", arc.Ctx)
 	}
 
 	var adminRoleService services.AdminRoleService
 
-	noDeletionId := new(models.AdminRole).NoDeletionId()
+	noDeletionID := new(models.AdminRole).NoDeletionId()
 
-	m, b := arrayOperations.Intersect(noDeletionId, idArr)
+	m, b := arrayOperations.Intersect(noDeletionID, idArr)
 
-	if len(noDeletionId) > 0 && len(m.Interface().([]int)) > 0 && b {
-		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionId), ",")+"的数据无法删除!", this.Ctx)
+	if len(noDeletionID) > 0 && len(m.Interface().([]int)) > 0 && b {
+		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionID), ",")+"的数据无法删除!", arc.Ctx)
 	}
 
 	count := adminRoleService.Del(idArr)
 
 	if count > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, arc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(arc.Ctx)
 	}
 }
 
-//启用
-func (this *AdminRoleController) Enable() {
-	idStr := this.GetString("id")
+// Enable 启用.
+func (arc *AdminRoleController) Enable() {
+	idStr := arc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		arc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -183,26 +184,26 @@ func (this *AdminRoleController) Enable() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("请选择启用的角色.", this.Ctx)
+		response.ErrorWithMessage("请选择启用的角色.", arc.Ctx)
 	}
 
 	var adminRoleService services.AdminRoleService
 	num := adminRoleService.Enable(idArr)
 	if num > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, arc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(arc.Ctx)
 	}
 }
 
-//禁用
-func (this *AdminRoleController) Disable() {
-	idStr := this.GetString("id")
+// Disable 禁用.
+func (arc *AdminRoleController) Disable() {
+	idStr := arc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		arc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -213,23 +214,23 @@ func (this *AdminRoleController) Disable() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("请选择禁用的角色.", this.Ctx)
+		response.ErrorWithMessage("请选择禁用的角色.", arc.Ctx)
 	}
 
 	var adminRoleService services.AdminRoleService
 	num := adminRoleService.Disable(idArr)
 	if num > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, arc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(arc.Ctx)
 	}
 }
 
-//菜单管理-角色管理-角色授权界面
-func (this *AdminRoleController) Access() {
-	id, _ := this.GetInt("id", -1)
+// Access 菜单管理-角色管理-角色授权界面.
+func (arc *AdminRoleController) Access() {
+	id, _ := arc.GetInt("id", -1)
 	if id <= 0 {
-		response.ErrorWithMessage("Param is error.", this.Ctx)
+		response.ErrorWithMessage("Param is error.", arc.Ctx)
 	}
 
 	var (
@@ -260,37 +261,37 @@ func (this *AdminRoleController) Access() {
 
 	html := adminTreeService.AuthorizeHtml(menuMap, strings.Split(data.Url, ","))
 
-	this.Data["data"] = data
-	this.Data["html"] = html
+	arc.Data["data"] = data
+	arc.Data["html"] = html
 
-	this.Layout = "public/base.html"
-	this.TplName = "admin_role/access.html"
+	arc.Layout = "public/base.html"
+	arc.TplName = "admin_role/access.html"
 }
 
-//菜单管理-角色管理-角色授权
-func (this *AdminRoleController) AccessOperate() {
-	id, _ := this.GetInt("id", -1)
+// AccessOperate 菜单管理-角色管理-角色授权.
+func (arc *AdminRoleController) AccessOperate() {
+	id, _ := arc.GetInt("id", -1)
 	if id < 0 {
-		response.ErrorWithMessage("Params is Error.", this.Ctx)
+		response.ErrorWithMessage("Params is Error.", arc.Ctx)
 	}
 
 	url := make([]string, 0)
-	this.Ctx.Input.Bind(&url, "url")
+	arc.Ctx.Input.Bind(&url, "url")
 
 	if len(url) == 0 {
-		response.ErrorWithMessage("请选择授权的菜单", this.Ctx)
+		response.ErrorWithMessage("请选择授权的菜单", arc.Ctx)
 	}
 
 	if !utils.InArrayForString(url, "1") {
-		response.ErrorWithMessage("首页权限必选", this.Ctx)
+		response.ErrorWithMessage("首页权限必选", arc.Ctx)
 	}
 
 	var adminRoleService services.AdminRoleService
 	num := adminRoleService.StoreAccess(id, url)
 	if num > 0 {
-		response.Success(this.Ctx)
+		response.Success(arc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(arc.Ctx)
 	}
 
 }

@@ -1,8 +1,8 @@
-package form_validate
+package formvalidate
 
 import "github.com/gookit/validate"
 
-//菜单管理-添加角色表单
+// AdminRoleForm 菜单管理-添加角色表单
 type AdminRoleForm struct {
 	Id          int    `form:"id"`
 	Name        string `form:"name" validate:"required"`
@@ -11,7 +11,7 @@ type AdminRoleForm struct {
 	IsCreate    int    `form:"_create"`
 }
 
-//自定义验证返回消息
+// Messages 自定义验证返回消息
 func (f AdminRoleForm) Messages() map[string]string {
 	return validate.MS{
 		"Name.required":        "名称不能为空.",

@@ -7,10 +7,12 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// SettingService struct
 type SettingService struct {
 	BaseService
 }
 
+// Show 显示设置
 func (settingService *SettingService) Show(id int) []*models.Setting {
 	data := settingService.getDataBySettingGroupId(id)
 
@@ -40,37 +42,35 @@ func (settingService *SettingService) Show(id int) []*models.Setting {
 	return data
 }
 
-//根据设置分组id获取多个设置信息
+// getDataBySettingGroupId 根据设置分组id获取多个设置信息
 func (*SettingService) getDataBySettingGroupId(settingGroupId int) []*models.Setting {
 	var settings []*models.Setting
 	_, err := orm.NewOrm().QueryTable(new(models.Setting)).Filter("setting_group_id", settingGroupId).All(&settings)
 	if err != nil {
 		return nil
-	} else {
-		return settings
 	}
+	return settings
 }
 
-//根据设置id，获取对应的setting info
+// GetSettingInfoById 根据设置id，获取对应的setting info
 func (*SettingService) GetSettingInfoById(id int) *models.Setting {
 	setting := models.Setting{Id: id}
 	orm.NewOrm().Read(&setting)
 	return &setting
 }
 
-//根据id修改content的内容
+// UpdateSettingInfoToContent 根据id修改content的内容
 func (*SettingService) UpdateSettingInfoToContent(id int, content string) int {
 	affectRow, err := orm.NewOrm().QueryTable(new(models.Setting)).Filter("id", id).Update(orm.Params{
 		"content": content,
 	})
 	if err == nil {
 		return int(affectRow)
-	} else {
-		return 0
 	}
+	return 0
 }
 
-//加载或者更新全局登录、系统配置信息
+// LoadOrUpdateGlobalBaseConfig 加载或者更新全局登录、系统配置信息
 func (*SettingService) LoadOrUpdateGlobalBaseConfig(setting *models.Setting) bool {
 	if setting == nil {
 		return false

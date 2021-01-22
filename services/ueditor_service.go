@@ -18,10 +18,11 @@ import (
 	"strings"
 )
 
+// UeditorService struct
 type UeditorService struct {
 }
 
-//获取配置信息
+// GetConfig 获取配置信息
 func (*UeditorService) GetConfig() map[string]interface{} {
 	cfg, err := ini.Load("conf/ueditor.conf")
 	configKeys := cfg.Section("ueditor").KeyStrings()
@@ -47,18 +48,18 @@ func (*UeditorService) GetConfig() map[string]interface{} {
 	return result
 }
 
-//上传图片
-func (this *UeditorService) UploadImage(ctx *context.Context) map[string]interface{} {
+// UploadImage 上传图片
+func (us *UeditorService) UploadImage(ctx *context.Context) map[string]interface{} {
 	fieldName := global.BA_CONFIG.Ueditor.ImageFieldName
 	if fieldName == "" {
 		return map[string]interface{}{
 			"state": "not found field ueditor::imageFieldName.",
 		}
 	}
-	return this.upFile(fieldName, ctx)
+	return us.upFile(fieldName, ctx)
 }
 
-//上传文件
+// upFile 上传文件
 func (*UeditorService) upFile(fieldName string, ctx *context.Context) map[string]interface{} {
 	result := make(map[string]interface{})
 	file, h, err := ctx.Request.FormFile(fieldName)
@@ -87,7 +88,7 @@ func (*UeditorService) upFile(fieldName string, ctx *context.Context) map[string
 		err = os.MkdirAll(saveRealDir, os.ModePerm)
 	}
 
-	saveUrl := "/static/uploads/ueditor/" + saveName + fileExt
+	saveURL := "/static/uploads/ueditor/" + saveName + fileExt
 
 	f, err := os.OpenFile(savePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
@@ -104,7 +105,7 @@ func (*UeditorService) upFile(fieldName string, ctx *context.Context) map[string
 
 	result = map[string]interface{}{
 		"state":    "SUCCESS",
-		"url":      saveUrl,
+		"url":      saveURL,
 		"title":    saveName + fileExt,
 		"original": h.Filename,
 		"type":     strings.TrimLeft(fileExt, "."),
@@ -114,8 +115,8 @@ func (*UeditorService) upFile(fieldName string, ctx *context.Context) map[string
 	return result
 }
 
-//列出图片
-func (this *UeditorService) ListImage(get url.Values) map[string]interface{} {
+// ListImage 列出图片
+func (us *UeditorService) ListImage(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	allowFiles := global.BA_CONFIG.Ueditor.ImageManagerAllowFiles
 	//ext前面的.号去掉
@@ -126,13 +127,13 @@ func (this *UeditorService) ListImage(get url.Values) map[string]interface{} {
 	}
 
 	listSizeInt, _ := strconv.Atoi(listSize)
-	result = this.fileList(allowFiles, listSizeInt, get)
+	result = us.fileList(allowFiles, listSizeInt, get)
 
 	return result
 }
 
-//列出图片
-func (this *UeditorService) fileList(allowFiles string, listSize int, get url.Values) map[string]interface{} {
+// fileList 列出图片
+func (us *UeditorService) fileList(allowFiles string, listSize int, get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	var sizeInt, startInt int
 
@@ -156,7 +157,7 @@ func (this *UeditorService) fileList(allowFiles string, listSize int, get url.Va
 	end := startInt + sizeInt
 
 	//获取文件列表
-	files := this.getFiles(dir, allowFiles)
+	files := us.getFiles(dir, allowFiles)
 	if files == nil || len(files) <= 0 {
 		result = map[string]interface{}{
 			"state": "no match file",
@@ -194,8 +195,8 @@ func (this *UeditorService) fileList(allowFiles string, listSize int, get url.Va
 	return result
 }
 
-//遍历获取目录下的指定类型的文件
-func (this *UeditorService) getFiles(dir, allowFiles string) []map[string]string {
+// getFiles 遍历获取目录下的指定类型的文件
+func (us *UeditorService) getFiles(dir, allowFiles string) []map[string]string {
 	path := filepath.ToSlash(beego.AppPath + dir)
 	var filesArr []map[string]string
 
@@ -215,7 +216,7 @@ func (this *UeditorService) getFiles(dir, allowFiles string) []map[string]string
 
 	for _, file := range files {
 		if file.IsDir() {
-			childFilesArr := this.getFiles(filepath.ToSlash(path+file.Name()+"/"), allowFiles)
+			childFilesArr := us.getFiles(filepath.ToSlash(path+file.Name()+"/"), allowFiles)
 			if len(childFilesArr) > 0 {
 				filesArr = append(filesArr, childFilesArr...)
 			}
@@ -233,8 +234,8 @@ func (this *UeditorService) getFiles(dir, allowFiles string) []map[string]string
 	return filesArr
 }
 
-//上传视频
-func (this *UeditorService) UploadVideo(ctx *context.Context) map[string]interface{} {
+// UploadVideo 上传视频
+func (us *UeditorService) UploadVideo(ctx *context.Context) map[string]interface{} {
 	fieldName := global.BA_CONFIG.Ueditor.VideoFieldName
 	if fieldName == "" {
 		return map[string]interface{}{
@@ -242,11 +243,11 @@ func (this *UeditorService) UploadVideo(ctx *context.Context) map[string]interfa
 		}
 	}
 
-	return this.upFile(fieldName, ctx)
+	return us.upFile(fieldName, ctx)
 }
 
-//上传文件
-func (this *UeditorService) UploadFile(ctx *context.Context) map[string]interface{} {
+// UploadFile 上传文件
+func (us *UeditorService) UploadFile(ctx *context.Context) map[string]interface{} {
 	fieldName := global.BA_CONFIG.Ueditor.FileFieldName
 	if fieldName == "" {
 		return map[string]interface{}{
@@ -254,11 +255,11 @@ func (this *UeditorService) UploadFile(ctx *context.Context) map[string]interfac
 		}
 	}
 
-	return this.upFile(fieldName, ctx)
+	return us.upFile(fieldName, ctx)
 }
 
-//列出文件
-func (this *UeditorService) ListFile(get url.Values) map[string]interface{} {
+// ListFile 列出文件
+func (us *UeditorService) ListFile(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	allowFiles := global.BA_CONFIG.Ueditor.FileManagerAllowFiles
 	//ext前面的.号去掉
@@ -269,13 +270,13 @@ func (this *UeditorService) ListFile(get url.Values) map[string]interface{} {
 	}
 
 	listSizeInt := listSize
-	result = this.fileList(allowFiles, listSizeInt, get)
+	result = us.fileList(allowFiles, listSizeInt, get)
 
 	return result
 }
 
-//上传涂鸦
-func (this *UeditorService) UploadScrawl(get url.Values) map[string]interface{} {
+// UploadScrawl 上传涂鸦
+func (us *UeditorService) UploadScrawl(get url.Values) map[string]interface{} {
 	result := make(map[string]interface{})
 	pathFormat := global.BA_CONFIG.Ueditor.ScrawlPathFormat
 	maxSize := global.BA_CONFIG.Ueditor.ScrawlMaxSize
@@ -297,11 +298,11 @@ func (this *UeditorService) UploadScrawl(get url.Values) map[string]interface{} 
 	}
 
 	base64Data := get.Get(oriName)
-	return this.upBase64(config, base64Data)
+	return us.upBase64(config, base64Data)
 }
 
-//处理base64编码的图片上传
-func (this *UeditorService) upBase64(config map[string]string, base64Data string) map[string]interface{} {
+// upBase64 处理base64编码的图片上传
+func (us *UeditorService) upBase64(config map[string]string, base64Data string) map[string]interface{} {
 	result := make(map[string]interface{})
 	imgByte, err := base64.StdEncoding.DecodeString(base64Data)
 	if err != nil {
@@ -364,8 +365,8 @@ func (this *UeditorService) upBase64(config map[string]string, base64Data string
 	return result
 }
 
-//抓取远程文件
-func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interface{} {
+// CatchImage 抓取远程文件
+func (us *UeditorService) CatchImage(ctx *context.Context) map[string]interface{} {
 	result := make(map[string]interface{})
 	pathFormat := global.BA_CONFIG.Ueditor.CatcherPathFormat
 	maxSize := global.BA_CONFIG.Ueditor.CatcherMaxSize
@@ -401,8 +402,8 @@ func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interfac
 		return result
 	}
 
-	for _, imgUrl := range source {
-		info := this.saveRemote(config, imgUrl)
+	for _, imgURL := range source {
+		info := us.saveRemote(config, imgURL)
 		if info["state"] == "SUCCESS" {
 			list = append(list, map[string]string{
 				"state":    info["state"],
@@ -410,7 +411,7 @@ func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interfac
 				"size":     info["size"],
 				"title":    info["title"],
 				"original": info["original"],
-				"source":   imgUrl,
+				"source":   imgURL,
 			})
 		} else {
 			list = append(list, map[string]string{
@@ -419,7 +420,7 @@ func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interfac
 				"size":     "",
 				"title":    "",
 				"original": "",
-				"source":   imgUrl,
+				"source":   imgURL,
 			})
 		}
 
@@ -433,24 +434,24 @@ func (this *UeditorService) CatchImage(ctx *context.Context) map[string]interfac
 	return result
 }
 
-//抓取远程图片
+// saveRemote 抓取远程图片
 func (*UeditorService) saveRemote(config map[string]string, fieldName string) map[string]string {
 	result := make(map[string]string)
-	imgUrl := strings.ReplaceAll(fieldName, "&amp;", "&")
+	imgURL := strings.ReplaceAll(fieldName, "&amp;", "&")
 
-	if imgUrl == "" {
+	if imgURL == "" {
 		result["state"] = "链接为空"
 		return result
 	}
 
 	//http开头验证
-	if !strings.HasPrefix(imgUrl, "http") {
+	if !strings.HasPrefix(imgURL, "http") {
 		result["state"] = "链接不是http链接"
 		return result
 	}
 
 	//获取请求头并检测死链
-	response, err := http.Get(imgUrl)
+	response, err := http.Get(imgURL)
 	defer response.Body.Close()
 	if err != nil || response.StatusCode != 200 {
 		result["state"] = "链接不可用"
@@ -463,7 +464,7 @@ func (*UeditorService) saveRemote(config map[string]string, fieldName string) ma
 		return result
 	}
 
-	fileType := strings.TrimLeft(filepath.Ext(imgUrl), ".")
+	fileType := strings.TrimLeft(filepath.Ext(imgURL), ".")
 	if fileType == "" || !strings.Contains(config["allowFiles"], fileType) {
 		result["state"] = "链接url后缀不正确"
 		return result
@@ -473,7 +474,7 @@ func (*UeditorService) saveRemote(config map[string]string, fieldName string) ma
 	dirName := filepath.ToSlash(beego.AppPath + path)
 
 	file := make(map[string]string)
-	file["oriName"] = filepath.Ext(imgUrl)
+	file["oriName"] = filepath.Ext(imgURL)
 	file["filesize"] = "0"
 	file["ext"] = file["oriName"]
 	file["name"] = uuid.New().String() + file["ext"]

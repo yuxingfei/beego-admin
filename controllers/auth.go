@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"beego-admin/form_validate"
+	"beego-admin/formvalidate"
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/services"
@@ -15,12 +15,13 @@ import (
 
 var adminLogService services.AdminLogService
 
+// AuthController struct
 type AuthController struct {
 	baseController
 }
 
-//登录界面
-func (this *AuthController) Login() {
+// Login 登录界面
+func (ac *AuthController) Login() {
 
 	//加载登录配置信息
 	var settingService services.SettingService
@@ -39,30 +40,37 @@ func (this *AuthController) Login() {
 		Captcha:    global.BA_CONFIG.Login.Captcha,
 		Background: global.BA_CONFIG.Login.Background,
 	}
-	this.Data["login_config"] = loginConfig
 
+	//login界面只需要name字段
+	admin := map[string]interface{}{
+		"name":            global.BA_CONFIG.Base.Name,
+		"title":           "登录",
+	}
+
+	ac.Data["login_config"] = loginConfig
 	//登录验证码
-	this.Data["captcha"] = utils.GetCaptcha()
+	ac.Data["captcha"] = utils.GetCaptcha()
+	ac.Data["admin"] = admin
 
-	this.TplName = "auth/login.html"
+	ac.TplName = "auth/login.html"
 }
 
-//退出登录
-func (this *AuthController) Logout() {
-	this.DelSession(global.LOGIN_USER)
-	this.Ctx.SetCookie(global.LOGIN_USER_ID, "", -1)
-	this.Ctx.SetCookie(global.LOGIN_USER_ID_SIGN, "", -1)
-	this.Redirect("/admin/auth/login", http.StatusFound)
+// Logout 退出登录
+func (ac *AuthController) Logout() {
+	ac.DelSession(global.LOGIN_USER)
+	ac.Ctx.SetCookie(global.LOGIN_USER_ID, "", -1)
+	ac.Ctx.SetCookie(global.LOGIN_USER_ID_SIGN, "", -1)
+	ac.Redirect("/admin/auth/login", http.StatusFound)
 }
 
-//登录认证
-func (this *AuthController) CheckLogin() {
+// CheckLogin 登录认证
+func (ac *AuthController) CheckLogin() {
 	//数据校验
 	valid := validation.Validation{}
-	loginForm := form_validate.LoginForm{}
+	loginForm := formvalidate.LoginForm{}
 
-	if err := this.ParseForm(&loginForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+	if err := ac.ParseForm(&loginForm); err != nil {
+		response.ErrorWithMessage(err.Error(), ac.Ctx)
 	}
 
 	v := validate.Struct(loginForm)
@@ -72,51 +80,51 @@ func (this *AuthController) CheckLogin() {
 	if isCaptcha > 0 {
 		valid.Required(loginForm.Captcha, "captcha").Message("请输入验证码.")
 		if ok := captcha.VerifyString(loginForm.CaptchaId, loginForm.Captcha); !ok {
-			response.ErrorWithMessage("验证码错误.", this.Ctx)
+			response.ErrorWithMessage("验证码错误.", ac.Ctx)
 		}
 	}
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), ac.Ctx)
 	}
 
 	//基础验证通过后，进行用户验证
 	var adminUserService services.AdminUserService
-	loginUser, err := adminUserService.CheckLogin(loginForm, this.Ctx)
+	loginUser, err := adminUserService.CheckLogin(loginForm, ac.Ctx)
 	if err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+		response.ErrorWithMessage(err.Error(), ac.Ctx)
 	}
 
 	//登录日志记录
-	adminLogService.LoginLog(loginUser.Id, this.Ctx)
+	adminLogService.LoginLog(loginUser.Id, ac.Ctx)
 
-	redirect, _ := this.GetSession("redirect").(string)
+	redirect, _ := ac.GetSession("redirect").(string)
 	if redirect != "" {
-		response.SuccessWithMessageAndUrl("登录成功", redirect, this.Ctx)
+		response.SuccessWithMessageAndUrl("登录成功", redirect, ac.Ctx)
 	} else {
-		response.SuccessWithMessageAndUrl("登录成功", "/admin/index/index", this.Ctx)
+		response.SuccessWithMessageAndUrl("登录成功", "/admin/index/index", ac.Ctx)
 	}
 }
 
-//刷新验证码
-func (this *AuthController) RefreshCaptcha() {
-	captchaId := this.GetString("captchaId")
+// RefreshCaptcha 刷新验证码
+func (ac *AuthController) RefreshCaptcha() {
+	captchaID := ac.GetString("captchaId")
 	res := map[string]interface{}{
 		"isNew": false,
 	}
-	if captchaId == "" {
+	if captchaID == "" {
 		res["msg"] = "参数错误."
 	}
 
-	isReload := captcha.Reload(captchaId)
+	isReload := captcha.Reload(captchaID)
 	if isReload {
-		res["captchaId"] = captchaId
+		res["captchaId"] = captchaID
 	} else {
 		res["isNew"] = true
 		res["captcha"] = utils.GetCaptcha()
 	}
 
-	this.Data["json"] = res
+	ac.Data["json"] = res
 
-	this.ServeJSON()
+	ac.ServeJSON()
 }

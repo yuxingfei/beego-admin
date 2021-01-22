@@ -14,55 +14,57 @@ import (
 	"time"
 )
 
+// IndexController struct
 type IndexController struct {
 	baseController
 }
 
-//加载的包信息
+// PackageLib 加载的包信息
 type PackageLib struct {
 	Name    string
 	Version string
 }
 
-func (this *IndexController) Index() {
-	this.Data["login_user"] = loginUser
+// Index 首页
+func (ic *IndexController) Index() {
+	ic.Data["login_user"] = loginUser
 
 	//默认密码修改检测
-	this.Data["password_danger"] = 0
+	ic.Data["password_danger"] = 0
 
 	//是否首页显示提示信息
-	this.Data["show_notice"] = global.BA_CONFIG.Base.ShowNotice
+	ic.Data["show_notice"] = global.BA_CONFIG.Base.ShowNotice
 	//提示内容
-	this.Data["notice_content"] = global.BA_CONFIG.Base.NoticeContent
+	ic.Data["notice_content"] = global.BA_CONFIG.Base.NoticeContent
 
 	//默认密码修改检测
 	loginUserPassword, _ := base64.StdEncoding.DecodeString(loginUser.Password)
 	if global.BA_CONFIG.Base.PasswordWarning == "1" && utils.PasswordVerify("123456", string(loginUserPassword)) {
-		this.Data["password_danger"] = 1
+		ic.Data["password_danger"] = 1
 	}
 
 	//后台用户数量
 	var adminUserService services.AdminUserService
-	this.Data["admin_user_count"] = adminUserService.GetCount()
+	ic.Data["admin_user_count"] = adminUserService.GetCount()
 	//后台角色数量
 	var adminRoleService services.AdminRoleService
-	this.Data["admin_role_count"] = adminRoleService.GetCount()
+	ic.Data["admin_role_count"] = adminRoleService.GetCount()
 	//后台菜单数量
 	var adminMenuService services.AdminMenuService
-	this.Data["admin_menu_count"] = adminMenuService.GetCount()
+	ic.Data["admin_menu_count"] = adminMenuService.GetCount()
 	//后台日志数量
 	var adminLogService services.AdminLogService
-	this.Data["admin_log_count"] = adminLogService.GetCount()
+	ic.Data["admin_log_count"] = adminLogService.GetCount()
 	//系统信息
-	this.Data["system_info"] = this.getSystemInfo()
+	ic.Data["system_info"] = ic.getSystemInfo()
 
-	this.Layout = "public/base.html"
+	ic.Layout = "public/base.html"
 
-	this.TplName = "index/index.html"
+	ic.TplName = "index/index.html"
 }
 
-//获取系统信息
-func (this *IndexController) getSystemInfo() map[string]interface{} {
+// getSystemInfo 获取系统信息
+func (ic *IndexController) getSystemInfo() map[string]interface{} {
 	systemInfo := make(map[string]interface{})
 	//服务器系统
 	systemInfo["server_os"] = runtime.GOOS
@@ -82,9 +84,9 @@ func (this *IndexController) getSystemInfo() map[string]interface{} {
 	//当前时间
 	systemInfo["date_time"] = time.Now().Format("2006-01-02 15:04:05")
 	//用户IP
-	systemInfo["user_ip"] = this.Ctx.Input.IP()
+	systemInfo["user_ip"] = ic.Ctx.Input.IP()
 
-	userAgent := this.Ctx.Input.Header("user-agent")
+	userAgent := ic.Ctx.Input.Header("user-agent")
 
 	userOs := "Other"
 	if strings.Contains(userAgent, "win") {

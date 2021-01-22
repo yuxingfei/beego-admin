@@ -2,13 +2,14 @@ package services
 
 import (
 	"beego-admin/utils"
-	beego_pagination "beego-admin/utils/beego-pagination"
+	"beego-admin/utils/page"
 	"github.com/astaxie/beego/orm"
 	"net/url"
 	"strings"
 	"time"
 )
 
+// BaseService struct
 type BaseService struct {
 	//可搜索字段
 	SearchField []string
@@ -19,42 +20,41 @@ type BaseService struct {
 	//禁止删除的数据id,在model中声明就可以了，可不用在此处声明
 	//NoDeletionId []int
 	//分页
-	Pagination beego_pagination.Pagination
+	Pagination page.Pagination
 }
 
-//分页处理
-func (this *BaseService) Paginate(seter orm.QuerySeter, listRows int, parameters url.Values) orm.QuerySeter {
-	var pagination beego_pagination.Pagination
+// Paginate 分页处理
+func (bs *BaseService) Paginate(seter orm.QuerySeter, listRows int, parameters url.Values) orm.QuerySeter {
+	var pagination page.Pagination
 	qs := pagination.Paginate(seter, listRows, parameters)
-	this.Pagination = pagination
+	bs.Pagination = pagination
 	return qs
 }
 
-//查询处理
-func (this *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values) orm.QuerySeter {
-
+// ScopeWhere 查询处理
+func (bs *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values) orm.QuerySeter {
 	//关键词like搜索
 	keywords := parameters.Get("_keywords")
 	cond := orm.NewCondition()
-	if keywords != "" && len(this.SearchField) > 0 {
-		for _, v := range this.SearchField {
+	if keywords != "" && len(bs.SearchField) > 0 {
+		for _, v := range bs.SearchField {
 			cond = cond.Or(v+"__icontains", keywords)
 		}
 	}
 
 	//字段条件查询
-	if len(this.WhereField) > 0 && len(parameters) > 0 {
+	if len(bs.WhereField) > 0 && len(parameters) > 0 {
 		for k, v := range parameters {
-			if v[0] != "" && utils.InArrayForString(this.WhereField, k) {
+			if v[0] != "" && utils.InArrayForString(bs.WhereField, k) {
 				cond = cond.And(k, v[0])
 			}
 		}
 	}
 
 	//时间范围查询
-	if len(this.TimeField) > 0 && len(parameters) > 0 {
+	if len(bs.TimeField) > 0 && len(parameters) > 0 {
 		for key, value := range parameters {
-			if value[0] != "" && utils.InArrayForString(this.TimeField, key) {
+			if value[0] != "" && utils.InArrayForString(bs.TimeField, key) {
 				timeRange := strings.Split(value[0], " - ")
 				startTimeStr := timeRange[0]
 				endTimeStr := timeRange[1]
@@ -104,7 +104,7 @@ func (this *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values)
 	return seter
 }
 
-//分页和查询合并，多用于首页列表展示、搜索
-func (this *BaseService) PaginateAndScopeWhere(seter orm.QuerySeter, listRows int, parameters url.Values) orm.QuerySeter {
-	return this.Paginate(this.ScopeWhere(seter, parameters), listRows, parameters)
+// PaginateAndScopeWhere 分页和查询合并，多用于首页列表展示、搜索
+func (bs *BaseService) PaginateAndScopeWhere(seter orm.QuerySeter, listRows int, parameters url.Values) orm.QuerySeter {
+	return bs.Paginate(bs.ScopeWhere(seter, parameters), listRows, parameters)
 }

@@ -1,8 +1,8 @@
-package form_validate
+package formvalidate
 
 import "github.com/gookit/validate"
 
-//admin_user 表单
+// AdminUserForm admin_user 表单
 type AdminUserForm struct {
 	Id       int    `form:"id"`
 	Username string `form:"username" validate:"required"`
@@ -14,7 +14,7 @@ type AdminUserForm struct {
 	IsCreate int    `form:"_create"`
 }
 
-//自定义验证返回消息
+// Messages 自定义验证返回消息
 func (f AdminUserForm) Messages() map[string]string {
 	return validate.MS{
 		"Username.required": "请填写账号.",

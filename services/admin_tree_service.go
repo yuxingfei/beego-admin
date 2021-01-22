@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// AdminTreeService struct
 type AdminTreeService struct {
 	Ret   string
 	Html  string
@@ -21,17 +22,17 @@ var (
 	space string   = "&nbsp;&nbsp;"
 )
 
-//获取左侧菜单
+// GetLeftMenu 获取左侧菜单
 func (adminTreeService *AdminTreeService) GetLeftMenu(requestUrl string, user models.AdminUser) string {
 	menu := user.GetShowMenu()
 	maxLevel := 0
-	currentId := 1
+	currentID := 1
 	parentIds := []int{0}
 
 	for _, v := range menu {
 		if v["Url"].(string) == requestUrl {
 			parentIds = adminTreeService.getMenuParent(menu, int(v["Id"].(int64)), []int{})
-			currentId = int(v["Id"].(int64))
+			currentID = int(v["Id"].(int64))
 		}
 	}
 
@@ -84,45 +85,45 @@ func (adminTreeService *AdminTreeService) GetLeftMenu(requestUrl string, user mo
 	adminTreeService.Text["current"] = textCurrent
 	adminTreeService.Text["other"] = textOther
 
-	return adminTreeService.getAuthTree(0, currentId, parentIds)
+	return adminTreeService.getAuthTree(0, currentID, parentIds)
 
 }
 
-//获取父级菜单
-func (adminTreeService *AdminTreeService) getMenuParent(menu map[int]orm.Params, myId int, parentIds []int) []int {
+// getMenuParent 获取父级菜单
+func (adminTreeService *AdminTreeService) getMenuParent(menu map[int]orm.Params, myID int, parentIds []int) []int {
 	for _, a := range menu {
-		if int(a["Id"].(int64)) == myId && int(a["ParentId"].(int64)) != 0 {
+		if int(a["Id"].(int64)) == myID && int(a["ParentId"].(int64)) != 0 {
 			parentIds = append(parentIds, int(a["ParentId"].(int64)))
 			parentIds = adminTreeService.getMenuParent(menu, int(a["ParentId"].(int64)), parentIds)
 		}
 	}
 	if len(parentIds) > 0 {
 		return parentIds
-	} else {
-		return []int{}
 	}
+	return []int{}
 }
 
-//递归获取级别
+// GetLevel 递归获取级别
 func (adminTreeService *AdminTreeService) GetLevel(id int, menu map[int]orm.Params, i int) int {
-	parentId := 0
+	parentID := 0
 	v, ok := menu[id]["ParentId"].(int64)
 	if ok {
-		parentId = int(v)
+		parentID = int(v)
 	} else {
 		v1, ok := menu[id]["ParentId"].(int)
 		if ok {
-			parentId = v1
+			parentID = v1
 		}
 	}
 
-	if (parentId == 0) || id == parentId {
+	if (parentID == 0) || id == parentID {
 		return i
 	}
 	i++
-	return adminTreeService.GetLevel(parentId, menu, i)
+	return adminTreeService.GetLevel(parentID, menu, i)
 }
 
+// initTree 初始化树
 func (adminTreeService *AdminTreeService) initTree(menu map[int]orm.Params) {
 	adminTreeService.Array = make(map[int]orm.Params)
 	adminTreeService.Array = menu
@@ -130,29 +131,29 @@ func (adminTreeService *AdminTreeService) initTree(menu map[int]orm.Params) {
 	adminTreeService.Html = ""
 }
 
-//获取后台左侧菜单
-func (adminTreeService *AdminTreeService) getAuthTree(myId int, currentId int, parentIds []int) string {
+// getAuthTree 获取后台左侧菜单
+func (adminTreeService *AdminTreeService) getAuthTree(myId int, currentID int, parentIds []int) string {
 	nStr := ""
 	child := adminTreeService.getChild(myId)
 	if len(child) > 0 {
 		menu := make(map[string]interface{})
 		//取key最小的一个，防止for range随机取，导致每次菜单顺序不同
-		sortId := 99999
-		for k, _ := range child {
-			if k < sortId {
-				sortId = k
+		sortID := 99999
+		for k := range child {
+			if k < sortID {
+				sortID = k
 			}
 		}
-		menu = child[sortId]
+		menu = child[sortID]
 
 		//获取当前等级的html
-		var textHtmlInterface interface{}
+		var textHTMLInterface interface{}
 		if adminTreeService.Text[strconv.Itoa(menu["Level"].(int))] != "" {
 			//[]string类型
-			textHtmlInterface = adminTreeService.Text[strconv.Itoa(menu["Level"].(int))]
+			textHTMLInterface = adminTreeService.Text[strconv.Itoa(menu["Level"].(int))]
 		} else {
 			//string类型
-			textHtmlInterface = adminTreeService.Text["other"]
+			textHTMLInterface = adminTreeService.Text["other"]
 		}
 
 		//child排序，防止菜单位置每次都不同
@@ -166,18 +167,18 @@ func (adminTreeService *AdminTreeService) getAuthTree(myId int, currentId int, p
 			v := child[key]
 
 			if len(adminTreeService.getChild(k)) > 0 {
-				textHtmlArr := textHtmlInterface.([]string)
+				textHTMLArr := textHTMLInterface.([]string)
 				if utils.InArrayForInt(parentIds, k) {
-					nStr = adminTreeService.strReplace(textHtmlArr[1], v)
+					nStr = adminTreeService.strReplace(textHTMLArr[1], v)
 					adminTreeService.Html += nStr
 				} else {
-					nStr = adminTreeService.strReplace(textHtmlArr[0], v)
+					nStr = adminTreeService.strReplace(textHTMLArr[0], v)
 					adminTreeService.Html += nStr
 				}
-				adminTreeService.getAuthTree(k, currentId, parentIds)
-				nStr = adminTreeService.strReplace(textHtmlArr[2], v)
+				adminTreeService.getAuthTree(k, currentID, parentIds)
+				nStr = adminTreeService.strReplace(textHTMLArr[2], v)
 				adminTreeService.Html += nStr
-			} else if k == currentId {
+			} else if k == currentID {
 				a := adminTreeService.Text["current"].(string)
 				nStr = adminTreeService.strReplace(a, v)
 				adminTreeService.Html += nStr
@@ -191,26 +192,26 @@ func (adminTreeService *AdminTreeService) getAuthTree(myId int, currentId int, p
 	return adminTreeService.Html
 }
 
-//得到子级数组
+// getChild 得到子级数组
 func (adminTreeService *AdminTreeService) getChild(pid int) map[int]map[string]interface{} {
 	result := make(map[int]map[string]interface{})
 	for k, v := range adminTreeService.Array {
-		parentId, ok := v["ParentId"].(int64)
-		var parentIdInt int
+		parentID, ok := v["ParentId"].(int64)
+		var parentIDInt int
 		if ok {
-			parentIdInt = int(parentId)
+			parentIDInt = int(parentID)
 		} else {
-			parentIdInt = v["ParentId"].(int)
+			parentIDInt = v["ParentId"].(int)
 		}
 
-		if parentIdInt == pid {
+		if parentIDInt == pid {
 			result[k] = v
 		}
 	}
 	return result
 }
 
-//替换字符串
+// strReplace 替换字符串
 func (adminTreeService *AdminTreeService) strReplace(str string, m map[string]interface{}) string {
 	str = strings.ReplaceAll(str, "$icon", m["Icon"].(string))
 	str = strings.ReplaceAll(str, "$name", m["Name"].(string))
@@ -218,10 +219,10 @@ func (adminTreeService *AdminTreeService) strReplace(str string, m map[string]in
 	return str
 }
 
-//得到树型结构
+// GetTree 得到树型结构
 //myId 表示获得这个ID下的所有子级
 //str 生成树型结构的基本代码，例如："<option value=\$id \$selected>\$spacer\$name</option>"
-//sid 被选中的ID，比如在做树型下拉框的时候需要用到
+//sid 被选中的ID，比如在做树型下拉框的时候需要用到.
 func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int, adds string, strGroup string) string {
 	number := 1
 	child := adminTreeService.getChild(myId)
@@ -231,7 +232,7 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 
 		//child排序
 		var ids []int
-		for id, _ := range child {
+		for id := range child {
 			ids = append(ids, id)
 		}
 		sort.Ints(ids)
@@ -261,11 +262,11 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 				selected = "selected"
 			}
 			nStr := ""
-			parentIdInt, ok := value["ParentId"].(int)
+			parentIDInt, ok := value["ParentId"].(int)
 			if !ok {
-				parentIdInt = int(value["ParentId"].(int64))
+				parentIDInt = int(value["ParentId"].(int64))
 			}
-			if 0 == parentIdInt && strGroup != "" {
+			if 0 == parentIDInt && strGroup != "" {
 				nStr = strGroup
 			} else {
 				nStr = str
@@ -294,20 +295,20 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 				nStr = strings.ReplaceAll(nStr, "$level", strconv.Itoa(levelInt))
 			}
 
-			sortIdInt, ok := value["SortId"].(int)
+			sortIDInt, ok := value["SortId"].(int)
 			if !ok {
-				sortIdInt64, ok := value["SortId"].(int64)
+				sortIDInt64, ok := value["SortId"].(int64)
 				if ok {
-					sortIdInt = int(sortIdInt64)
-					nStr = strings.ReplaceAll(nStr, "$sort_id", strconv.Itoa(sortIdInt))
+					sortIDInt = int(sortIDInt64)
+					nStr = strings.ReplaceAll(nStr, "$sort_id", strconv.Itoa(sortIDInt))
 				}
 			} else {
-				nStr = strings.ReplaceAll(nStr, "$sort_id", strconv.Itoa(sortIdInt))
+				nStr = strings.ReplaceAll(nStr, "$sort_id", strconv.Itoa(sortIDInt))
 			}
 
-			parentIdNodeStringValue, ok := value["ParentIdNode"].(string)
+			parentIDNodeStringValue, ok := value["ParentIdNode"].(string)
 			if ok {
-				nStr = strings.ReplaceAll(nStr, "$parent_id_node", parentIdNodeStringValue)
+				nStr = strings.ReplaceAll(nStr, "$parent_id_node", parentIDNodeStringValue)
 			}
 
 			nStr = strings.ReplaceAll(nStr, "$spacer", spacer)
@@ -323,7 +324,7 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 				nStr = strings.ReplaceAll(nStr, "$url", urlValue)
 			}
 
-			nStr = strings.ReplaceAll(nStr, "$parent_id", strconv.Itoa(parentIdInt))
+			nStr = strings.ReplaceAll(nStr, "$parent_id", strconv.Itoa(parentIDInt))
 
 			iconValue, ok := value["Icon"].(string)
 			if ok {
@@ -357,7 +358,7 @@ func (adminTreeService *AdminTreeService) GetTree(myId int, str string, sid int,
 	return adminTreeService.Ret
 }
 
-//菜单选择 select树形选择
+// Menu 菜单选择 select树形选择
 func (adminTreeService *AdminTreeService) Menu(selected int, currentId int) string {
 	var adminMenuService AdminMenuService
 	result := adminMenuService.Menu(currentId)
@@ -379,12 +380,11 @@ func (adminTreeService *AdminTreeService) Menu(selected int, currentId int) stri
 		str := `<option value='$id' $selected >$spacer $name</option>`
 		adminTreeService.initTree(resultKey)
 		return adminTreeService.GetTree(0, str, selected, "", "")
-	} else {
-		return ""
 	}
+	return ""
 }
 
-//生成菜单树
+// AdminMenuTree 生成菜单树
 func (adminTreeService *AdminTreeService) AdminMenuTree() string {
 	var adminMenuService AdminMenuService
 	adminMenus := adminMenuService.AllMenu()
@@ -430,14 +430,13 @@ func (adminTreeService *AdminTreeService) AdminMenuTree() string {
 
 		return adminTreeService.GetTree(0, str, 0, "", "")
 
-	} else {
-		return ""
 	}
+	return ""
 }
 
-//生成授权html
+// AuthorizeHtml 生成授权html
 func (adminTreeService *AdminTreeService) AuthorizeHtml(menu map[int]orm.Params, authMenus []string) string {
-	for id, _ := range menu {
+	for id := range menu {
 		if utils.InArrayForString(authMenus, strconv.Itoa(id)) {
 			menu[id]["Checked"] = " checked"
 		} else {
@@ -487,25 +486,25 @@ func (adminTreeService *AdminTreeService) AuthorizeHtml(menu map[int]orm.Params,
 	return adminTreeService.getAuthTreeAccess(0)
 }
 
-//获取权限树
-func (adminTreeService *AdminTreeService) getAuthTreeAccess(myId int) string {
+// getAuthTreeAccess 获取权限树
+func (adminTreeService *AdminTreeService) getAuthTreeAccess(myID int) string {
 	nStr := ""
-	child := adminTreeService.getChild(myId)
+	child := adminTreeService.getChild(myID)
 
 	if len(child) > 0 {
 		//取key最小的一个，防止for range随机取，导致每次菜单顺序不同
-		sortId := 99999
-		for k, _ := range child {
-			if k < sortId {
-				sortId = k
+		sortID := 99999
+		for k := range child {
+			if k < sortID {
+				sortID = k
 			}
 		}
 		level := make(map[string]interface{})
-		level = child[sortId]
+		level = child[sortID]
 
 		//child排序
 		var ids []int
-		for id, _ := range child {
+		for id := range child {
 			ids = append(ids, id)
 		}
 		sort.Ints(ids)

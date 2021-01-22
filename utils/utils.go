@@ -14,31 +14,31 @@ import (
 	"unicode"
 )
 
+// CaptchaResponse struct
 type CaptchaResponse struct {
 	CaptchaId  string
 	CaptchaUrl string
 }
 
-//获取验证码
+// GetCaptcha 获取验证码
 func GetCaptcha() *CaptchaResponse {
-	captchaId := captcha.NewLen(4)
+	captchaID := captcha.NewLen(4)
 	return &CaptchaResponse{
-		CaptchaId:  captchaId,
-		CaptchaUrl: fmt.Sprintf("/admin/auth/captcha/%s.png", captchaId),
+		CaptchaId:  captchaID,
+		CaptchaUrl: fmt.Sprintf("/admin/auth/captcha/%s.png", captchaID),
 	}
 }
 
-//模仿php的array_key_exists,判断是否存在map中
+// KeyInMap 模仿php的array_key_exists,判断是否存在map中
 func KeyInMap(key string, m map[string]interface{}) bool {
 	_, ok := m[key]
 	if ok {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-//模仿php的in_array,判断是否存在string数组中
+// InArrayForString 模仿php的in_array,判断是否存在string数组中
 func InArrayForString(items []string, item string) bool {
 	for _, eachItem := range items {
 		if eachItem == item {
@@ -48,7 +48,7 @@ func InArrayForString(items []string, item string) bool {
 	return false
 }
 
-//模仿php的in_array,判断是否存在int数组中
+// InArrayForInt 模仿php的in_array,判断是否存在int数组中
 func InArrayForInt(items []int, item int) bool {
 	for _, eachItem := range items {
 		if eachItem == item {
@@ -58,19 +58,19 @@ func InArrayForInt(items []int, item int) bool {
 	return false
 }
 
-//php的函数password_hash
+// PasswordHash php的函数password_hash
 func PasswordHash(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(bytes), err
 }
 
-//php的函数password_verify
+// PasswordVerify php的函数password_verify
 func PasswordVerify(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
 
-//int数组转string数组
+// IntArrToStringArr int数组转string数组
 func IntArrToStringArr(arr []int) []string {
 	var stringArr []string
 	for _, v := range arr {
@@ -79,21 +79,21 @@ func IntArrToStringArr(arr []int) []string {
 	return stringArr
 }
 
-//对字符串进行MD5哈希
+// GetMd5String 对字符串进行MD5哈希
 func GetMd5String(str string) string {
 	t := md5.New()
 	io.WriteString(t, str)
 	return fmt.Sprintf("%x", t.Sum(nil))
 }
 
-//对字符串进行SHA1哈希
+// GetSha1String 对字符串进行SHA1哈希
 func GetSha1String(str string) string {
 	t := sha1.New()
 	io.WriteString(t, str)
 	return fmt.Sprintf("%x", t.Sum(nil))
 }
 
-//字符串命名风格转换
+// ParseName 字符串命名风格转换
 func ParseName(name string, ptype int, ucfirst bool) string {
 	if ptype > 0 {
 		//解释正则表达式
@@ -110,27 +110,25 @@ func ParseName(name string, ptype int, ucfirst bool) string {
 
 		if ucfirst {
 			return Ucfirst(name)
-		} else {
-			return Lcfirst(name)
 		}
-	} else {
-		//解释正则表达式
-		reg := regexp.MustCompile(`[A-Z]`)
-		if reg == nil {
-			beego.Error("MustCompile err")
-			return ""
-		}
-		//提取关键信息
-		result := reg.FindAllStringSubmatch(name, -1)
-
-		for _, v := range result {
-			name = strings.ReplaceAll(name, v[0], "_"+v[0])
-		}
-		return strings.ToLower(name)
+		return Lcfirst(name)
 	}
+	//解释正则表达式
+	reg := regexp.MustCompile(`[A-Z]`)
+	if reg == nil {
+		beego.Error("MustCompile err")
+		return ""
+	}
+	//提取关键信息
+	result := reg.FindAllStringSubmatch(name, -1)
+
+	for _, v := range result {
+		name = strings.ReplaceAll(name, v[0], "_"+v[0])
+	}
+	return strings.ToLower(name)
 }
 
-//首字母大写
+// Ucfirst 首字母大写
 func Ucfirst(str string) string {
 	for i, v := range str {
 		return string(unicode.ToUpper(v)) + str[i+1:]
@@ -138,7 +136,7 @@ func Ucfirst(str string) string {
 	return ""
 }
 
-//首字母小写
+// Lcfirst 首字母小写
 func Lcfirst(str string) string {
 	for i, v := range str {
 		return string(unicode.ToLower(v)) + str[i+1:]

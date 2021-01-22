@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//注册mysql
+// init 注册mysql
 func init() {
 	err := orm.RegisterDriver("mysql", orm.DRMySQL)
 	if err != nil {

@@ -1,4 +1,4 @@
-package beego_pagination
+package page
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+// Pagination struct
 type Pagination struct {
 	//当前页
 	CurrentPage int

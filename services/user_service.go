@@ -1,37 +1,37 @@
 package services
 
 import (
-	"beego-admin/form_validate"
+	"beego-admin/formvalidate"
 	"beego-admin/models"
 	"beego-admin/utils"
-	beego_pagination "beego-admin/utils/beego-pagination"
+	"beego-admin/utils/page"
 	"encoding/base64"
 	"github.com/astaxie/beego/orm"
 	"net/url"
 	"time"
 )
 
+// UserService struct
 type UserService struct {
 	BaseService
 }
 
-//通过分页获取user
-func (this *UserService) GetPaginateData(listRows int, params url.Values) ([]*models.User, beego_pagination.Pagination) {
+// GetPaginateData 通过分页获取user
+func (us *UserService) GetPaginateData(listRows int, params url.Values) ([]*models.User, page.Pagination) {
 	//搜索、查询字段赋值
-	this.SearchField = append(this.SearchField, new(models.User).SearchField()...)
+	us.SearchField = append(us.SearchField, new(models.User).SearchField()...)
 
 	var users []*models.User
 	o := orm.NewOrm().QueryTable(new(models.User))
-	_, err := this.PaginateAndScopeWhere(o, listRows, params).All(&users)
+	_, err := us.PaginateAndScopeWhere(o, listRows, params).All(&users)
 	if err != nil {
-		return nil, this.Pagination
-	} else {
-		return users, this.Pagination
+		return nil, us.Pagination
 	}
+	return users, us.Pagination
 }
 
-//新增用户
-func (*UserService) Create(form *form_validate.UserForm) int {
+// Create 新增用户
+func (*UserService) Create(form *formvalidate.UserForm) int {
 	user := models.User{
 		Username:    form.Username,
 		Nickname:    form.Nickname,
@@ -57,12 +57,11 @@ func (*UserService) Create(form *form_validate.UserForm) int {
 
 	if err == nil {
 		return int(id)
-	} else {
-		return 0
 	}
+	return 0
 }
 
-//根据id获取一条user数据
+// GetUserById 根据id获取一条user数据
 func (*UserService) GetUserById(id int) *models.User {
 	o := orm.NewOrm()
 	user := models.User{Id: id}
@@ -73,8 +72,8 @@ func (*UserService) GetUserById(id int) *models.User {
 	return &user
 }
 
-//更新用户
-func (*UserService) Update(form *form_validate.UserForm) int {
+// Update 更新用户
+func (*UserService) Update(form *formvalidate.UserForm) int {
 	o := orm.NewOrm()
 	user := models.User{Id: form.Id}
 	if o.Read(&user) == nil {
@@ -102,57 +101,52 @@ func (*UserService) Update(form *form_validate.UserForm) int {
 
 		if err == nil {
 			return int(num)
-		} else {
-			return 0
 		}
+		return 0
 	}
 	return 0
 }
 
-//启用
+// Enable 启用
 func (*UserService) Enable(ids []int) int {
 	num, err := orm.NewOrm().QueryTable(new(models.User)).Filter("id__in", ids).Update(orm.Params{
 		"status": 1,
 	})
 	if err == nil {
 		return int(num)
-	} else {
-		return 0
 	}
+	return 0
 }
 
-//禁用
+// Disable 禁用
 func (*UserService) Disable(ids []int) int {
 	num, err := orm.NewOrm().QueryTable(new(models.User)).Filter("id__in", ids).Update(orm.Params{
 		"status": 0,
 	})
 	if err == nil {
 		return int(num)
-	} else {
-		return 0
 	}
+	return 0
 }
 
-//删除
+// Del 删除
 func (*UserService) Del(ids []int) int {
 	count, err := orm.NewOrm().QueryTable(new(models.User)).Filter("id__in", ids).Delete()
 	if err == nil {
 		return int(count)
-	} else {
-		return 0
 	}
+	return 0
 }
 
-//获取导出数据
-func (this *UserService) GetExportData(params url.Values) []*models.User {
+// GetExportData 获取导出数据
+func (us *UserService) GetExportData(params url.Values) []*models.User {
 	//搜索、查询字段赋值
-	this.SearchField = append(this.SearchField, new(models.User).SearchField()...)
+	us.SearchField = append(us.SearchField, new(models.User).SearchField()...)
 	var user []*models.User
 	o := orm.NewOrm().QueryTable(new(models.User))
-	_, err := this.ScopeWhere(o, params).All(&user)
+	_, err := us.ScopeWhere(o, params).All(&user)
 	if err != nil {
 		return nil
-	} else {
-		return user
 	}
+	return user
 }
