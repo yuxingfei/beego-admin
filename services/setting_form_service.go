@@ -5,11 +5,13 @@ import (
 	"strings"
 )
 
+// SettingFormService struct
 type SettingFormService struct {
 	BaseService
 }
 
-var formHtml map[string]string = map[string]string{
+// formHTML 生成form html
+var formHTML map[string]string = map[string]string{
 	"checkboxHtml": `<div class="form-group">
 		<label class="col-sm-2 control-label">[FORM_NAME]</label>
 		<div class="col-sm-10 col-md-4">
@@ -447,11 +449,11 @@ var formHtml map[string]string = map[string]string{
 	</script>`,
 }
 
-//获取表单字段
+// GetFieldForm 获取表单字段
 func (*SettingFormService) GetFieldForm(typeS string, name string, field string, content string, option string) string {
 	htmlVar := utils.ParseName(typeS, 1, false) + "Html"
 
-	form, ok := formHtml[htmlVar]
+	form, ok := formHTML[htmlVar]
 
 	if !ok {
 		return ""
@@ -468,7 +470,7 @@ func (*SettingFormService) GetFieldForm(typeS string, name string, field string,
 		}
 		break
 	case "select":
-		optionHtml := ""
+		optionHTML := ""
 		optionArr := strings.Split(option, "\r\n")
 		for _, item := range optionArr {
 			optionKeyValueArr := strings.Split(item, "||")
@@ -477,10 +479,10 @@ func (*SettingFormService) GetFieldForm(typeS string, name string, field string,
 				selectStr = "selected"
 			}
 			if len(optionKeyValueArr) > 0 {
-				optionHtml += `<option value="` + optionKeyValueArr[0] + `" ` + selectStr + `>` + optionKeyValueArr[1] + `</option>`
+				optionHTML += `<option value="` + optionKeyValueArr[0] + `" ` + selectStr + `>` + optionKeyValueArr[1] + `</option>`
 			}
 		}
-		form = strings.ReplaceAll(form, "[OPTION_DATA]", optionHtml)
+		form = strings.ReplaceAll(form, "[OPTION_DATA]", optionHTML)
 		break
 	default:
 		break

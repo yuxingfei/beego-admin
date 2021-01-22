@@ -5,11 +5,13 @@ import (
 	"github.com/dchest/captcha"
 )
 
+// CaptchaController struct
 type CaptchaController struct {
 	beego.Controller
 }
 
-func (this *CaptchaController) CaptchaId() {
-	captchaId := captcha.NewLen(6)
-	this.Ctx.WriteString(captchaId)
+// CaptchaId 获取CaptchaId
+func (cc *CaptchaController) CaptchaId() {
+	captchaID := captcha.NewLen(6)
+	cc.Ctx.WriteString(captchaID)
 }

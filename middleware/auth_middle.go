@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-//中间件
+// AuthMiddle 中间件
 func AuthMiddle() {
 
 	//不需要验证的url
@@ -41,11 +41,11 @@ func AuthMiddle() {
 			//验证，是否有权限访问
 			var adminUserService services.AdminUserService
 			if loginUser.Id != 1 && !adminUserService.AuthCheck(url, authExcept, loginUser) {
-				errorBackUrl := global.URL_CURRENT
+				errorBackURL := global.URL_CURRENT
 				if ctx.Request.Method == "GET" {
-					errorBackUrl = ""
+					errorBackURL = ""
 				}
-				response.ErrorWithMessageAndUrl("无权限", errorBackUrl, ctx)
+				response.ErrorWithMessageAndUrl("无权限", errorBackURL, ctx)
 				return
 			}
 		}
@@ -71,24 +71,23 @@ func isAuthExceptUrl(url string, m map[string]interface{}) bool {
 	_, ok := m[url]
 	if ok {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 //是否登录
 func isLogin(ctx *context.Context) (*models.AdminUser, bool) {
 	loginUser, ok := ctx.Input.Session(global.LOGIN_USER).(models.AdminUser)
 	if !ok {
-		loginUserIdStr := ctx.GetCookie(global.LOGIN_USER_ID)
-		loginUserIdSign := ctx.GetCookie(global.LOGIN_USER_ID_SIGN)
+		loginUserIDStr := ctx.GetCookie(global.LOGIN_USER_ID)
+		loginUserIDSign := ctx.GetCookie(global.LOGIN_USER_ID_SIGN)
 
-		if loginUserIdStr != "" && loginUserIdSign != "" {
-			loginUserId, _ := strconv.Atoi(loginUserIdStr)
+		if loginUserIDStr != "" && loginUserIDSign != "" {
+			loginUserID, _ := strconv.Atoi(loginUserIDStr)
 			var adminUserService services.AdminUserService
-			loginUserPointer := adminUserService.GetAdminUserById(loginUserId)
+			loginUserPointer := adminUserService.GetAdminUserById(loginUserID)
 
-			if loginUserPointer != nil && loginUserPointer.GetSignStrByAdminUser(ctx) == loginUserIdSign {
+			if loginUserPointer != nil && loginUserPointer.GetSignStrByAdminUser(ctx) == loginUserIDSign {
 				ctx.Output.Session(global.LOGIN_USER, *loginUserPointer)
 				return loginUserPointer, true
 			}

@@ -1,26 +1,26 @@
 package services
 
 import (
-	"beego-admin/form_validate"
+	"beego-admin/formvalidate"
 	"beego-admin/models"
 	"github.com/astaxie/beego/orm"
 )
 
+// AdminMenuService struct
 type AdminMenuService struct {
 }
 
-//根据url获取admin_menu数据
+// GetAdminMenuByUrl 根据url获取admin_menu数据
 func (*AdminMenuService) GetAdminMenuByUrl(url string) *models.AdminMenu {
 	var adminMenu models.AdminMenu
 	err := orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("url", url).One(&adminMenu)
 	if err == nil {
 		return &adminMenu
-	} else {
-		return nil
 	}
+	return nil
 }
 
-//获取admin_menu 总数
+// GetCount 获取admin_menu 总数
 func (*AdminMenuService) GetCount() int {
 	count, err := orm.NewOrm().QueryTable(new(models.AdminMenu)).Count()
 	if err != nil {
@@ -29,26 +29,25 @@ func (*AdminMenuService) GetCount() int {
 	return int(count)
 }
 
-//获取所有菜单
+// AllMenu 获取所有菜单
 func (*AdminMenuService) AllMenu() []*models.AdminMenu {
 	var adminMenus []*models.AdminMenu
 	_, err := orm.NewOrm().QueryTable(new(models.AdminMenu)).OrderBy("sort_id", "id").All(&adminMenus)
 	if err == nil {
 		return adminMenus
-	} else {
-		return nil
 	}
+	return nil
 }
 
-//除去当前id之外的所有菜单id
-func (*AdminMenuService) Menu(currentId int) []orm.Params {
+// Menu 除去当前id之外的所有菜单id
+func (*AdminMenuService) Menu(currentID int) []orm.Params {
 	var adminMenusMap []orm.Params
-	orm.NewOrm().QueryTable(new(models.AdminMenu)).Exclude("id", currentId).OrderBy("sort_id", "id").Values(&adminMenusMap, "id", "parent_id", "name", "sort_id")
+	orm.NewOrm().QueryTable(new(models.AdminMenu)).Exclude("id", currentID).OrderBy("sort_id", "id").Values(&adminMenusMap, "id", "parent_id", "name", "sort_id")
 	return adminMenusMap
 }
 
-//创建菜单
-func (*AdminMenuService) Create(form *form_validate.AdminMenuForm) (id int64, err error) {
+// Create 创建菜单
+func (*AdminMenuService) Create(form *formvalidate.AdminMenuForm) (id int64, err error) {
 	adminMenu := models.AdminMenu{
 		ParentId:  form.ParentId,
 		Name:      form.Name,
@@ -62,8 +61,8 @@ func (*AdminMenuService) Create(form *form_validate.AdminMenuForm) (id int64, er
 	return orm.NewOrm().Insert(&adminMenu)
 }
 
-//更新菜单
-func (*AdminMenuService) Update(form *form_validate.AdminMenuForm) int {
+// Update 更新菜单
+func (*AdminMenuService) Update(form *formvalidate.AdminMenuForm) int {
 	num, err := orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("id", form.Id).Update(orm.Params{
 		"parent_id":  form.ParentId,
 		"name":       form.Name,
@@ -75,42 +74,38 @@ func (*AdminMenuService) Update(form *form_validate.AdminMenuForm) int {
 	})
 	if err == nil {
 		return int(num)
-	} else {
-		return 0
 	}
+	return 0
 }
 
-//Url验重
+// IsExistUrl Url验重
 func (*AdminMenuService) IsExistUrl(url string, id int) bool {
 	if id == 0 {
 		return orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("url", url).Exist()
-	} else {
-		return orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("url", url).Exclude("id", id).Exist()
 	}
+	return orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("url", url).Exclude("id", id).Exist()
 }
 
-//判断是否有子菜单
+// IsChildMenu 判断是否有子菜单
 func (*AdminMenuService) IsChildMenu(ids []int) bool {
 	return orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("parent_id__in", ids).Exist()
 }
 
-//删除菜单
+// Del 删除菜单
 func (*AdminMenuService) Del(ids []int) int {
 	count, err := orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("id__in", ids).Delete()
 	if err == nil {
 		return int(count)
-	} else {
-		return 0
 	}
+	return 0
 }
 
-//通过id获取菜单信息
+// GetAdminMenuById 通过id获取菜单信息
 func (*AdminMenuService) GetAdminMenuById(id int) *models.AdminMenu {
 	var adminMenu models.AdminMenu
 	err := orm.NewOrm().QueryTable(new(models.AdminMenu)).Filter("id", id).One(&adminMenu)
 	if err == nil {
 		return &adminMenu
-	} else {
-		return nil
 	}
+	return nil
 }

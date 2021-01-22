@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// UserLevel struct
 type UserLevel struct {
 	Id          int    `orm:"column(id);auto;size(11)" description:"表ID" json:"id"`
 	Name        string `orm:"column(name);size(20)" description:"名称" json:"name"`
@@ -15,27 +16,27 @@ type UserLevel struct {
 	DeleteTime  int    `orm:"column(delete_time);;size(10);default(0)" description:"删除时间" json:"delete_time"`
 }
 
-//自定义table 名称
+// TableName 自定义table 名称
 func (*UserLevel) TableName() string {
 	return "user_level"
 }
 
-//定义模型的可搜索字段
+// SearchField 定义模型的可搜索字段
 func (*UserLevel) SearchField() []string {
 	return []string{"name", "description"}
 }
 
-//禁止删除的数据id
+// NoDeletionId 禁止删除的数据id
 func (*UserLevel) NoDeletionId() []int {
 	return []int{}
 }
 
-//定义模型可作为条件的字段
+// WhereField 定义模型可作为条件的字段
 func (*UserLevel) WhereField() []string {
 	return []string{}
 }
 
-//定义可做为时间范围查询的字段
+// TimeField 定义可做为时间范围查询的字段
 func (*UserLevel) TimeField() []string {
 	return []string{}
 }

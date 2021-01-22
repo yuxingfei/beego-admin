@@ -8,6 +8,7 @@ import (
 	"strconv"
 )
 
+// Attachment struct
 type Attachment struct {
 	Id           int    `orm:"column(id);auto;size(11)" description:"表ID"`
 	AdminUserId  int    `orm:"column(admin_user_id);size(11);default(0)" description:"后台用户id"`
@@ -26,27 +27,27 @@ type Attachment struct {
 	DeleteTime   int    `orm:"column(delete_time);size(10);default(0)" description:"删除时间"`
 }
 
-//自定义table 名称
+// TableName 自定义table 名称
 func (*Attachment) TableName() string {
 	return "attachment"
 }
 
-//定义模型的可搜索字段
+// SearchField 定义模型的可搜索字段
 func (*Attachment) SearchField() []string {
 	return []string{}
 }
 
-//禁止删除的数据id
+// NoDeletionId 禁止删除的数据id
 func (*Attachment) NoDeletionId() []int {
 	return []int{}
 }
 
-//定义模型可作为条件的字段
+// WhereField 定义模型可作为条件的字段
 func (*Attachment) WhereField() []string {
 	return []string{}
 }
 
-//定义可做为时间范围查询的字段
+// TimeField 定义可做为时间范围查询的字段
 func (*Attachment) TimeField() []string {
 	return []string{}
 }
@@ -56,6 +57,7 @@ func init() {
 	orm.RegisterModel(new(Attachment))
 }
 
+// FileType 属性定义
 func (*Attachment) FileType() map[string][]string {
 	return map[string][]string{
 		"图片":   {"jpg", "bmp", "png", "jpeg", "gif", "svg"},
@@ -66,6 +68,7 @@ func (*Attachment) FileType() map[string][]string {
 	}
 }
 
+// FileThumb 属性定义
 func (*Attachment) FileThumb() map[string][]string {
 	return map[string][]string{
 		"picture":      {"jpg", "bmp", "png", "jpeg", "gif", "svg"},
@@ -79,7 +82,7 @@ func (*Attachment) FileThumb() map[string][]string {
 	}
 }
 
-//格式化大小
+// GetSize 格式化大小
 func (attachment *Attachment) GetSize() string {
 	size := float64(attachment.Size)
 	units := []string{" B", " KB", " MB", " GB", " TB"}
@@ -90,7 +93,7 @@ func (attachment *Attachment) GetSize() string {
 	return strconv.FormatFloat(math.Round(size), 'f', -1, 64) + units[i]
 }
 
-//文件分类
+// GetFileType 文件分类
 func (attachment *Attachment) GetFileType() string {
 	typeName := "其他"
 	extension := attachment.Extension
@@ -103,7 +106,7 @@ func (attachment *Attachment) GetFileType() string {
 	return typeName
 }
 
-//文件预览
+// GetThumbnail 文件预览
 func (attachment *Attachment) GetThumbnail() string {
 	thumbnail := global.BA_CONFIG.Attachment.ThumbPath + "unknown.svg"
 	extension := attachment.Extension

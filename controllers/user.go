@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"beego-admin/form_validate"
+	"beego-admin/formvalidate"
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/models"
 	"beego-admin/services"
 	"beego-admin/utils"
-	excel_office "beego-admin/utils/excel-office"
+	"beego-admin/utils/exceloffice"
 	"beego-admin/utils/template"
 	"github.com/adam-hanna/arrayOperations"
 	"github.com/gookit/validate"
@@ -16,12 +16,13 @@ import (
 	"time"
 )
 
+// UserController struct
 type UserController struct {
 	baseController
 }
 
-//用户等级 列表页
-func (this *UserController) Index() {
+// Index 用户等级 列表页
+func (uc *UserController) Index() {
 	var userService services.UserService
 	var userLevelService services.UserLevelService
 
@@ -34,16 +35,17 @@ func (this *UserController) Index() {
 
 	data, pagination := userService.GetPaginateData(admin["per_page"].(int), gQueryParams)
 
-	this.Data["data"] = data
-	this.Data["paginate"] = pagination
-	this.Data["user_level_map"] = userLevelMap
+	uc.Data["data"] = data
+	uc.Data["paginate"] = pagination
+	uc.Data["user_level_map"] = userLevelMap
 
-	this.Layout = "public/base.html"
-	this.TplName = "user/index.html"
+	uc.Layout = "public/base.html"
+	uc.TplName = "user/index.html"
 }
 
-func (this *UserController) Export() {
-	exportData := this.GetString("export_data")
+// Export 导出
+func (uc *UserController) Export() {
+	exportData := uc.GetString("export_data")
 	if exportData == "1" {
 		var userService services.UserService
 		var userLevelService services.UserLevelService
@@ -77,114 +79,114 @@ func (this *UserController) Export() {
 			record = append(record, template.UnixTimeForFormat(item.CreateTime))
 			body = append(body, record)
 		}
-		this.Ctx.ResponseWriter.Header().Set("a", "b")
-		excel_office.ExportData(header, body, "user-"+time.Now().Format("2006-01-02-15-04-05"), "", "", this.Ctx.ResponseWriter)
+		uc.Ctx.ResponseWriter.Header().Set("a", "b")
+		exceloffice.ExportData(header, body, "user-"+time.Now().Format("2006-01-02-15-04-05"), "", "", uc.Ctx.ResponseWriter)
 	}
 
-	response.Error(this.Ctx)
+	response.Error(uc.Ctx)
 }
 
-//用户-添加界面
-func (this *UserController) Add() {
+// Add 用户-添加界面
+func (uc *UserController) Add() {
 	var userLevelService services.UserLevelService
 
 	//获取用户等级
 	userLevel := userLevelService.GetUserLevel()
 
-	this.Data["user_level_list"] = userLevel
-	this.Layout = "public/base.html"
-	this.TplName = "user/add.html"
+	uc.Data["user_level_list"] = userLevel
+	uc.Layout = "public/base.html"
+	uc.TplName = "user/add.html"
 }
 
-//添加用户
-func (this *UserController) Create() {
-	var userForm form_validate.UserForm
-	if err := this.ParseForm(&userForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+// Create 添加用户
+func (uc *UserController) Create() {
+	var userForm formvalidate.UserForm
+	if err := uc.ParseForm(&userForm); err != nil {
+		response.ErrorWithMessage(err.Error(), uc.Ctx)
 	}
 
 	v := validate.Struct(userForm)
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), uc.Ctx)
 	}
 
 	//处理图片上传
-	_, _, err := this.GetFile("avatar")
+	_, _, err := uc.GetFile("avatar")
 	if err == nil {
 		var attachmentService services.AttachmentService
-		attachmentInfo, err := attachmentService.Upload(this.Ctx, "avatar", loginUser.Id, 0)
+		attachmentInfo, err := attachmentService.Upload(uc.Ctx, "avatar", loginUser.Id, 0)
 		if err != nil || attachmentInfo == nil {
-			response.ErrorWithMessage(err.Error(), this.Ctx)
+			response.ErrorWithMessage(err.Error(), uc.Ctx)
 		} else {
 			userForm.Avatar = attachmentInfo.Url
 		}
 	}
 
 	var userService services.UserService
-	insertId := userService.Create(&userForm)
+	insertID := userService.Create(&userForm)
 
 	url := global.URL_BACK
 	if userForm.IsCreate == 1 {
 		url = global.URL_RELOAD
 	}
 
-	if insertId > 0 {
-		response.SuccessWithMessageAndUrl("添加成功", url, this.Ctx)
+	if insertID > 0 {
+		response.SuccessWithMessageAndUrl("添加成功", url, uc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(uc.Ctx)
 	}
 }
 
-//用户-修改界面
-func (this *UserController) Edit() {
-	id, _ := this.GetInt("id", -1)
+// Edit 用户-修改界面
+func (uc *UserController) Edit() {
+	id, _ := uc.GetInt("id", -1)
 	if id <= 0 {
-		response.ErrorWithMessage("Param is error.", this.Ctx)
+		response.ErrorWithMessage("Param is error.", uc.Ctx)
 	}
 
 	var userService services.UserService
 
 	user := userService.GetUserById(id)
 	if user == nil {
-		response.ErrorWithMessage("Not Found Info By Id.", this.Ctx)
+		response.ErrorWithMessage("Not Found Info By Id.", uc.Ctx)
 	}
 
 	//获取用户等级
 	var userLevelService services.UserLevelService
 	userLevel := userLevelService.GetUserLevel()
 
-	this.Data["user_level_list"] = userLevel
-	this.Data["data"] = user
+	uc.Data["user_level_list"] = userLevel
+	uc.Data["data"] = user
 
-	this.Layout = "public/base.html"
-	this.TplName = "user/edit.html"
+	uc.Layout = "public/base.html"
+	uc.TplName = "user/edit.html"
 }
 
-//用户-修改
-func (this *UserController) Update() {
-	var userForm form_validate.UserForm
-	if err := this.ParseForm(&userForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+// Update 用户-修改
+func (uc *UserController) Update() {
+	var userForm formvalidate.UserForm
+	if err := uc.ParseForm(&userForm); err != nil {
+		response.ErrorWithMessage(err.Error(), uc.Ctx)
 	}
 
 	if userForm.Id <= 0 {
-		response.ErrorWithMessage("Params is Error.", this.Ctx)
+		response.ErrorWithMessage("Params is Error.", uc.Ctx)
 	}
 
 	v := validate.Struct(userForm)
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), uc.Ctx)
 	}
 
-	_, _, err := this.GetFile("avatar")
+	_, _, err := uc.GetFile("avatar")
 	if err == nil {
 		//处理图片上传
 		var attachmentService services.AttachmentService
-		attachmentInfo, err := attachmentService.Upload(this.Ctx, "avatar", loginUser.Id, 0)
+		attachmentInfo, err := attachmentService.Upload(uc.Ctx, "avatar", loginUser.Id, 0)
 		if err != nil || attachmentInfo == nil {
-			response.ErrorWithMessage(err.Error(), this.Ctx)
+			response.ErrorWithMessage(err.Error(), uc.Ctx)
 		} else {
 			userForm.Avatar = attachmentInfo.Url
 		}
@@ -194,20 +196,20 @@ func (this *UserController) Update() {
 	num := userService.Update(&userForm)
 
 	if num > 0 {
-		response.Success(this.Ctx)
+		response.Success(uc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(uc.Ctx)
 	}
 }
 
-//启用
-func (this *UserController) Enable() {
-	idStr := this.GetString("id")
+// Enable 启用
+func (uc *UserController) Enable() {
+	idStr := uc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		uc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -218,26 +220,26 @@ func (this *UserController) Enable() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("请选择用户等级.", this.Ctx)
+		response.ErrorWithMessage("请选择用户等级.", uc.Ctx)
 	}
 
 	var userService services.UserService
 	num := userService.Enable(idArr)
 	if num > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, uc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(uc.Ctx)
 	}
 }
 
-//禁用
-func (this *UserController) Disable() {
-	idStr := this.GetString("id")
+// Disable 禁用
+func (uc *UserController) Disable() {
+	idStr := uc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		uc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -248,26 +250,26 @@ func (this *UserController) Disable() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("请选择禁用的用户.", this.Ctx)
+		response.ErrorWithMessage("请选择禁用的用户.", uc.Ctx)
 	}
 
 	var userService services.UserService
 	num := userService.Disable(idArr)
 	if num > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, uc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(uc.Ctx)
 	}
 }
 
-//删除
-func (this *UserController) Del() {
-	idStr := this.GetString("id")
+// Del 删除
+func (uc *UserController) Del() {
+	idStr := uc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		uc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -278,23 +280,23 @@ func (this *UserController) Del() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("参数id错误.", this.Ctx)
+		response.ErrorWithMessage("参数id错误.", uc.Ctx)
 	}
 
-	noDeletionId := new(models.User).NoDeletionId()
+	noDeletionID := new(models.User).NoDeletionId()
 
-	m, b := arrayOperations.Intersect(noDeletionId, idArr)
+	m, b := arrayOperations.Intersect(noDeletionID, idArr)
 
-	if len(noDeletionId) > 0 && len(m.Interface().([]int)) > 0 && b {
-		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionId), ",")+"的数据无法删除!", this.Ctx)
+	if len(noDeletionID) > 0 && len(m.Interface().([]int)) > 0 && b {
+		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionID), ",")+"的数据无法删除!", uc.Ctx)
 	}
 
 	var userService services.UserService
 	count := userService.Del(idArr)
 
 	if count > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, uc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(uc.Ctx)
 	}
 }

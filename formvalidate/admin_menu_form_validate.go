@@ -1,8 +1,8 @@
-package form_validate
+package formvalidate
 
 import "github.com/gookit/validate"
 
-//菜单管理-添加菜单表单
+// AdminMenuForm 菜单管理-添加菜单表单
 type AdminMenuForm struct {
 	Id        int    `form:"id"`
 	ParentId  int    `form:"parent_id" validate:"min:0"`
@@ -15,7 +15,7 @@ type AdminMenuForm struct {
 	IsCreate  int    `form:"_create"`
 }
 
-//自定义验证返回消息
+// Messages 自定义验证返回消息
 func (f AdminMenuForm) Messages() map[string]string {
 	return validate.MS{
 		"ParentId.min":       "parent_id必须大于等于0.",

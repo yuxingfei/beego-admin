@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"beego-admin/form_validate"
+	"beego-admin/formvalidate"
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/models"
@@ -14,75 +14,76 @@ import (
 	"strings"
 )
 
+// AdminUserController struct
 type AdminUserController struct {
 	baseController
 }
 
-//用户管理-首页
-func (this *AdminUserController) Index() {
+// Index 用户管理-首页
+func (auc *AdminUserController) Index() {
 	var adminUserService services.AdminUserService
 	data, pagination := adminUserService.GetPaginateData(admin["per_page"].(int), gQueryParams)
-	this.Data["data"] = data
-	this.Data["paginate"] = pagination
+	auc.Data["data"] = data
+	auc.Data["paginate"] = pagination
 
-	this.Layout = "public/base.html"
-	this.TplName = "admin_user/index.html"
+	auc.Layout = "public/base.html"
+	auc.TplName = "admin_user/index.html"
 }
 
-//用户管理-添加界面
-func (this *AdminUserController) Add() {
+// Add 用户管理-添加界面
+func (auc *AdminUserController) Add() {
 	var adminRoleService services.AdminRoleService
 	roles := adminRoleService.GetAllData()
 
-	this.Data["roles"] = roles
-	this.Layout = "public/base.html"
-	this.TplName = "admin_user/add.html"
+	auc.Data["roles"] = roles
+	auc.Layout = "public/base.html"
+	auc.TplName = "admin_user/add.html"
 }
 
-//用户管理-添加界面
-func (this *AdminUserController) Create() {
-	var adminUserForm form_validate.AdminUserForm
-	if err := this.ParseForm(&adminUserForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+// Create 用户管理-添加界面
+func (auc *AdminUserController) Create() {
+	var adminUserForm formvalidate.AdminUserForm
+	if err := auc.ParseForm(&adminUserForm); err != nil {
+		response.ErrorWithMessage(err.Error(), auc.Ctx)
 	}
 	roles := make([]string, 0)
-	this.Ctx.Input.Bind(&roles, "role")
+	auc.Ctx.Input.Bind(&roles, "role")
 
 	adminUserForm.Role = strings.Join(roles, ",")
 
 	v := validate.Struct(adminUserForm)
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), auc.Ctx)
 	}
 
 	//账号验重
 	var adminUserService services.AdminUserService
 	if adminUserService.IsExistName(strings.TrimSpace(adminUserForm.Username), 0) {
-		response.ErrorWithMessage("账号已经存在", this.Ctx)
+		response.ErrorWithMessage("账号已经存在", auc.Ctx)
 	}
 	//默认头像
 	adminUserForm.Avatar = "/static/admin/images/avatar.png"
 
-	insertId := adminUserService.Create(&adminUserForm)
+	insertID := adminUserService.Create(&adminUserForm)
 
 	url := global.URL_BACK
 	if adminUserForm.IsCreate == 1 {
 		url = global.URL_RELOAD
 	}
 
-	if insertId > 0 {
-		response.SuccessWithMessageAndUrl("添加成功", url, this.Ctx)
+	if insertID > 0 {
+		response.SuccessWithMessageAndUrl("添加成功", url, auc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(auc.Ctx)
 	}
 }
 
-//系统管理-用户管理-修改界面
-func (this *AdminUserController) Edit() {
-	id, _ := this.GetInt("id", -1)
+// Edit 系统管理-用户管理-修改界面
+func (auc *AdminUserController) Edit() {
+	id, _ := auc.GetInt("id", -1)
 	if id <= 0 {
-		response.ErrorWithMessage("Param is error.", this.Ctx)
+		response.ErrorWithMessage("Param is error.", auc.Ctx)
 	}
 
 	var (
@@ -92,63 +93,63 @@ func (this *AdminUserController) Edit() {
 
 	adminUser := adminUserService.GetAdminUserById(id)
 	if adminUser == nil {
-		response.ErrorWithMessage("Not Found Info By Id.", this.Ctx)
+		response.ErrorWithMessage("Not Found Info By Id.", auc.Ctx)
 	}
 
 	roles := adminRoleService.GetAllData()
-	this.Data["roles"] = roles
-	this.Data["data"] = adminUser
-	this.Data["role_arr"] = strings.Split(adminUser.Role, ",")
+	auc.Data["roles"] = roles
+	auc.Data["data"] = adminUser
+	auc.Data["role_arr"] = strings.Split(adminUser.Role, ",")
 
-	this.Layout = "public/base.html"
-	this.TplName = "admin_user/edit.html"
+	auc.Layout = "public/base.html"
+	auc.TplName = "admin_user/edit.html"
 }
 
-//系统管理-用户管理-修改
-func (this *AdminUserController) Update() {
-	var adminUserForm form_validate.AdminUserForm
-	if err := this.ParseForm(&adminUserForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+// Update 系统管理-用户管理-修改
+func (auc *AdminUserController) Update() {
+	var adminUserForm formvalidate.AdminUserForm
+	if err := auc.ParseForm(&adminUserForm); err != nil {
+		response.ErrorWithMessage(err.Error(), auc.Ctx)
 	}
 
 	if adminUserForm.Id <= 0 {
-		response.ErrorWithMessage("Params is Error.", this.Ctx)
+		response.ErrorWithMessage("Params is Error.", auc.Ctx)
 	}
 
 	roles := make([]string, 0)
-	this.Ctx.Input.Bind(&roles, "role")
+	auc.Ctx.Input.Bind(&roles, "role")
 
 	adminUserForm.Role = strings.Join(roles, ",")
 
 	v := validate.Struct(adminUserForm)
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), auc.Ctx)
 	}
 
 	//账号验重
 	var adminUserService services.AdminUserService
 	if adminUserService.IsExistName(strings.TrimSpace(adminUserForm.Username), adminUserForm.Id) {
-		response.ErrorWithMessage("账号已经存在", this.Ctx)
+		response.ErrorWithMessage("账号已经存在", auc.Ctx)
 	}
 
 	num := adminUserService.Update(&adminUserForm)
 
 	if num > 0 {
-		response.Success(this.Ctx)
+		response.Success(auc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(auc.Ctx)
 	}
 }
 
-//启用
-func (this *AdminUserController) Enable() {
-	idStr := this.GetString("id")
+// Enable 启用
+func (auc *AdminUserController) Enable() {
+	idStr := auc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		auc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -159,26 +160,26 @@ func (this *AdminUserController) Enable() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("请选择启用的用户.", this.Ctx)
+		response.ErrorWithMessage("请选择启用的用户.", auc.Ctx)
 	}
 
 	var adminUserService services.AdminUserService
 	num := adminUserService.Enable(idArr)
 	if num > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, auc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(auc.Ctx)
 	}
 }
 
-//禁用
-func (this *AdminUserController) Disable() {
-	idStr := this.GetString("id")
+// Disable 禁用
+func (auc *AdminUserController) Disable() {
+	idStr := auc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		auc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -189,26 +190,26 @@ func (this *AdminUserController) Disable() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("请选择禁用的用户.", this.Ctx)
+		response.ErrorWithMessage("请选择禁用的用户.", auc.Ctx)
 	}
 
 	var adminUserService services.AdminUserService
 	num := adminUserService.Disable(idArr)
 	if num > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, auc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(auc.Ctx)
 	}
 }
 
-//删除
-func (this *AdminUserController) Del() {
-	idStr := this.GetString("id")
+// Del 删除
+func (auc *AdminUserController) Del() {
+	idStr := auc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		auc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -219,40 +220,40 @@ func (this *AdminUserController) Del() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("参数id错误.", this.Ctx)
+		response.ErrorWithMessage("参数id错误.", auc.Ctx)
 	}
 
-	noDeletionId := new(models.AdminUser).NoDeletionId()
+	noDeletionID := new(models.AdminUser).NoDeletionId()
 
-	m, b := arrayOperations.Intersect(noDeletionId, idArr)
+	m, b := arrayOperations.Intersect(noDeletionID, idArr)
 
-	if len(noDeletionId) > 0 && len(m.Interface().([]int)) > 0 && b {
-		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionId), ",")+"的数据无法删除!", this.Ctx)
+	if len(noDeletionID) > 0 && len(m.Interface().([]int)) > 0 && b {
+		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionID), ",")+"的数据无法删除!", auc.Ctx)
 	}
 
 	var adminUserService services.AdminUserService
 	count := adminUserService.Del(idArr)
 
 	if count > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, auc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(auc.Ctx)
 	}
 }
 
-//系统管理-个人资料
-func (this *AdminUserController) Profile() {
-	this.Layout = "public/base.html"
-	this.TplName = "admin_user/profile.html"
+// Profile 系统管理-个人资料
+func (auc *AdminUserController) Profile() {
+	auc.Layout = "public/base.html"
+	auc.TplName = "admin_user/profile.html"
 }
 
-//系统管理-个人资料-修改昵称
-func (this *AdminUserController) UpdateNickName() {
-	id, err := this.GetInt("id")
-	nickname := strings.TrimSpace(this.GetString("nickname"))
+// UpdateNickName 系统管理-个人资料-修改昵称
+func (auc *AdminUserController) UpdateNickName() {
+	id, err := auc.GetInt("id")
+	nickname := strings.TrimSpace(auc.GetString("nickname"))
 
 	if nickname == "" || err != nil {
-		response.ErrorWithMessage("参数错误", this.Ctx)
+		response.ErrorWithMessage("参数错误", auc.Ctx)
 	}
 
 	var adminUserService services.AdminUserService
@@ -261,75 +262,75 @@ func (this *AdminUserController) UpdateNickName() {
 	if num > 0 {
 		//修改成功后，更新session的登录用户信息
 		loginAdminUser := adminUserService.GetAdminUserById(id)
-		this.SetSession(global.LOGIN_USER, *loginAdminUser)
-		response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
+		auc.SetSession(global.LOGIN_USER, *loginAdminUser)
+		response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, auc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(auc.Ctx)
 	}
 }
 
-//系统管理-个人资料-修改密码
-func (this *AdminUserController) UpdatePassword() {
-	id, err := this.GetInt("id")
-	password := this.GetString("password")
-	newPassword := this.GetString("new_password")
-	reNewPassword := this.GetString("renew_password")
+// UpdatePassword 系统管理-个人资料-修改密码
+func (auc *AdminUserController) UpdatePassword() {
+	id, err := auc.GetInt("id")
+	password := auc.GetString("password")
+	newPassword := auc.GetString("new_password")
+	reNewPassword := auc.GetString("renew_password")
 
 	if err != nil || password == "" || newPassword == "" || reNewPassword == "" {
-		response.ErrorWithMessage("Bad Parameter.", this.Ctx)
+		response.ErrorWithMessage("Bad Parameter.", auc.Ctx)
 	}
 
 	if newPassword != reNewPassword {
-		response.ErrorWithMessage("两次输入的密码不一致.", this.Ctx)
+		response.ErrorWithMessage("两次输入的密码不一致.", auc.Ctx)
 	}
 
 	if password == newPassword {
-		response.ErrorWithMessage("新密码与旧密码一致，无需修改", this.Ctx)
+		response.ErrorWithMessage("新密码与旧密码一致，无需修改", auc.Ctx)
 	}
 
 	loginUserPassword, err := base64.StdEncoding.DecodeString(loginUser.Password)
 
 	if err != nil {
-		response.ErrorWithMessage("err:"+err.Error(), this.Ctx)
+		response.ErrorWithMessage("err:"+err.Error(), auc.Ctx)
 	}
 
 	if !utils.PasswordVerify(password, string(loginUserPassword)) {
-		response.ErrorWithMessage("当前密码不正确", this.Ctx)
+		response.ErrorWithMessage("当前密码不正确", auc.Ctx)
 	}
 
 	var adminUserService services.AdminUserService
 	num := adminUserService.UpdatePassword(id, newPassword)
 	if num > 0 {
-		response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, auc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(auc.Ctx)
 	}
 }
 
-//系统管理-个人资料-修改头像
-func (this *AdminUserController) UpdateAvatar() {
-	_, _, err := this.GetFile("avatar")
+// UpdateAvatar 系统管理-个人资料-修改头像
+func (auc *AdminUserController) UpdateAvatar() {
+	_, _, err := auc.GetFile("avatar")
 	if err != nil {
-		response.ErrorWithMessage("上传头像错误"+err.Error(), this.Ctx)
+		response.ErrorWithMessage("上传头像错误"+err.Error(), auc.Ctx)
 	}
 
 	var (
 		attachmentService services.AttachmentService
 		adminUserService  services.AdminUserService
 	)
-	attachmentInfo, err := attachmentService.Upload(this.Ctx, "avatar", loginUser.Id, 0)
+	attachmentInfo, err := attachmentService.Upload(auc.Ctx, "avatar", loginUser.Id, 0)
 	if err != nil || attachmentInfo == nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+		response.ErrorWithMessage(err.Error(), auc.Ctx)
 	} else {
 		//头像上传成功，更新用户的avatar头像信息
 		num := adminUserService.UpdateAvatar(loginUser.Id, attachmentInfo.Url)
 		if num > 0 {
 			//修改成功后，更新session的登录用户信息
 			loginAdminUser := adminUserService.GetAdminUserById(loginUser.Id)
-			this.SetSession(global.LOGIN_USER, *loginAdminUser)
-			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
+			auc.SetSession(global.LOGIN_USER, *loginAdminUser)
+			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, auc.Ctx)
 		} else {
-			response.Error(this.Ctx)
+			response.Error(auc.Ctx)
 		}
 	}
 

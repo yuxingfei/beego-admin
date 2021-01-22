@@ -4,24 +4,26 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// DbVersion struct
 type DbVersion struct {
 	DbVersion string
 }
 
+// DatabaseService struct
 type DatabaseService struct {
 }
 
-//获取mysql的版本
+// GetMysqlVersion 获取mysql的版本
 func (*DatabaseService) GetMysqlVersion() string {
 	var dbVersion DbVersion
-	error := orm.NewOrm().Raw("select VERSION() as db_version").QueryRow(&dbVersion)
-	if error != nil {
+	err := orm.NewOrm().Raw("select VERSION() as db_version").QueryRow(&dbVersion)
+	if err != nil {
 		return "not found."
 	}
 	return dbVersion.DbVersion
 }
 
-//获取所有数据表的状态
+// GetTableStatus 获取所有数据表的状态
 func (ds *DatabaseService) GetTableStatus() ([]map[string]string, int) {
 	var maps []orm.Params
 	var resultMaps []map[string]string
@@ -45,29 +47,27 @@ func (ds *DatabaseService) GetTableStatus() ([]map[string]string, int) {
 	return resultMaps, int(affectRows)
 }
 
-//优化数据表
+// OptimizeTable 优化数据表
 func (*DatabaseService) OptimizeTable(tableName string) bool {
 	o := orm.NewOrm()
 	_, err := o.Raw("OPTIMIZE TABLE `" + tableName + "`").Exec()
 	if err == nil {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-//修复数据表
+// RepairTable 修复数据表
 func (*DatabaseService) RepairTable(tableName string) bool {
 	o := orm.NewOrm()
 	_, err := o.Raw("REPAIR TABLE `" + tableName + "`").Exec()
 	if err == nil {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-//获取数据表的所有字段
+// GetFullColumnsFromTable 获取数据表的所有字段
 func (ds *DatabaseService) GetFullColumnsFromTable(tableName string) []map[string]string {
 	var maps []orm.Params
 	var resultMaps []map[string]string
@@ -93,11 +93,10 @@ func (ds *DatabaseService) GetFullColumnsFromTable(tableName string) []map[strin
 	return resultMaps
 }
 
-//interface 转换 为string
+// nil2String interface 转换 为string
 func (*DatabaseService) nil2String(val interface{}) string {
 	if val == nil {
 		return ""
-	} else {
-		return val.(string)
 	}
+	return val.(string)
 }

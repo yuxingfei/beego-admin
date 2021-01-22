@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"beego-admin/form_validate"
+	"beego-admin/formvalidate"
 	"beego-admin/global"
 	"beego-admin/global/response"
 	"beego-admin/models"
@@ -13,40 +13,41 @@ import (
 	"strings"
 )
 
+// AdminMenuController struct.
 type AdminMenuController struct {
 	baseController
 }
 
-//菜单首页
-func (this *AdminMenuController) Index() {
+// Index 菜单首页.
+func (amc *AdminMenuController) Index() {
 	var adminTreeService services.AdminTreeService
-	this.Data["data"] = adminTreeService.AdminMenuTree()
+	amc.Data["data"] = adminTreeService.AdminMenuTree()
 
-	this.Layout = "public/base.html"
-	this.TplName = "admin_menu/index.html"
+	amc.Layout = "public/base.html"
+	amc.TplName = "admin_menu/index.html"
 }
 
-//添加菜单界面
-func (this *AdminMenuController) Add() {
+// Add 添加菜单界面.
+func (amc *AdminMenuController) Add() {
 
 	var adminTreeService services.AdminTreeService
-	parentId, _ := this.GetInt("parent_id", 0)
-	parents := adminTreeService.Menu(parentId, 0)
+	parentID, _ := amc.GetInt("parent_id", 0)
+	parents := adminTreeService.Menu(parentID, 0)
 
-	this.Data["parents"] = parents
-	this.Data["log_method"] = new(models.AdminMenu).GetLogMethod()
+	amc.Data["parents"] = parents
+	amc.Data["log_method"] = new(models.AdminMenu).GetLogMethod()
 
-	this.Layout = "public/base.html"
-	this.TplName = "admin_menu/add.html"
+	amc.Layout = "public/base.html"
+	amc.TplName = "admin_menu/add.html"
 }
 
-//添加菜单
-func (this *AdminMenuController) Create() {
+// Create 添加菜单.
+func (amc *AdminMenuController) Create() {
 	var adminMenuService services.AdminMenuService
-	adminMenuForm := form_validate.AdminMenuForm{}
+	adminMenuForm := formvalidate.AdminMenuForm{}
 
-	if err := this.ParseForm(&adminMenuForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+	if err := amc.ParseForm(&adminMenuForm); err != nil {
+		response.ErrorWithMessage(err.Error(), amc.Ctx)
 	}
 
 	//去除Url前后两侧的空格
@@ -58,18 +59,18 @@ func (this *AdminMenuController) Create() {
 	v := validate.Struct(adminMenuForm)
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), amc.Ctx)
 	}
 
 	//添加之前url验重
 	if adminMenuService.IsExistUrl(adminMenuForm.Url, adminMenuForm.Id) {
-		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", this.Ctx)
+		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", amc.Ctx)
 	}
 
 	//创建
 	_, err := adminMenuService.Create(&adminMenuForm)
 	if err != nil {
-		response.Error(this.Ctx)
+		response.Error(amc.Ctx)
 	}
 
 	url := global.URL_BACK
@@ -77,14 +78,14 @@ func (this *AdminMenuController) Create() {
 		url = global.URL_RELOAD
 	}
 
-	response.SuccessWithMessageAndUrl("添加成功", url, this.Ctx)
+	response.SuccessWithMessageAndUrl("添加成功", url, amc.Ctx)
 }
 
-//编辑菜单界面
-func (this *AdminMenuController) Edit() {
-	id, _ := this.GetInt("id", -1)
+// Edit 编辑菜单界面.
+func (amc *AdminMenuController) Edit() {
+	id, _ := amc.GetInt("id", -1)
 	if id <= 0 {
-		response.ErrorWithMessage("Param is error.", this.Ctx)
+		response.ErrorWithMessage("Param is error.", amc.Ctx)
 	}
 
 	var (
@@ -94,27 +95,27 @@ func (this *AdminMenuController) Edit() {
 
 	adminMenu := adminMenuService.GetAdminMenuById(id)
 	if adminMenu == nil {
-		response.ErrorWithMessage("Not Found Info By Id.", this.Ctx)
+		response.ErrorWithMessage("Not Found Info By Id.", amc.Ctx)
 	}
 
-	parentId := adminMenu.ParentId
-	parents := adminTreeService.Menu(parentId, 0)
+	parentID := adminMenu.ParentId
+	parents := adminTreeService.Menu(parentID, 0)
 
-	this.Data["data"] = adminMenu
-	this.Data["parents"] = parents
-	this.Data["log_method"] = new(models.AdminMenu).GetLogMethod()
+	amc.Data["data"] = adminMenu
+	amc.Data["parents"] = parents
+	amc.Data["log_method"] = new(models.AdminMenu).GetLogMethod()
 
-	this.Layout = "public/base.html"
-	this.TplName = "admin_menu/edit.html"
+	amc.Layout = "public/base.html"
+	amc.TplName = "admin_menu/edit.html"
 }
 
-//菜单更新
-func (this *AdminMenuController) Update() {
+// Update 菜单更新.
+func (amc *AdminMenuController) Update() {
 	var adminMenuService services.AdminMenuService
-	adminMenuForm := form_validate.AdminMenuForm{}
+	adminMenuForm := formvalidate.AdminMenuForm{}
 
-	if err := this.ParseForm(&adminMenuForm); err != nil {
-		response.ErrorWithMessage(err.Error(), this.Ctx)
+	if err := amc.ParseForm(&adminMenuForm); err != nil {
+		response.ErrorWithMessage(err.Error(), amc.Ctx)
 	}
 
 	//去除Url前后两侧的空格
@@ -126,31 +127,31 @@ func (this *AdminMenuController) Update() {
 	v := validate.Struct(adminMenuForm)
 
 	if !v.Validate() {
-		response.ErrorWithMessage(v.Errors.One(), this.Ctx)
+		response.ErrorWithMessage(v.Errors.One(), amc.Ctx)
 	}
 
 	//添加之前url验重
 	if adminMenuService.IsExistUrl(adminMenuForm.Url, adminMenuForm.Id) {
-		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", this.Ctx)
+		response.ErrorWithMessage("url【"+adminMenuForm.Url+"】已经存在.", amc.Ctx)
 	}
 
 	count := adminMenuService.Update(&adminMenuForm)
 
 	if count > 0 {
-		response.Success(this.Ctx)
+		response.Success(amc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(amc.Ctx)
 	}
 }
 
-//删除
-func (this *AdminMenuController) Del() {
-	idStr := this.GetString("id")
+// Del 删除.
+func (amc *AdminMenuController) Del() {
+	idStr := amc.GetString("id")
 	ids := make([]int, 0)
 	var idArr []int
 
 	if idStr == "" {
-		this.Ctx.Input.Bind(&ids, "id")
+		amc.Ctx.Input.Bind(&ids, "id")
 	} else {
 		id, _ := strconv.Atoi(idStr)
 		idArr = append(idArr, id)
@@ -161,28 +162,28 @@ func (this *AdminMenuController) Del() {
 	}
 
 	if len(idArr) == 0 {
-		response.ErrorWithMessage("参数id错误.", this.Ctx)
+		response.ErrorWithMessage("参数id错误.", amc.Ctx)
 	}
 
 	var adminMenuService services.AdminMenuService
 	//判断是否有子菜单
 	if adminMenuService.IsChildMenu(idArr) {
-		response.ErrorWithMessage("有子菜单不可删除！", this.Ctx)
+		response.ErrorWithMessage("有子菜单不可删除！", amc.Ctx)
 	}
 
-	noDeletionId := new(models.AdminMenu).NoDeletionId()
+	noDeletionID := new(models.AdminMenu).NoDeletionId()
 
-	m, b := arrayOperations.Intersect(noDeletionId, idArr)
+	m, b := arrayOperations.Intersect(noDeletionID, idArr)
 
-	if len(noDeletionId) > 0 && len(m.Interface().([]int)) > 0 && b {
-		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionId), ",")+"的数据无法删除!", this.Ctx)
+	if len(noDeletionID) > 0 && len(m.Interface().([]int)) > 0 && b {
+		response.ErrorWithMessage("ID为"+strings.Join(utils.IntArrToStringArr(noDeletionID), ",")+"的数据无法删除!", amc.Ctx)
 	}
 
 	count := adminMenuService.Del(idArr)
 
 	if count > 0 {
-		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, this.Ctx)
+		response.SuccessWithMessageAndUrl("操作成功", global.URL_RELOAD, amc.Ctx)
 	} else {
-		response.Error(this.Ctx)
+		response.Error(amc.Ctx)
 	}
 }

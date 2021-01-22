@@ -1,8 +1,8 @@
-package form_validate
+package formvalidate
 
 import "github.com/gookit/validate"
 
-//admin_user 表单
+// UserLevelForm admin_user 表单
 type UserLevelForm struct {
 	Id          int    `form:"id"`
 	Name        string `form:"name" validate:"required"`
@@ -15,7 +15,7 @@ type UserLevelForm struct {
 	IsCreate    int    `form:"_create"`
 }
 
-//自定义验证返回消息
+// Messages 自定义验证返回消息
 func (f UserLevelForm) Messages() map[string]string {
 	return validate.MS{
 		"Name.required":        "名称不能为空.",

@@ -8,18 +8,21 @@ import (
 	"github.com/astaxie/beego"
 )
 
+// PKCS5Padding pkcs5padding
 func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padtext...)
 }
 
+// PKCS5UnPadding pkcs5 unpadding
 func PKCS5UnPadding(origData []byte) []byte {
 	length := len(origData)
 	unpadding := int(origData[length-1])
 	return origData[:(length - unpadding)]
 }
 
+// AesEncrypt aes encrypt
 func AesEncrypt(origData, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -34,6 +37,7 @@ func AesEncrypt(origData, key []byte) ([]byte, error) {
 	return crypted, nil
 }
 
+// AesDecrypt aes decrypt
 func AesDecrypt(crypted, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -48,7 +52,7 @@ func AesDecrypt(crypted, key []byte) ([]byte, error) {
 	return origData, nil
 }
 
-//加密
+// Encrypt 加密
 func Encrypt(byteData []byte, aeskey []byte) string {
 	xpass, err := AesEncrypt(byteData, aeskey)
 	if err != nil {
@@ -58,7 +62,7 @@ func Encrypt(byteData []byte, aeskey []byte) string {
 	return base64.StdEncoding.EncodeToString(xpass)
 }
 
-//解密
+// Decrypt 解密
 func Decrypt(encryptData string, aeskey []byte) string {
 	bytesPass, err := base64.StdEncoding.DecodeString(encryptData)
 	if err != nil {

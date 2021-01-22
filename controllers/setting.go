@@ -8,31 +8,32 @@ import (
 	"strconv"
 )
 
+// SettingController struct
 type SettingController struct {
 	baseController
 }
 
-//设置
-func (this *SettingController) Admin() {
-	this.show(1)
+// Admin 设置
+func (sc *SettingController) Admin() {
+	sc.show(1)
 }
 
-//展示单个配置信息
-func (this *SettingController) show(id int) {
+// show 展示单个配置信息
+func (sc *SettingController) show(id int) {
 	var settingService services.SettingService
 	data := settingService.Show(id)
 
-	this.Data["data_config"] = data
-	this.Layout = "public/base.html"
-	this.TplName = "setting/show.html"
+	sc.Data["data_config"] = data
+	sc.Layout = "public/base.html"
+	sc.TplName = "setting/show.html"
 }
 
-//设置中心-更新设置
-func (this *SettingController) Update() {
-	id := this.Input().Get("id")
+// Update 设置中心-更新设置
+func (sc *SettingController) Update() {
+	id := sc.Input().Get("id")
 
 	if id == "" {
-		response.ErrorWithMessage("参数错误.", this.Ctx)
+		response.ErrorWithMessage("参数错误.", sc.Ctx)
 	}
 
 	var settingService services.SettingService
@@ -40,12 +41,12 @@ func (this *SettingController) Update() {
 	setting := settingService.GetSettingInfoById(idInt)
 
 	if setting == nil {
-		response.ErrorWithMessage("无法更新配置信息", this.Ctx)
+		response.ErrorWithMessage("无法更新配置信息", sc.Ctx)
 	}
 
 	err := json.Unmarshal([]byte(setting.Content), &setting.ContentStrut)
 	if err != nil {
-		response.ErrorWithMessage("无法更新配置信息", this.Ctx)
+		response.ErrorWithMessage("无法更新配置信息", sc.Ctx)
 	}
 
 	for key, value := range setting.ContentStrut {
@@ -53,7 +54,7 @@ func (this *SettingController) Update() {
 		case "image", "file":
 			//单个文件上传
 			var attachmentService services.AttachmentService
-			attachmentInfo, err := attachmentService.Upload(this.Ctx, value.Field, loginUser.Id, 0)
+			attachmentInfo, err := attachmentService.Upload(sc.Ctx, value.Field, loginUser.Id, 0)
 			if err == nil && attachmentInfo != nil {
 				//图片上传成功
 				setting.ContentStrut[key].Content = attachmentInfo.Url
@@ -61,7 +62,7 @@ func (this *SettingController) Update() {
 		case "multi_file", "multi_image":
 			//多个文件上传
 			var attachmentService services.AttachmentService
-			attachments, err := attachmentService.UploadMulti(this.Ctx, value.Field, loginUser.Id, 0)
+			attachments, err := attachmentService.UploadMulti(sc.Ctx, value.Field, loginUser.Id, 0)
 			if err == nil && attachments != nil {
 				var urls []string
 				for _, atta := range attachments {
@@ -75,7 +76,7 @@ func (this *SettingController) Update() {
 				}
 			}
 		default:
-			setting.ContentStrut[key].Content = this.Input().Get(value.Field)
+			setting.ContentStrut[key].Content = sc.Input().Get(value.Field)
 		}
 	}
 
@@ -86,12 +87,12 @@ func (this *SettingController) Update() {
 		if affectRow > 0 {
 			//更新全局配置
 			settingService.LoadOrUpdateGlobalBaseConfig(setting)
-			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, this.Ctx)
+			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, sc.Ctx)
 		} else {
-			response.ErrorWithMessage("没有可更新的信息", this.Ctx)
+			response.ErrorWithMessage("没有可更新的信息", sc.Ctx)
 		}
 	} else {
-		response.ErrorWithMessage("修改失败 err:"+err.Error(), this.Ctx)
+		response.ErrorWithMessage("修改失败 err:"+err.Error(), sc.Ctx)
 	}
 
 }
