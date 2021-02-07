@@ -6,8 +6,9 @@ import (
 	"beego-admin/models"
 	"beego-admin/services"
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/adapter/context"
+	context2 "github.com/beego/beego/v2/server/web/context"
 	"strconv"
 	"strings"
 )
@@ -34,7 +35,7 @@ func AuthMiddle() {
 			//验证是否登录
 			loginUser, isLogin := isLogin(ctx)
 			if !isLogin {
-				response.ErrorWithMessageAndUrl("未登录", "/admin/auth/login", ctx)
+				response.ErrorWithMessageAndUrl("未登录", "/admin/auth/login", (*context2.Context)(ctx))
 				return
 			}
 
@@ -45,7 +46,7 @@ func AuthMiddle() {
 				if ctx.Request.Method == "GET" {
 					errorBackURL = ""
 				}
-				response.ErrorWithMessageAndUrl("无权限", errorBackURL, ctx)
+				response.ErrorWithMessageAndUrl("无权限", errorBackURL, (*context2.Context)(ctx))
 				return
 			}
 		}
@@ -53,7 +54,7 @@ func AuthMiddle() {
 		checkAuth, _ := strconv.Atoi(ctx.Request.PostForm.Get("check_auth"))
 
 		if checkAuth == 1 {
-			response.Success(ctx)
+			response.Success((*context2.Context)(ctx))
 			return
 		}
 
@@ -87,7 +88,7 @@ func isLogin(ctx *context.Context) (*models.AdminUser, bool) {
 			var adminUserService services.AdminUserService
 			loginUserPointer := adminUserService.GetAdminUserById(loginUserID)
 
-			if loginUserPointer != nil && loginUserPointer.GetSignStrByAdminUser(ctx) == loginUserIDSign {
+			if loginUserPointer != nil && loginUserPointer.GetSignStrByAdminUser((*context2.Context)(ctx)) == loginUserIDSign {
 				ctx.Output.Session(global.LOGIN_USER, *loginUserPointer)
 				return loginUserPointer, true
 			}

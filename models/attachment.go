@@ -3,7 +3,7 @@ package models
 import (
 	"beego-admin/global"
 	"beego-admin/utils"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 	"math"
 	"strconv"
 )

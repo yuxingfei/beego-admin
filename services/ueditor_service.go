@@ -3,10 +3,9 @@ package services
 import (
 	"beego-admin/global"
 	"encoding/base64"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/server/web/context"
 	"github.com/google/uuid"
-	"gopkg.in/ini.v1"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -24,27 +23,60 @@ type UeditorService struct {
 
 // GetConfig 获取配置信息
 func (*UeditorService) GetConfig() map[string]interface{} {
-	cfg, err := ini.Load("conf/ueditor.conf")
-	configKeys := cfg.Section("ueditor").KeyStrings()
-
-	result := make(map[string]interface{})
-	if err != nil {
-		result["state"] = "请求地址出错"
-		return result
+	ueditorConfig := global.BA_CONFIG.Ueditor
+	result := map[string]interface{}{
+		"catcherActionName":       ueditorConfig.CatcherActionName,
+		"catcherAllowFiles":       strings.Split(ueditorConfig.CatcherAllowFiles, "|"),
+		"catcherFieldName":        ueditorConfig.CatcherFieldName,
+		"catcherLocalDomain":      strings.Split(ueditorConfig.CatcherLocalDomain, "|"),
+		"catcherMaxSize":          ueditorConfig.CatcherMaxSize,
+		"catcherPathFormat":       ueditorConfig.CatcherPathFormat,
+		"catcherUrlPrefix":        ueditorConfig.CatcherUrlPrefix,
+		"fileActionName":          ueditorConfig.FileActionName,
+		"fileAllowFiles":          strings.Split(ueditorConfig.FileAllowFiles, "|"),
+		"fileFieldName":           ueditorConfig.FileFieldName,
+		"fileManagerActionName":   ueditorConfig.FileManagerActionName,
+		"fileManagerAllowFiles":   strings.Split(ueditorConfig.FileManagerAllowFiles, "|"),
+		"fileManagerListPath":     ueditorConfig.FileManagerListPath,
+		"fileManagerListSize":     ueditorConfig.FileManagerListSize,
+		"fileManagerUrlPrefix":    ueditorConfig.FileManagerUrlPrefix,
+		"fileMaxSize":             ueditorConfig.FileMaxSize,
+		"filePathFormat":          ueditorConfig.FilePathFormat,
+		"fileUrlPrefix":           ueditorConfig.FileUrlPrefix,
+		"imageActionName":         ueditorConfig.ImageActionName,
+		"imageAllowFiles":         strings.Split(ueditorConfig.ImageAllowFiles, "|"),
+		"imageCompressBorder":     ueditorConfig.ImageCompressBorder,
+		"imageCompressEnable":     ueditorConfig.ImageCompressEnable,
+		"imageFieldName":          ueditorConfig.ImageFieldName,
+		"imageInsertAlign":        ueditorConfig.ImageInsertAlign,
+		"imageManagerActionName":  ueditorConfig.ImageManagerActionName,
+		"imageManagerAllowFiles":  strings.Split(ueditorConfig.ImageManagerAllowFiles, "|"),
+		"imageManagerInsertAlign": ueditorConfig.ImageManagerInsertAlign,
+		"imageManagerListPath":    ueditorConfig.ImageManagerListPath,
+		"imageManagerListSize":    ueditorConfig.ImageManagerListSize,
+		"imageManagerUrlPrefix":   ueditorConfig.ImageManagerUrlPrefix,
+		"imageMaxSize":            ueditorConfig.ImageMaxSize,
+		"imagePathFormat":         ueditorConfig.ImagePathFormat,
+		"imageUrlPrefix":          ueditorConfig.ImageUrlPrefix,
+		"scrawlActionName":        ueditorConfig.ScrawlActionName,
+		"scrawlAllowFiles":        strings.Split(ueditorConfig.ScrawlAllowFiles, "|"),
+		"scrawlFieldName":         ueditorConfig.ScrawlFieldName,
+		"scrawlInsertAlign":       ueditorConfig.ScrawlInsertAlign,
+		"scrawlMaxSize":           ueditorConfig.ScrawlMaxSize,
+		"scrawlPathFormat":        ueditorConfig.ScrawlPathFormat,
+		"scrawlUrlPrefix":         ueditorConfig.ScrawlUrlPrefix,
+		"snapscreenActionName":    ueditorConfig.SnapscreenActionName,
+		"snapscreenInsertAlign":   ueditorConfig.SnapscreenInsertAlign,
+		"snapscreenPathFormat":    ueditorConfig.SnapscreenPathFormat,
+		"snapscreenUrlPrefix":     ueditorConfig.SnapscreenUrlPrefix,
+		"videoActionName":         ueditorConfig.VideoActionName,
+		"videoAllowFiles":         strings.Split(ueditorConfig.VideoAllowFiles, "|"),
+		"videoFieldName":          ueditorConfig.VideoFieldName,
+		"videoMaxSize":            ueditorConfig.VideoMaxSize,
+		"videoPathFormat":         ueditorConfig.VideoPathFormat,
+		"videoUrlPrefix":          ueditorConfig.VideoUrlPrefix,
 	}
 
-	for _, key := range configKeys {
-		value := cfg.Section("ueditor").Key(key).String()
-		arr := strings.Split(value, "|")
-		lenArr := len(arr)
-		if lenArr < 1 {
-			result[key] = ""
-		} else if lenArr > 1 {
-			result[key] = arr
-		} else {
-			result[key] = arr[0]
-		}
-	}
 	return result
 }
 

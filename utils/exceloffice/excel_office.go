@@ -2,8 +2,8 @@ package exceloffice
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/server/web/context"
 	"strconv"
 	"time"
 )

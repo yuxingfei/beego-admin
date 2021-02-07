@@ -1,6 +1,6 @@
 package session
 
-import "github.com/astaxie/beego"
+import beego "github.com/beego/beego/v2/adapter"
 
 func init() {
 	//session 过期时间，默认值是 3600 秒

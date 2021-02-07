@@ -5,7 +5,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
-	"github.com/astaxie/beego"
+	beego "github.com/beego/beego/v2/adapter"
 )
 
 // PKCS5Padding pkcs5padding

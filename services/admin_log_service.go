@@ -3,12 +3,13 @@ package services
 import (
 	"beego-admin/global"
 	"beego-admin/models"
-	"beego-admin/utils/page"
 	"beego-admin/utils/encrypter"
+	"beego-admin/utils/page"
 	"encoding/json"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/server/web/context"
+
+	"github.com/beego/beego/v2/client/orm"
 	"net/url"
 	"time"
 )
@@ -36,11 +37,11 @@ func (*AdminLogService) CreateAdminLog(loginUser *models.AdminUser, menu *models
 
 	o := orm.NewOrm()
 	//开启事务
-	err := o.Begin()
+	to,err := o.Begin()
 
-	adminLogID, err := o.Insert(&adminLog)
+	adminLogID, err := to.Insert(&adminLog)
 	if err != nil {
-		o.Rollback()
+		to.Rollback()
 		beego.Error(err)
 		return
 	}
@@ -51,13 +52,13 @@ func (*AdminLogService) CreateAdminLog(loginUser *models.AdminUser, menu *models
 	var adminLogData models.AdminLogData
 	adminLogData.AdminLogId = int(adminLogID)
 	adminLogData.Data = cryptData
-	_, err = o.Insert(&adminLogData)
+	_, err = to.Insert(&adminLogData)
 	if err != nil {
-		o.Rollback()
+		to.Rollback()
 		beego.Error(err)
 		return
 	}
-	o.Commit()
+	to.Commit()
 }
 
 // LoginLog 登录日志
@@ -74,11 +75,11 @@ func (*AdminLogService) LoginLog(loginUserID int, ctx *context.Context) {
 	o := orm.NewOrm()
 
 	//开启事务
-	err := o.Begin()
+	to,err := o.Begin()
 
 	adminLogID, err := o.Insert(&adminLog)
 	if err != nil {
-		o.Rollback()
+		to.Rollback()
 		beego.Error(err)
 		return
 	}
@@ -92,11 +93,11 @@ func (*AdminLogService) LoginLog(loginUserID int, ctx *context.Context) {
 	adminLogData.Data = cryptData
 	_, err = o.Insert(&adminLogData)
 	if err != nil {
-		o.Rollback()
+		to.Rollback()
 		beego.Error(err)
 		return
 	}
-	o.Commit()
+	to.Commit()
 }
 
 // GetCount 获取admin_log 总数

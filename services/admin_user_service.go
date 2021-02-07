@@ -8,8 +8,8 @@ import (
 	"beego-admin/utils/page"
 	"encoding/base64"
 	"errors"
-	"github.com/astaxie/beego/context"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/server/web/context"
 	"net/url"
 	"strconv"
 )

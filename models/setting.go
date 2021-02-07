@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 )
 
 //Content 将Content json字符串转换为结构体，便于html界面中range

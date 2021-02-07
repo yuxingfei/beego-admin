@@ -6,7 +6,7 @@ import (
 	"beego-admin/global/response"
 	"beego-admin/services"
 	"beego-admin/utils"
-	"github.com/astaxie/beego/validation"
+	"github.com/beego/beego/v2/adapter/validation"
 	"github.com/dchest/captcha"
 	"github.com/gookit/validate"
 	"net/http"

@@ -3,8 +3,8 @@ package models
 import (
 	"crypto/sha1"
 	"fmt"
-	"github.com/astaxie/beego/context"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/server/web/context"
 	"strings"
 )
 

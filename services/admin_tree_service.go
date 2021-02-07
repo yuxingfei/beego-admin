@@ -3,7 +3,7 @@ package services
 import (
 	"beego-admin/models"
 	"beego-admin/utils"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 	"sort"
 	"strconv"
 	"strings"
