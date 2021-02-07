@@ -8,7 +8,7 @@ import (
 	"beego-admin/services"
 	"beego-admin/utils"
 	"github.com/adam-hanna/arrayOperations"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 	"github.com/gookit/validate"
 	"strconv"
 	"strings"

@@ -4,7 +4,7 @@ import (
 	"beego-admin/global"
 	"beego-admin/models"
 	"beego-admin/services"
-	"github.com/astaxie/beego"
+	beego "github.com/beego/beego/v2/adapter"
 	"net/url"
 	"strconv"
 	"strings"
@@ -31,7 +31,6 @@ var (
 
 // Prepare 父控制器初始化
 func (bc *baseController) Prepare() {
-
 	//访问url
 	requestURL := strings.ToLower(strings.TrimLeft(bc.Ctx.Input.URL(), "/"))
 

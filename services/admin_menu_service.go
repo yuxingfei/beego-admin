@@ -3,7 +3,7 @@ package services
 import (
 	"beego-admin/formvalidate"
 	"beego-admin/models"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 )
 
 // AdminMenuService struct

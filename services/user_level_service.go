@@ -4,7 +4,7 @@ import (
 	"beego-admin/formvalidate"
 	"beego-admin/models"
 	"beego-admin/utils/page"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 	"net/url"
 	"time"
 )

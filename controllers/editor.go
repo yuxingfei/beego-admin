@@ -19,8 +19,7 @@ func (ec *EditorController) Prepare() {
 
 // Server 方法
 func (ec *EditorController) Server() {
-	result := make(map[string]interface{})
-
+	var result map[string]interface{}
 	var ueditorService services.UeditorService
 	action := ec.GetString("action")
 	switch action {
@@ -51,7 +50,7 @@ func (ec *EditorController) Server() {
 		//抓取远程文件
 		result = ueditorService.CatchImage(ec.Ctx)
 	default:
-		ec.Data["json"] = map[string]string{
+		result = map[string]interface{}{
 			"state": "请求地址出错",
 		}
 	}

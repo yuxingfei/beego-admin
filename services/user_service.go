@@ -6,7 +6,7 @@ import (
 	"beego-admin/utils"
 	"beego-admin/utils/page"
 	"encoding/base64"
-	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/v2/client/orm"
 	"net/url"
 	"time"
 )

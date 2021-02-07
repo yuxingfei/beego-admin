@@ -3,8 +3,8 @@ package mysql
 import (
 	"beego-admin/global"
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
+	beego "github.com/beego/beego/v2/adapter"
+	"github.com/beego/beego/v2/client/orm"
 	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
 )
