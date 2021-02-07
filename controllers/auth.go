@@ -10,7 +10,9 @@ import (
 	"github.com/dchest/captcha"
 	"github.com/gookit/validate"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 )
 
 var adminLogService services.AdminLogService
@@ -22,7 +24,6 @@ type AuthController struct {
 
 // Login 登录界面
 func (ac *AuthController) Login() {
-
 	//加载登录配置信息
 	var settingService services.SettingService
 	data := settingService.Show(1)
@@ -38,8 +39,12 @@ func (ac *AuthController) Login() {
 	}{
 		Token:      global.BA_CONFIG.Login.Token,
 		Captcha:    global.BA_CONFIG.Login.Captcha,
-		Background: global.BA_CONFIG.Login.Background,
 	}
+	//登录背景图片
+	if _,err := os.Stat(strings.TrimLeft(global.BA_CONFIG.Login.Background,"/")); err != nil{
+		global.BA_CONFIG.Login.Background = "/static/admin/images/login-default-bg.jpg"
+	}
+	loginConfig.Background = global.BA_CONFIG.Login.Background
 
 	//login界面只需要name字段
 	admin := map[string]interface{}{
