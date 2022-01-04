@@ -256,6 +256,11 @@ func (auc *AdminUserController) UpdateNickName() {
 		response.ErrorWithMessage("参数错误", auc.Ctx)
 	}
 
+	// 验证是否是登陆用户，这里也可不用提供的id，使用登陆的id即可
+	if loginUser.Id != id{
+		response.ErrorWithMessage("数据非法", auc.Ctx)
+	}
+
 	var adminUserService services.AdminUserService
 	num := adminUserService.UpdateNickName(id, nickname)
 
@@ -275,6 +280,11 @@ func (auc *AdminUserController) UpdatePassword() {
 	password := auc.GetString("password")
 	newPassword := auc.GetString("new_password")
 	reNewPassword := auc.GetString("renew_password")
+
+	// 验证是否是登陆用户，这里也可不用提供的id，使用登陆的id即可
+	if loginUser.Id != id{
+		response.ErrorWithMessage("数据非法", auc.Ctx)
+	}
 
 	if err != nil || password == "" || newPassword == "" || reNewPassword == "" {
 		response.ErrorWithMessage("Bad Parameter.", auc.Ctx)
