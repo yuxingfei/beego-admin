@@ -60,7 +60,7 @@ func (pagination *Pagination) Paginate(seter orm.QuerySeter, listRows int, param
 	}
 
 	pagination.Total = int(total)
-	pagination.LastPage = int(math.Ceil(float64(pagination.Total / pagination.ListRows)))
+	pagination.LastPage = int(math.Ceil(float64(pagination.Total) / float64(pagination.ListRows)))
 	pagination.HasMore = pagination.CurrentPage < pagination.LastPage
 
 	//放到最后执行，前面需要赋值
