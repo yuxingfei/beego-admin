@@ -65,7 +65,7 @@ func (bs *BaseService) ScopeWhere(seter orm.QuerySeter, parameters url.Values) o
 				if err == nil {
 					unixStartTime := startTime.Unix()
 					if len(endTimeStr) == 10 {
-						endTimeStr += "23:59:59"
+						endTimeStr += " 23:59:59"
 					}
 
 					endTime, err := time.ParseInLocation("2006-01-02 15:04:05", endTimeStr, loc)
