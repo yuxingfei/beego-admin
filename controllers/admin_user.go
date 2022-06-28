@@ -22,7 +22,7 @@ type AdminUserController struct {
 // Index 用户管理-首页
 func (auc *AdminUserController) Index() {
 	var adminUserService services.AdminUserService
-	data, pagination := adminUserService.GetPaginateData(admin["per_page"].(int), gQueryParams)
+	data, pagination := adminUserService.GetPaginateData(auc.Option["per_page"].(int), auc.QueryParams)
 	auc.Data["data"] = data
 	auc.Data["paginate"] = pagination
 
@@ -257,7 +257,7 @@ func (auc *AdminUserController) UpdateNickName() {
 	}
 
 	// 验证是否是登陆用户，这里也可不用提供的id，使用登陆的id即可
-	if loginUser.Id != id{
+	if auc.User.Id != id {
 		response.ErrorWithMessage("数据非法", auc.Ctx)
 	}
 
@@ -282,7 +282,7 @@ func (auc *AdminUserController) UpdatePassword() {
 	reNewPassword := auc.GetString("renew_password")
 
 	// 验证是否是登陆用户，这里也可不用提供的id，使用登陆的id即可
-	if loginUser.Id != id{
+	if auc.User.Id != id {
 		response.ErrorWithMessage("数据非法", auc.Ctx)
 	}
 
@@ -298,7 +298,7 @@ func (auc *AdminUserController) UpdatePassword() {
 		response.ErrorWithMessage("新密码与旧密码一致，无需修改", auc.Ctx)
 	}
 
-	loginUserPassword, err := base64.StdEncoding.DecodeString(loginUser.Password)
+	loginUserPassword, err := base64.StdEncoding.DecodeString(auc.User.Password)
 
 	if err != nil {
 		response.ErrorWithMessage("err:"+err.Error(), auc.Ctx)
@@ -328,15 +328,15 @@ func (auc *AdminUserController) UpdateAvatar() {
 		attachmentService services.AttachmentService
 		adminUserService  services.AdminUserService
 	)
-	attachmentInfo, err := attachmentService.Upload(auc.Ctx, "avatar", loginUser.Id, 0)
+	attachmentInfo, err := attachmentService.Upload(auc.Ctx, "avatar", auc.User.Id, 0)
 	if err != nil || attachmentInfo == nil {
 		response.ErrorWithMessage(err.Error(), auc.Ctx)
 	} else {
 		//头像上传成功，更新用户的avatar头像信息
-		num := adminUserService.UpdateAvatar(loginUser.Id, attachmentInfo.Url)
+		num := adminUserService.UpdateAvatar(auc.User.Id, attachmentInfo.Url)
 		if num > 0 {
 			//修改成功后，更新session的登录用户信息
-			loginAdminUser := adminUserService.GetAdminUserById(loginUser.Id)
+			loginAdminUser := adminUserService.GetAdminUserById(auc.User.Id)
 			auc.SetSession(global.LOGIN_USER, *loginAdminUser)
 			response.SuccessWithMessageAndUrl("修改成功", global.URL_RELOAD, auc.Ctx)
 		} else {

@@ -33,7 +33,7 @@ func (uc *UserController) Index() {
 		userLevelMap[item.Id] = item.Name
 	}
 
-	data, pagination := userService.GetPaginateData(admin["per_page"].(int), gQueryParams)
+	data, pagination := userService.GetPaginateData(uc.Option["per_page"].(int), uc.QueryParams)
 
 	uc.Data["data"] = data
 	uc.Data["paginate"] = pagination
@@ -55,7 +55,7 @@ func (uc *UserController) Export() {
 			userLevelMap[item.Id] = item.Name
 		}
 
-		data := userService.GetExportData(gQueryParams)
+		data := userService.GetExportData(uc.QueryParams)
 		header := []string{"ID", "头像", "用户等级", "用户名", "手机号", "昵称", "是否启用", "创建时间"}
 		body := [][]string{}
 		for _, item := range data {
@@ -115,7 +115,7 @@ func (uc *UserController) Create() {
 	_, _, err := uc.GetFile("avatar")
 	if err == nil {
 		var attachmentService services.AttachmentService
-		attachmentInfo, err := attachmentService.Upload(uc.Ctx, "avatar", loginUser.Id, 0)
+		attachmentInfo, err := attachmentService.Upload(uc.Ctx, "avatar", uc.User.Id, 0)
 		if err != nil || attachmentInfo == nil {
 			response.ErrorWithMessage(err.Error(), uc.Ctx)
 		} else {
@@ -184,7 +184,7 @@ func (uc *UserController) Update() {
 	if err == nil {
 		//处理图片上传
 		var attachmentService services.AttachmentService
-		attachmentInfo, err := attachmentService.Upload(uc.Ctx, "avatar", loginUser.Id, 0)
+		attachmentInfo, err := attachmentService.Upload(uc.Ctx, "avatar", uc.User.Id, 0)
 		if err != nil || attachmentInfo == nil {
 			response.ErrorWithMessage(err.Error(), uc.Ctx)
 		} else {

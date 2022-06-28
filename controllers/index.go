@@ -27,7 +27,7 @@ type PackageLib struct {
 
 // Index 首页
 func (ic *IndexController) Index() {
-	ic.Data["login_user"] = loginUser
+	ic.Data["login_user"] = ic.User
 
 	//默认密码修改检测
 	ic.Data["password_danger"] = 0
@@ -38,7 +38,7 @@ func (ic *IndexController) Index() {
 	ic.Data["notice_content"] = global.BA_CONFIG.Base.NoticeContent
 
 	//默认密码修改检测
-	loginUserPassword, _ := base64.StdEncoding.DecodeString(loginUser.Password)
+	loginUserPassword, _ := base64.StdEncoding.DecodeString(ic.User.Password)
 	if global.BA_CONFIG.Base.PasswordWarning == "1" && utils.PasswordVerify("123456", string(loginUserPassword)) {
 		ic.Data["password_danger"] = 1
 	}
