@@ -48,6 +48,11 @@ beego-admin目录下 go mod tidy 将自动下载依赖包
 ## 注意！！！
 当前最新master版本beego v2.0.1框架的版本，如果需要beego1.x 版本的请下载 tag v1.0.1 版本，因 Beego 2.x 的XSRF只支持 HTTPS 协议，所有app.conf配置中默认关闭了XSRF安全过滤，如有需要请手动开启,因beego v2.X版本和 beego v1.x版本区别较大，请根据beego最新手册进行开发使用。
 
+## 科学上网
+顺便推荐两个比较稳定的科学上网，我用了几年了，一直比较稳定
+[樱花云](https://renzhe.cloud/auth/register?code=GoTA)
+[忍者云](https://www.sakuras.pro/index.php#/register?code=hxGASdrG)
+
 技术交流QQ群：1151174994
 
 ![Image](https://raw.githubusercontent.com/yuxingfei/images/master/beego-admin-qq-share.png)
