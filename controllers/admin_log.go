@@ -15,7 +15,7 @@ func (alc *AdminLogController) Index() {
 		adminLogService  services.AdminLogService
 		adminUserService services.AdminUserService
 	)
-	data, pagination := adminLogService.GetPaginateData(admin["per_page"].(int), gQueryParams)
+	data, pagination := adminLogService.GetPaginateData(alc.Option["per_page"].(int), alc.QueryParams)
 
 	alc.Data["admin_user_list"] = adminUserService.GetAllAdminUser()
 

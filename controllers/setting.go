@@ -54,7 +54,7 @@ func (sc *SettingController) Update() {
 		case "image", "file":
 			//单个文件上传
 			var attachmentService services.AttachmentService
-			attachmentInfo, err := attachmentService.Upload(sc.Ctx, value.Field, loginUser.Id, 0)
+			attachmentInfo, err := attachmentService.Upload(sc.Ctx, value.Field, sc.User.Id, 0)
 			if err == nil && attachmentInfo != nil {
 				//图片上传成功
 				setting.ContentStrut[key].Content = attachmentInfo.Url
@@ -62,7 +62,7 @@ func (sc *SettingController) Update() {
 		case "multi_file", "multi_image":
 			//多个文件上传
 			var attachmentService services.AttachmentService
-			attachments, err := attachmentService.UploadMulti(sc.Ctx, value.Field, loginUser.Id, 0)
+			attachments, err := attachmentService.UploadMulti(sc.Ctx, value.Field, sc.User.Id, 0)
 			if err == nil && attachments != nil {
 				var urls []string
 				for _, atta := range attachments {

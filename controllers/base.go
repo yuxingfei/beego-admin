@@ -18,16 +18,10 @@ type NestPreparer interface {
 // baseController struct
 type baseController struct {
 	beego.Controller
+	Option      map[string]interface{}
+	User        models.AdminUser
+	QueryParams url.Values
 }
-
-var (
-	//后台变量
-	admin map[string]interface{}
-	//当前用户
-	loginUser models.AdminUser
-	//参数
-	gQueryParams url.Values
-)
 
 // Prepare 父控制器初始化
 func (bc *baseController) Prepare() {
@@ -37,10 +31,10 @@ func (bc *baseController) Prepare() {
 	//query参数
 	//只有分页首页列表时才会使用
 	if bc.Ctx.Input.IsGet() {
-		gQueryParams, _ = url.ParseQuery(bc.Ctx.Request.URL.RawQuery)
-		gQueryParams.Set("queryParamUrl", bc.Ctx.Input.URL())
-		if len(gQueryParams) > 0 {
-			for k, val := range gQueryParams {
+		bc.QueryParams, _ = url.ParseQuery(bc.Ctx.Request.URL.RawQuery)
+		bc.QueryParams.Set("queryParamUrl", bc.Ctx.Input.URL())
+		if len(bc.QueryParams) > 0 {
+			for k, val := range bc.QueryParams {
 				v, ok := strconv.Atoi(val[0])
 				if ok == nil {
 					bc.Data[k] = v
@@ -53,7 +47,7 @@ func (bc *baseController) Prepare() {
 
 	//登录用户
 	var isOk bool
-	loginUser, isOk = bc.GetSession(global.LOGIN_USER).(models.AdminUser)
+	bc.User, isOk = bc.GetSession(global.LOGIN_USER).(models.AdminUser)
 
 	//基础变量
 	runMode := beego.AppConfig.String("runmode")
@@ -84,7 +78,7 @@ func (bc *baseController) Prepare() {
 		title = adminMenu.Name
 		if strings.ToLower(adminMenu.LogMethod) == strings.ToLower(bc.Ctx.Input.Method()) {
 			var adminLogService services.AdminLogService
-			adminLogService.CreateAdminLog(&loginUser, adminMenu, requestURL, bc.Ctx)
+			adminLogService.CreateAdminLog(&bc.User, adminMenu, requestURL, bc.Ctx)
 		}
 	}
 
@@ -92,12 +86,12 @@ func (bc *baseController) Prepare() {
 	menu := ""
 	if "admin/auth/login" != requestURL && !(bc.Ctx.Input.Header("X-PJAX") == "true") && isOk {
 		var adminTreeService services.AdminTreeService
-		menu = adminTreeService.GetLeftMenu(requestURL, loginUser)
+		menu = adminTreeService.GetLeftMenu(requestURL, bc.User)
 	}
 
-	admin = map[string]interface{}{
+	bc.Option = map[string]interface{}{
 		"pjax":            bc.Ctx.Input.Header("X-PJAX") == "true",
-		"user":            &loginUser,
+		"user":            &bc.User,
 		"menu":            menu,
 		"name":            global.BA_CONFIG.Base.Name,
 		"author":          global.BA_CONFIG.Base.Author,
@@ -108,7 +102,7 @@ func (bc *baseController) Prepare() {
 		"per_page_config": []int{10, 20, 30, 50, 100},
 		"title":           title,
 	}
-	bc.Data["admin"] = admin
+	bc.Data["admin"] = bc.Option
 
 	//ajax头部统一设置_xsrf
 	bc.Data["xsrf_token"] = bc.XSRFToken()

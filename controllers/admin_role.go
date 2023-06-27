@@ -22,7 +22,7 @@ type AdminRoleController struct {
 // Index 角色管理首页.
 func (arc *AdminRoleController) Index() {
 	var adminRoleService services.AdminRoleService
-	data, pagination := adminRoleService.GetPaginateData(admin["per_page"].(int), gQueryParams)
+	data, pagination := adminRoleService.GetPaginateData(arc.Option["per_page"].(int), arc.QueryParams)
 
 	arc.Data["data"] = data
 	arc.Data["paginate"] = pagination

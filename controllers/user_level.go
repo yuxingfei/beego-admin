@@ -24,7 +24,7 @@ type UserLevelController struct {
 // Index 用户等级 列表页
 func (ulc *UserLevelController) Index() {
 	var userLevelService services.UserLevelService
-	data, pagination := userLevelService.GetPaginateData(admin["per_page"].(int), gQueryParams)
+	data, pagination := userLevelService.GetPaginateData(ulc.Option["per_page"].(int), ulc.QueryParams)
 	ulc.Data["data"] = data
 	ulc.Data["paginate"] = pagination
 
@@ -37,7 +37,7 @@ func (ulc *UserLevelController) Export() {
 	exportData := ulc.GetString("export_data")
 	if exportData == "1" {
 		var userLevelService services.UserLevelService
-		data := userLevelService.GetExportData(gQueryParams)
+		data := userLevelService.GetExportData(ulc.QueryParams)
 		header := []string{"ID", "名称", "简介", "是否启用", "创建时间"}
 		body := [][]string{}
 		for _, item := range data {
@@ -84,7 +84,7 @@ func (ulc *UserLevelController) Create() {
 	_, _, err := ulc.GetFile("img")
 	if err == nil {
 		var attachmentService services.AttachmentService
-		attachmentInfo, err := attachmentService.Upload(ulc.Ctx, "img", loginUser.Id, 0)
+		attachmentInfo, err := attachmentService.Upload(ulc.Ctx, "img", ulc.User.Id, 0)
 		if err != nil || attachmentInfo == nil {
 			response.ErrorWithMessage(err.Error(), ulc.Ctx)
 		} else {
@@ -148,7 +148,7 @@ func (ulc *UserLevelController) Update() {
 	if err == nil {
 		//处理图片上传
 		var attachmentService services.AttachmentService
-		attachmentInfo, err := attachmentService.Upload(ulc.Ctx, "img", loginUser.Id, 0)
+		attachmentInfo, err := attachmentService.Upload(ulc.Ctx, "img", ulc.User.Id, 0)
 		if err != nil || attachmentInfo == nil {
 			response.ErrorWithMessage(err.Error(), ulc.Ctx)
 		} else {

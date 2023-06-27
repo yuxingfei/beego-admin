@@ -155,3 +155,7 @@
 .skin-yellow-light .box {
   border-top: 3px solid #f39c12;
 }
+
+.sidebar-menu .treeview-menu>li>a {
+  padding: 14px 24px;
+}
