@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func init() {
+func InitRouter() {
 	//授权登录中间件
 	middleware.AuthMiddle()
 

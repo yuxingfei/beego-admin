@@ -10,7 +10,7 @@ import (
 )
 
 // init 注册mysql
-func init() {
+func InitDb() {
 	err := orm.RegisterDriver("mysql", orm.DRMySQL)
 	if err != nil {
 		beego.Error("mysql register driver error:", err)
