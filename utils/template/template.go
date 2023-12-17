@@ -1,4 +1,4 @@
-//Package template 自定义模板函数
+// Package template 自定义模板函数
 package template
 
 import (
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func init() {
+func InitTtempate() {
 	beego.AddFuncMap("UnixTimeForFormat", UnixTimeForFormat)
 	beego.AddFuncMap("FormatSize", FormatSize)
 }

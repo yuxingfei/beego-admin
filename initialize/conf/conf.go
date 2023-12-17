@@ -9,8 +9,8 @@ import (
 	"os"
 )
 
-//加载配置文件
-func init() {
+// 加载配置文件
+func InitConfig() {
 	var config string
 	if configEnv := os.Getenv(utils.ConfigEnv); configEnv == "" {
 		config = utils.ConfigFile

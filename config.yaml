@@ -3,15 +3,15 @@
 redis:
   db: 0
   addr: '127.0.0.1:6379'
-  password: ''
+  password: '123456'
 
 # mysql connect configuration
 mysql:
   host: '127.0.0.1'
   port: 3306
-  database: 'beego-admin'
+  database: 'beego_admin'
   username: 'root'
-  password: 'root'
+  password: '123456'
 
 # other configuration
 other:
